@@ -1,0 +1,12 @@
+{
+    "content": "The wavelength (\u00ce\u00bb), frequency (f), and speed (v) of a wave are related by a simple equation: v = f\u00ce\u00bb. So if we know any two of these variables (wavelength, frequency, speed), we can calculate the third. Now it is time to take a look at how sound waves are produced by a musical instrument: in this case, the guitar. The guitar has six tightly-stretched steel strings which are picked (plucked) with fingers or a plastic pick to make them vibrate. A guitar string has a number of frequencies at which it will naturally vibrate. These natural frequencies are known as the harmonics of the guitar string. Sound is transmitted via a pressure wave within a material. Such a pressure wave can form when an object, vibrating back and forth rapidly, pushes air forward to make way for itself, then moves away again, leaving a partial vacuum behind. A string that is under more tension will vibrate more rapidly, creating pressure waves that are closer together, and hence have a higher frequency. Thicker or longer strings vibrate more slowly, creating pressure waves that are farther apart, and thus have a lower frequency.",
+    "scenario": {
+        "title": "Guitar Wave Laboratory",
+        "content": "In this immersive simulation, students explore a highly detailed virtual guitar with adjustable parameters. They can pluck strings, observe slow-motion visualizations of standing waves, and manipulate factors like string length, tension, and thickness. The simulation displays real-time waveforms showing frequency, amplitude, and wavelength while simultaneously playing the corresponding sounds. Students can toggle between visual representations (string movement, waveform displays, harmonic analysis) and use a virtual tuner to observe how adjustments affect pitch and wave properties."
+    },
+    "hypothesis": {
+        "hypothesis": "Waves in Action",
+        "type": "Descriptive",
+        "description": "Students will identify and describe the relationships between frequency, wavelength, amplitude, and wave speed in vibrating strings. They will explain how changing physical properties (tension, length, mass) affects these wave characteristics and predict the resulting changes in sound."
+    }
+}

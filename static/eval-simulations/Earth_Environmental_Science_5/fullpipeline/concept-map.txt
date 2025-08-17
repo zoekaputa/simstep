@@ -1,0 +1,19 @@
+graph LR
+    ParentMaterial[Parent Material]
+    Soil[Soil]
+    Organisms[Organisms]
+    Climate[Climate]
+    Topography[Topography]
+    Time[Time]
+    Weathering[Weathering]
+    OrganicMatter[Organic Matter]
+    SoilHorizons[Soil Horizons]
+    ParentMaterial -->|Undergoes| Weathering
+    Weathering -->|Contributes to| Soil
+    Organisms -->|Contribute| OrganicMatter
+    OrganicMatter -->|Improves| Soil
+    Climate -->|Influences| Weathering
+    Climate -->|Affects| Soil
+    Topography -->|Influences| Soil
+    Time -->|Allows development of| Soil
+    Soil -->|Develops| SoilHorizons

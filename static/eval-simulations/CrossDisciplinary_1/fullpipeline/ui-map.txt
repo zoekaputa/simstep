@@ -1,0 +1,26 @@
+graph LR
+    Skateboard[Simulated Skateboard]
+    Ramp[Customizable Ramp]
+    Surface[Adjustable Surface]
+    Force[Force Analysis]
+    Motion[Motion Tracking]
+    Impact[Impact Visualization]
+    Ergonomics[Biomechanical Analysis]
+    RampSlider[Ramp Angle Slider]
+    SurfaceDropdown[Surface Material Dropdown]
+    RunButton[Run Simulation Button]
+    DataDisplay[Data Display]
+    Skateboard -->|contacts| Surface
+    Force -->|affects| Motion
+    Force -->|determines| Impact
+    Surface -->|affects| Motion
+    RampSlider -->|adjusts| Ramp
+    SurfaceDropdown -->|changes| Surface
+    RunButton -->|initiates| Skateboard
+    RunButton -->|triggers| Motion
+    RunButton -->|triggers| Force
+    RunButton -->|triggers| Impact
+    Motion -->|updates| DataDisplay
+    Force -->|updates| DataDisplay
+    Impact -->|updates| DataDisplay
+    Ergonomics -->|informs| DataDisplay

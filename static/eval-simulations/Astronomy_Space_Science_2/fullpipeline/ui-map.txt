@@ -1,0 +1,35 @@
+graph LR
+    Object1[Merry-go-round]
+    Object2[Student]
+    CentralBody[Central Pole]
+    Orbit[Circular Path]
+    GravitationalForce[Centripetal Force]
+    Velocity[Spinning Speed]
+    OrbitalEnergy[Rotational Energy]
+    RadiusControl[Radius Slider]
+    MassControl[Mass Slider]
+    StartButton[Start/Stop Button]
+    SpeedDisplay[Angular Velocity Display]
+    EnergyDisplay[Energy Display]
+    MomentumDisplay[Angular Momentum Display]
+    Graph[Radius vs. Angular Velocity Graph]
+    Object1 -->|Attracts| Object2
+    Object1 -->|Has| Mass
+    Object2 -->|Has| Mass
+    Object1 -->|Orbits| CentralBody
+    Object2 -->|Orbits| CentralBody
+    CentralBody -->|Creates| GravitationalForce
+    GravitationalForce -->|Shapes| Orbit
+    Orbit -->|Has| Period
+    Velocity -->|Affects| Orbit
+    OrbitalEnergy -->|Consists of| KineticEnergy
+    OrbitalEnergy -->|Consists of| PotentialEnergy
+    RadiusControl -->|Adjusts| Orbit
+    MassControl -->|Changes| Object2
+    StartButton -->|Controls| Velocity
+    Object1 -->|Displays| SpeedDisplay
+    OrbitalEnergy -->|Shows in| EnergyDisplay
+    Orbit -->|Calculates| MomentumDisplay
+    RadiusControl -->|Updates| Graph
+    Velocity -->|Updates| Graph
+    MassControl -->|Updates| Graph

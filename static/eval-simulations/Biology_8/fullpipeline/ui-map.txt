@@ -1,0 +1,16 @@
+graph LR
+    Sun[Cafeteria Lights] -->|provides energy for| Producers[Salad Bar]
+    Producers -->|convert 1-2% of light energy| ChemicalEnergy[Nutrients in Vegetables]
+    Producers -->|feed| PrimaryConsumers[Vegetarian Students]
+    PrimaryConsumers -->|feed| SecondaryConsumers[Omnivore Students]
+    SecondaryConsumers -->|feed| TertiaryConsumers[Carnivore Students]
+    PrimaryConsumers -->|transfer ~10% energy| SecondaryConsumers
+    SecondaryConsumers -->|transfer ~10% energy| TertiaryConsumers
+    Ecosystem[EcoTray] -->|modeled as| EnergyPyramid[Tray Arrangement]
+    Reset[Reset Button] -->|resets simulation| Ecosystem
+    StartSimulation[Start Simulation Button] -->|begins food transfer| Producers
+    MeasureEnergy[Measure Energy Button] -->|calculates energy content| EnergyPyramid
+    EnergyDisplay[Energy Display] -->|shows energy at each level| EnergyPyramid
+    RepeatExperiment[Repeat Experiment Button] -->|starts new trial| Ecosystem
+    CalculateEfficiency[Calculate Efficiency Button] -->|computes energy transfer| EnergyPyramid
+    Results[Results Display] -->|shows final data| EnergyPyramid

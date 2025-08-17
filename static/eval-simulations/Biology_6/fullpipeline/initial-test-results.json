@@ -1,0 +1,8 @@
+{
+    "message": "Runtime test completed.",
+    "jsErrors": [],
+    "debugLogs": [
+        "DEBUG [2025-08-05T14:27:44.087Z]: Start button clicked",
+        "DEBUG [2025-08-05T14:27:44.112Z]: Reset button clicked"
+    ]
+}

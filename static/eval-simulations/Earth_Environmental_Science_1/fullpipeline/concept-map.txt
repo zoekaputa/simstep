@@ -1,0 +1,31 @@
+graph LR
+    Lithosphere[Lithosphere: Earth's outer shell]
+    Asthenosphere[Asthenosphere: Upper part of mantle]
+    Plates[Tectonic Plates]
+    Boundaries[Plate Boundaries]
+    Divergent[Divergent Boundaries]
+    Convergent[Convergent Boundaries]
+    Transform[Transform Boundaries]
+    Features[Geological Features]
+    Evidence[Evidence for Plate Tectonics]
+    Lithosphere -->|divided into| Plates
+    Plates -->|glide over| Asthenosphere
+    Plates -->|move at| Rate[1-15 cm per year]
+    Plates -->|interact at| Boundaries
+    Boundaries -->|include| Divergent
+    Boundaries -->|include| Convergent
+    Boundaries -->|include| Transform
+    Divergent -->|create| RiftValley[Rift Valleys]
+    Divergent -->|create| MidOceanRidge[Mid-Ocean Ridges]
+    Convergent -->|create| Trench[Ocean Trenches]
+    Convergent -->|create| VolcanicArc[Volcanic Arcs]
+    Convergent -->|create| Mountains[Mountain Ranges]
+    Transform -->|create| Fault[Fault Lines]
+    Boundaries -->|form| Features
+    Plates -->|movement explains| ContinentalDrift[Continental Drift]
+    Evidence -->|supports| PlateTheory[Plate Tectonics Theory]
+    Evidence -->|includes| ContinentFit[Jigsaw-like fit of continents]
+    Evidence -->|includes| RockFormations[Similar rock formations]
+    Evidence -->|includes| Fossils[Fossil distributions]
+    Evidence -->|includes| Paleomagnetism[Paleomagnetism patterns]
+    Evidence -->|includes| SeafloorAge[Age distribution of seafloor sediments]

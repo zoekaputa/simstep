@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Desert Water Resource Management Simulation</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cabin+Sketch:wght@400;700&family=Londrina+Sketch&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/roughjs@latest/bundled/rough.js"></script>
+    <style>
+        body {
+            font-family: 'Cabin Sketch', cursive;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 20px;
+        }
+        h1 {
+            font-family: 'Cabin Sketch', cursive;
+            font-weight: 700;
+            color: #2c3e50;
+        }
+        p {
+            font-family: 'Cabin Sketch', cursive;
+            font-weight: 400;
+            color: #34495e;
+            max-width: 800px;
+            text-align: center;
+        }
+        #simulationCanvas {
+            border: 2px solid #2c3e50;
+            margin-bottom: 20px;
+        }
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        button, select {
+            font-family: 'Cabin Sketch', cursive;
+            font-weight: 700;
+            font-size: 16px;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            background-color: #3498db;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover, select:hover {
+            background-color: #2980b9;
+        }
+        select {
+            background-color: #2ecc71;
+        }
+        select:hover {
+            background-color: #27ae60;
+        }
+        #results {
+            font-family: 'Cabin Sketch', cursive;
+            font-weight: 400;
+            color: #2c3e50;
+            text-align: center;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Desert Water Resource Management Simulation</h1>
+    <p>Welcome to the Desert Water Resource Management Simulation! In this experiment, you'll explore the challenges of managing water resources in a desert environment. You'll analyze water consumption patterns, implement conservation strategies, and develop an integrated management approach to sustain human activities while protecting the fragile desert ecosystem.</p>
+    <canvas id="simulationCanvas" width="800" height="600"></canvas>
+    <div class="controls">
+        <button id="measureBtn">Measure Water Supply</button>
+        <select id="conserveMeasures">
+            <option value="">Select Conservation Measure</option>
+            <option value="rationing">Personal Water Rationing</option>
+            <option value="irrigation">Drip Irrigation</option>
+            <option value="recycling">Water Recycling in Industry</option>
+            <option value="cityPlanning">Desert City Planning</option>
+        </select>
+        <button id="recordBtn">Record Water Metrics</button>
+        <button id="wqpBtn">Activate Water Quality Protection</button>
+        <button id="iwmBtn">Activate Integrated Management</button>
+        <button id="compareBtn">Compare Results</button>
+    </div>
+    <div id="results"></div>
+
+    <script>
+        window.LOG_DEBUG = false;
+
+        function logDebug(message) {
+            if (window.LOG_DEBUG) {
+                console.log(`DEBUG [${new Date().toISOString()}]: ${message}`);
+            }
+        }
+
+        const canvas = document.getElementById('simulationCanvas');
+        const ctx = canvas.getContext('2d');
+        const rc = rough.canvas(canvas);
+
+        const desertSVG = `
+            <svg width="800" height="600" viewBox="0 0 800 600">
+                <defs>
+                    <linearGradient id="skyGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                        <stop offset="0%" style="stop-color:#87CEEB;stop-opacity:1" />
+                        <stop offset="100%" style="stop-color:#E6E6FA;stop-opacity:1" />
+                    </linearGradient>
+                    <linearGradient id="sandGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                        <stop offset="0%" style="stop-color:#F4A460;stop-opacity:1" />
+                        <stop offset="100%" style="stop-color:#D2691E;stop-opacity:1" />
+                    </linearGradient>
+                </defs>
+                <rect width="800" height="400" fill="url(#skyGradient)" />
+                <rect y="400" width="800" height="200" fill="url(#sandGradient)" />
+                <circle cx="700" cy="100" r="60" fill="#FFD700" />
+                <path d="M 0 400 Q 200 300 400 400 Q 600 500 800 400" fill="url(#sandGradient)" />
+            </svg>
+        `;
+
+        const waterSupplySVG = `
+            <svg width="100" height="100" viewBox="0 0 100 100">
+                <circle cx="50" cy="50" r="45" fill="#4169E1" />
+                <path d="M 30 50 Q 50 20 70 50 Q 50 80 30 50" fill="#87CEFA" />
+            </svg>
+        `;
+
+        let waterSupply = 100;
+        let conservationMeasures = [];
+        let waterQualityProtection = false;
+        let integratedManagement = false;
+
+        function drawScene() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            const img = new Image();
+            img.onload = () => {
+                ctx.drawImage(img, 0, 0);
+                drawWaterSupply();
+            };
+            img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(desertSVG);
+            
+            logDebug(`Scene redrawn. Water supply: ${waterSupply}`);
+        }
+
+        function drawWaterSupply() {
+            const img = new Image();
+            img.onload = () => {
+                const scale = waterSupply / 100;
+                ctx.drawImage(img, 350, 250, 100 * scale, 100 * scale);
+            };
+            img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(waterSupplySVG);
+        }
+
+        document.getElementById('measureBtn').addEventListener('click', () => {
+            waterSupply = Math.max(0, Math.min(100, waterSupply + Math.random() * 20 - 10));
+            drawScene();
+            logDebug(`Measured water supply: ${waterSupply}`);
+        });
+
+        document.getElementById('conserveMeasures').addEventListener('change', (e) => {
+            const measure = e.target.value;
+            if (measure && !conservationMeasures.includes(measure)) {
+                conservationMeasures.push(measure);
+                waterSupply = Math.min(100, waterSupply + 10);
+                drawScene();
+            }
+            logDebug(`Conservation measure applied: ${measure}. New water supply: ${waterSupply}`);
+        });
+
+        document.getElementById('recordBtn').addEventListener('click', () => {
+            const metrics = {
+                supply: waterSupply,
+                measures: conservationMeasures,
+                qualityProtection: waterQualityProtection,
+                integratedManagement: integratedManagement
+            };
+            logDebug(`Recorded metrics: ${JSON.stringify(metrics)}`);
+        });
+
+        document.getElementById('wqpBtn').addEventListener('click', () => {
+            waterQualityProtection = !waterQualityProtection;
+            if (waterQualityProtection) {
+                waterSupply = Math.min(100, waterSupply + 5);
+            } else {
+                waterSupply = Math.max(0, waterSupply - 5);
+            }
+            drawScene();
+            logDebug(`Water quality protection ${waterQualityProtection ? 'activated' : 'deactivated'}. New water supply: ${waterSupply}`);
+        });
+
+        document.getElementById('iwmBtn').addEventListener('click', () => {
+            integratedManagement = !integratedManagement;
+            if (integratedManagement) {
+                waterSupply = Math.min(100, waterSupply + 15);
+            } else {
+                waterSupply = Math.max(0, waterSupply - 15);
+            }
+            drawScene();
+            logDebug(`Integrated management ${integratedManagement ? 'activated' : 'deactivated'}. New water supply: ${waterSupply}`);
+        });
+
+        document.getElementById('compareBtn').addEventListener('click', () => {
+            const efficiency = (conservationMeasures.length * 10 + (waterQualityProtection ? 5 : 0) + (integratedManagement ? 15 : 0)) / 50 * 100;
+            const results = `Water Management Plan Efficiency: ${efficiency.toFixed(2)}%`;
+            document.getElementById('results').textContent = results;
+            logDebug(`Comparison results: ${results}`);
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            drawScene();
+            if (window.LOG_DEBUG) {
+                logDebug('Simulation initialized');
+                document.querySelectorAll('svg').forEach((svg, index) => {
+                    const rect = svg.getBoundingClientRect();
+                    logDebug(`SVG #${index}: Position {x: ${rect.x}, y: ${rect.y}}, Size {w: ${rect.width}, h: ${rect.height}}`);
+                });
+                document.querySelectorAll('input, button, select').forEach((control) => {
+                    logDebug(`Control ${control.id || 'unnamed'} (${control.tagName}): Initial value: ${control.value || 'N/A'}`);
+                });
+                
+                document.querySelectorAll('button').forEach((button) => {
+                    button.addEventListener('click', () => logDebug(`Button ${button.id || 'unnamed'} clicked`));
+                });
+                document.querySelectorAll('input').forEach((input) => {
+                    input.addEventListener('change', (e) => logDebug(`Input ${input.id || 'unnamed'} changed to ${e.target.value}`));
+                });
+            }
+        });
+    </script>
+</body>
+</html>

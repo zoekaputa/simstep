@@ -1,0 +1,39 @@
+graph LR
+    System[System]
+    Components[Components]
+    EmergentProperties[Emergent Properties]
+    Interconnectedness[Interconnectedness]
+    Emergence[Emergence]
+    Nonlinearity[Nonlinearity]
+    Boundaries[Boundaries]
+    StocksFlows[Stocks and Flows]
+    FeedbackLoops[Feedback Loops]
+    SystemArchetypes[System Archetypes]
+    ComplexAdaptiveSystems[Complex Adaptive Systems]
+    LeveragePoints[Leverage Points]
+    SystemsMapping[Systems Mapping]
+    System -->|contains| Components
+    System -->|produces| EmergentProperties
+    System -->|exhibits| Interconnectedness
+    System -->|demonstrates| Emergence
+    System -->|shows| Nonlinearity
+    System -->|has| Boundaries
+    System -->|includes| StocksFlows
+    System -->|regulated by| FeedbackLoops
+    System -->|exemplified by| SystemArchetypes
+    System -->|can be| ComplexAdaptiveSystems
+    System -->|can be changed through| LeveragePoints
+    System -->|visualized by| SystemsMapping
+    FeedbackLoops -->|types| ReinforcingLoops[Reinforcing Loops]
+    FeedbackLoops -->|types| BalancingLoops[Balancing Loops]
+    SystemArchetypes -->|example| TragedyOfCommons[Tragedy of the Commons]
+    SystemArchetypes -->|example| FixesThatFail[Fixes That Fail]
+    SystemArchetypes -->|example| LimitsToGrowth[Limits to Growth]
+    ComplexAdaptiveSystems -->|feature| SelfOrganization[Self-Organization]
+    ComplexAdaptiveSystems -->|feature| Adaptation[Adaptation]
+    ComplexAdaptiveSystems -->|feature| Coevolution[Coevolution]
+    LeveragePoints -->|range from| ShallowLeverage[Shallow Leverage]
+    LeveragePoints -->|range to| DeepLeverage[Deep Leverage]
+    SystemsMapping -->|tool| CausalLoopDiagrams[Causal Loop Diagrams]
+    SystemsMapping -->|tool| StockFlowDiagrams[Stock and Flow Diagrams]
+    SystemsMapping -->|tool| SocialNetworkAnalyses[Social Network Analyses]

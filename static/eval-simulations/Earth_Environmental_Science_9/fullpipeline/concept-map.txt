@@ -1,0 +1,25 @@
+graph LR
+    AirMass[Air Mass]
+    PressureSystem[Pressure System]
+    Front[Front]
+    Geography[Geographical Features]
+    WeatherPattern[Weather Pattern]
+    AirMass -->|influences| WeatherPattern
+    PressureSystem -->|drives| WeatherPattern
+    Front -->|causes changes in| WeatherPattern
+    Geography -->|modifies| WeatherPattern
+    AirMass -->|interacts with| PressureSystem
+    AirMass -->|forms| Front
+    PressureSystem -->|creates| Front
+    AirMass -->|classified by| SourceRegion[Source Region]
+    AirMass -->|classified by| Latitude[Latitude]
+    PressureSystem -->|types| HighPressure[High Pressure]
+    PressureSystem -->|types| LowPressure[Low Pressure]
+    Front -->|types| ColdFront[Cold Front]
+    Front -->|types| WarmFront[Warm Front]
+    Front -->|types| StationaryFront[Stationary Front]
+    Front -->|types| OccludedFront[Occluded Front]
+    Geography -->|examples| Mountains[Mountains]
+    Geography -->|examples| WaterBodies[Large Water Bodies]
+    Geography -->|examples| UrbanAreas[Urban Areas]
+    WeatherPattern -->|affects| HumanActivity[Human Activity]

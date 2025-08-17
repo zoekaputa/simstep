@@ -1,0 +1,19 @@
+graph LR
+    System[Event Planning Network]
+    Components[Event Elements]
+    EmergentProperties[Overall Event Experience]
+    Interconnectedness[Interdependent Decisions]
+    Emergence[Unexpected Outcomes]
+    Nonlinearity[Disproportionate Effects]
+    LeveragePoints[Key Decision Points]
+    SystemsMapping[Event System Visualization]
+    System -->|contains| Components
+    System -->|produces| EmergentProperties
+    System -->|exhibits| Interconnectedness
+    System -->|demonstrates| Emergence
+    System -->|shows| Nonlinearity
+    System -->|can be changed through| LeveragePoints
+    System -->|visualized by| SystemsMapping
+    SystemsMapping -->|tool| CausalLoopDiagrams[Event Interaction Maps]
+    SystemsMapping -->|tool| StockFlowDiagrams[Resource Flow Charts]
+    SystemsMapping -->|tool| SocialNetworkAnalyses[Attendee Interaction Models]

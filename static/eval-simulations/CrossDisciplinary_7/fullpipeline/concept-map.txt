@@ -1,0 +1,27 @@
+graph LR
+    Bioethics[Bioethics]
+    Principles[Ethical Principles]
+    Dilemmas[Ethical Dilemmas]
+    ResourceAllocation[Resource Allocation]
+    Frameworks[Ethical Frameworks]
+    TriageProtocols[Triage Protocols]
+    Privacy[Privacy]
+    Surveillance[Surveillance]
+    ResearchEthics[Research Ethics]
+    InternationalCooperation[International Cooperation]
+    Bioethics -->|examines| Principles
+    Bioethics -->|addresses| Dilemmas
+    Principles -->|guide| ResourceAllocation
+    ResourceAllocation -->|informed by| Frameworks
+    ResourceAllocation -->|implemented through| TriageProtocols
+    Dilemmas -->|include| Privacy
+    Dilemmas -->|include| Surveillance
+    Dilemmas -->|include| ResearchEthics
+    Bioethics -->|considers| InternationalCooperation
+    Principles -->|include| Autonomy[Autonomy]
+    Principles -->|include| Beneficence[Beneficence]
+    Principles -->|include| NonMaleficence[Non-maleficence]
+    Principles -->|include| Justice[Justice]
+    Frameworks -->|includes| Utilitarian[Utilitarian]
+    Frameworks -->|includes| Egalitarian[Egalitarian]
+    Frameworks -->|includes| Prioritarian[Prioritarian]

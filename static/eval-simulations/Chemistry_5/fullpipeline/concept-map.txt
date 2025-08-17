@@ -1,0 +1,16 @@
+graph LR
+    A[Atom] -->|Share or transfer| E[Electrons]
+    A -->|Has| EN[Electronegativity]
+    E -->|Achieve| S[Stable Configuration]
+    EN -->|Determines| B[Bond Type]
+    B -->|Types| C[Covalent Bond]
+    B -->|Types| I[Ionic Bond]
+    C -->|Subtypes| NP[Nonpolar Covalent]
+    C -->|Subtypes| PC[Polar Covalent]
+    NP -->|Example| O2[Oxygen Molecule]
+    NP -->|Example| H2[Hydrogen Molecule]
+    PC -->|Example| H2O[Water Molecule]
+    I -->|Example| NaCl[Sodium Chloride]
+    EN -->|Influences| BS[Bond Strength]
+    AS[Atomic Size] -->|Influences| BS
+    EO[Electron Overlap] -->|Influences| BS

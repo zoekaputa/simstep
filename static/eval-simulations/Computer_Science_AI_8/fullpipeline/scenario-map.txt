@@ -1,0 +1,31 @@
+graph LR
+    AI[Adventure Decision Navigator]
+    RBS[Character Dialogue Rules]
+    SM[Narrative Branch Probabilities]
+    UBA[Quest Reward Calculations]
+    LBS[Adaptive NPC Behavior]
+    PA[Story Path Planning]
+    DT[Dialogue Choice Trees]
+    MDP[Narrative State Transitions]
+    RL[Experience-Based Learning]
+    BN[Event Probability Networks]
+    MAS[Character Interaction System]
+    NN[Player Preference Modeling]
+    EM[Multi-Approach Decision Engine]
+    HS[Narrative Structure Hierarchy]
+    AI -->|uses| RBS
+    AI -->|uses| SM
+    AI -->|uses| UBA
+    AI -->|uses| LBS
+    AI -->|uses| PA
+    AI -->|uses| DT
+    AI -->|uses| MDP
+    AI -->|uses| RL
+    AI -->|uses| BN
+    AI -->|uses| MAS
+    PA -->|includes| AS[Optimal Path Finding]
+    PA -->|includes| MCTS[Narrative Outcome Simulation]
+    RL -->|can use| NN
+    AI -->|combines with| EM
+    AI -->|uses| HS
+    MAS -->|applies| GT[Character Conflict Resolution]

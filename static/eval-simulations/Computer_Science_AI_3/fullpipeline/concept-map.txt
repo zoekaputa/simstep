@@ -1,0 +1,29 @@
+graph LR
+    DataStructure[Data Structure]
+    Array[Array]
+    LinkedList[Linked List]
+    Stack[Stack]
+    Queue[Queue]
+    Tree[Tree]
+    HashTable[Hash Table]
+    Graph[Graph]
+    Heap[Heap]
+    DataStructure -->|Includes| Array
+    DataStructure -->|Includes| LinkedList
+    DataStructure -->|Includes| Stack
+    DataStructure -->|Includes| Queue
+    DataStructure -->|Includes| Tree
+    DataStructure -->|Includes| HashTable
+    DataStructure -->|Includes| Graph
+    DataStructure -->|Includes| Heap
+    Array -->|Has| ContiguousMemory[Contiguous Memory]
+    LinkedList -->|Contains| Node[Node]
+    Node -->|Has| Data[Data]
+    Node -->|Has| Reference[Reference]
+    Stack -->|Implements| LIFO[LIFO Order]
+    Queue -->|Implements| FIFO[FIFO Order]
+    Tree -->|Has| ParentChildRelationship[Parent-Child Relationship]
+    HashTable -->|Uses| HashFunction[Hash Function]
+    Graph -->|Contains| Vertex[Vertex]
+    Graph -->|Contains| Edge[Edge]
+    Heap -->|Maintains| PartialOrdering[Partial Ordering]

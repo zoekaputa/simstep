@@ -1,0 +1,31 @@
+graph LR
+    Light[Terrarium Light Source]
+    CO2[CO2 Concentration Control]
+    H2O[Water Dispenser]
+    Glucose[Glucose Synthesis Monitor]
+    O2[Oxygen Output Sensor]
+    ATP[ATP Production Visualizer]
+    NADPH[NADPH Formation Display]
+    Chloroplast[Virtual Chloroplast Model]
+    Thylakoid[Interactive Thylakoid Membrane]
+    Stroma[Simulated Stroma Environment]
+    RuBisCO[RuBisCO Activity Tracker]
+    Environment[Environmental Controls Panel]
+    Light -->|powers| Photosynthesis
+    CO2 -->|input| Photosynthesis
+    H2O -->|input| Photosynthesis
+    Photosynthesis -->|produces| Glucose
+    Photosynthesis -->|releases| O2
+    Photosynthesis -->|occurs in| Chloroplast
+    Chloroplast -->|contains| Thylakoid
+    Chloroplast -->|contains| Stroma
+    Thylakoid -->|site of| LightReactions[Light Reaction Simulator]
+    Stroma -->|site of| CalvinCycle[Calvin Cycle Visualization]
+    LightReactions -->|produces| ATP
+    LightReactions -->|produces| NADPH
+    LightReactions -->|splits| H2O
+    CalvinCycle -->|uses| ATP
+    CalvinCycle -->|uses| NADPH
+    CalvinCycle -->|fixes| CO2
+    RuBisCO -->|catalyzes| CalvinCycle
+    Environment -->|affects| Photosynthesis

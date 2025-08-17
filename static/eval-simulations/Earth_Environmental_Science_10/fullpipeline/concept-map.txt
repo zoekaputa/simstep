@@ -1,0 +1,20 @@
+graph LR
+    R[Rock]
+    S[Sedimentary Rock]
+    I[Igneous Rock]
+    M[Metamorphic Rock]
+    Se[Sediment]
+    Ma[Magma]
+    P[Protolith]
+    F[Fossils]
+    E[Earth's Crust]
+    R -->|forms| S
+    R -->|forms| I
+    R -->|forms| M
+    Se -->|undergoes lithification| S
+    Ma -->|cools and solidifies| I
+    P -->|undergoes metamorphism| M
+    S -->|contains| F
+    S -->|shapes| E
+    I -->|shapes| E
+    M -->|shapes| E

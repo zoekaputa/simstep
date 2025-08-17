@@ -1,0 +1,13 @@
+{
+    "message": "Runtime test completed.",
+    "jsErrors": [],
+    "debugLogs": [
+        "DEBUG [2025-08-05T15:05:43.358Z]: Disturbance impact on Plot A: 0.20243527289592977",
+        "DEBUG [2025-08-05T15:05:43.358Z]: Disturbance impact on Plot B: 1.8066489832018462",
+        "DEBUG [2025-08-05T15:05:43.358Z]: Disturbance impact on Plot C: 3.6378288666969407",
+        "DEBUG [2025-08-05T15:05:43.358Z]: Disturbance impact on Plot D: 4.48277389510896",
+        "DEBUG [2025-08-05T15:05:43.361Z]: Data updated - Stability: 468.3865354649579, Resilience: 47.5",
+        "DEBUG [2025-08-05T15:05:43.361Z]: Simulation updated",
+        "DEBUG [2025-08-05T15:05:43.361Z]: Disturbance simulated"
+    ]
+}

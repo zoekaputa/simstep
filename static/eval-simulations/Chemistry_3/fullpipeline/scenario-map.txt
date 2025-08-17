@@ -1,0 +1,17 @@
+graph LR
+    pH[Soil pH Meter]
+    H[Soil Acidity Level]
+    Soil[Virtual Garden Soil]
+    Plants[Garden Plants]
+    Nutrients[Soil Amendments]
+    Microbes[Soil Microorganisms]
+    pH -->|measures| H
+    pH -->|affects| Soil
+    Soil -->|influences| Plants
+    Soil -->|contains| Nutrients
+    Soil -->|hosts| Microbes
+    pH -->|influences availability of| Nutrients
+    pH -->|affects activity of| Microbes
+    Plants -->|adapted to different| pH
+    Nutrients -->|essential for| Plants
+    Microbes -->|contribute to| Nutrients

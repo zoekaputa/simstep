@@ -1,0 +1,14 @@
+graph LR
+    Catalyst[Golden Dominoes]
+    Reactants[Regular Dominoes]
+    Products[Fallen Dominoes]
+    ActivationEnergy[Domino Spacing]
+    Intermediates[Temporary Bridges]
+    Catalyst -->|reduces| ActivationEnergy
+    Reactants -->|transform into| Products
+    Catalyst -->|creates| Intermediates
+    Intermediates -->|enable| Products
+    Catalyst -->|connects with| Reactants
+    Catalyst -->|initiates fall of| Reactants
+    Catalyst -->|separates from| Products
+    Catalyst -->|reusable after| Products

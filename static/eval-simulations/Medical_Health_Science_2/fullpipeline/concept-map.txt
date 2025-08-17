@@ -1,0 +1,21 @@
+graph LR
+    DDS[Drug Delivery System]
+    Drug[Pharmaceutical Compound]
+    Body[Human Body]
+    ADME[ADME Processes]
+    Routes[Absorption Routes]
+    Barriers[Biological Barriers]
+    AdvSys[Advanced Delivery Systems]
+    Target[Drug Targeting Approaches]
+    Release[Controlled-Release Mechanisms]
+    DDS -->|transports| Drug
+    DDS -->|optimizes delivery in| Body
+    ADME -->|governs| Drug
+    Body -->|contains| Routes
+    Body -->|contains| Barriers
+    Routes -->|enables| ADME
+    Barriers -->|challenges| DDS
+    AdvSys -->|overcomes| Barriers
+    AdvSys -->|implements| Target
+    AdvSys -->|utilizes| Release
+    DDS -->|incorporates| AdvSys

@@ -1,0 +1,8 @@
+{
+    "message": "Runtime test completed.",
+    "jsErrors": [],
+    "debugLogs": [
+        "DEBUG [2025-08-05T15:10:53.604Z]: Game updated: Generation 2, Resources 100, Ability speed, Adaptation Score 0.5249999999999999",
+        "DEBUG [2025-08-05T15:10:53.604Z]: Advanced to generation 2"
+    ]
+}

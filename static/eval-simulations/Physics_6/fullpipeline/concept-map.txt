@@ -1,0 +1,19 @@
+graph LR
+    Earth[Earth: Large mass]
+    GravField[Gravitational Field: 9.8 m/s²]
+    Basketball[Basketball]
+    Player[Player]
+    Hoop[Basketball Hoop]
+    Trajectory[Parabolic Trajectory]
+    LaunchAngle[Launch Angle: 45-55°]
+    LaunchVelocity[Launch Velocity]
+    Earth -->|creates| GravField
+    GravField -->|affects| Basketball
+    Player -->|shoots| Basketball
+    Basketball -->|follows| Trajectory
+    Trajectory -->|aims for| Hoop
+    Player -->|determines| LaunchAngle
+    Player -->|determines| LaunchVelocity
+    LaunchAngle -->|influences| Trajectory
+    LaunchVelocity -->|influences| Trajectory
+    GravField -->|shapes| Trajectory

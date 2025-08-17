@@ -1,0 +1,42 @@
+graph LR
+    RL[Pet Training System]
+    A[Virtual Pet]
+    E[Training Environment]
+    S[Pet States]
+    AC[Pet Actions]
+    R[Treats and Rewards]
+    P[Training Strategy]
+    Q[Trick Proficiency Estimation]
+    PetVisual[Pet Visual Representation]
+    EnvVisual[Environment Visual]
+    ActionButtons[Action Buttons]
+    RewardButton[Reward Button]
+    CycleCounter[Training Cycle Counter]
+    ProficiencyGraph[Proficiency Graph]
+    StartButton[Start Training Button]
+    ResetButton[Reset Button]
+    RL -->|uses| A
+    RL -->|interacts with| E
+    RL -->|defines| S
+    RL -->|defines| AC
+    RL -->|provides| R
+    RL -->|learns| P
+    RL -->|uses algorithm| Q
+    A -->|takes| AC
+    A -->|receives| R
+    A -->|learns| P
+    E -->|contains| S
+    P -->|maximizes| R
+    Q -->|estimates| R
+    PetVisual -->|represents| A
+    EnvVisual -->|displays| E
+    EnvVisual -->|shows| S
+    ActionButtons -->|trigger| AC
+    RewardButton -->|gives| R
+    CycleCounter -->|tracks| RL
+    ProficiencyGraph -->|visualizes| Q
+    StartButton -->|initiates| RL
+    ResetButton -->|resets| RL
+    ActionButtons -->|updates| PetVisual
+    RewardButton -->|updates| PetVisual
+    CycleCounter -->|updates| ProficiencyGraph

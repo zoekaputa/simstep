@@ -1,0 +1,31 @@
+graph LR
+    Materials[Materials]
+    Composition[Composition]
+    Structure[Structure]
+    Processing[Processing]
+    Properties[Properties]
+    MechanicalProperties[Mechanical Properties]
+    Strength[Strength]
+    Elasticity[Elasticity]
+    Toughness[Toughness]
+    Metals[Metals]
+    Ceramics[Ceramics]
+    Polymers[Polymers]
+    Composites[Composites]
+    Environment[Environment]
+    Applications[Applications]
+    Materials -->|influences| Composition
+    Materials -->|influences| Structure
+    Materials -->|influences| Processing
+    Materials -->|determines| Properties
+    Properties -->|include| MechanicalProperties
+    MechanicalProperties -->|includes| Strength
+    MechanicalProperties -->|includes| Elasticity
+    MechanicalProperties -->|includes| Toughness
+    Materials -->|types| Metals
+    Materials -->|types| Ceramics
+    Materials -->|types| Polymers
+    Materials -->|types| Composites
+    Environment -->|affects| Properties
+    Properties -->|determine| Applications
+    Applications -->|influence| Materials

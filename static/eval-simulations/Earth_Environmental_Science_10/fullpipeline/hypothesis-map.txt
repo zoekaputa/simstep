@@ -1,0 +1,14 @@
+graph LR
+    R[Rock Sandwich]
+    S[Layered Sandwich]
+    I[Melted Sandwich]
+    M[Pressed Sandwich]
+    Se[Sandwich Ingredients]
+    Ma[Melted Ingredients]
+    P[Original Sandwich]
+    R -->|forms| S
+    R -->|forms| I
+    R -->|forms| M
+    Se -->|undergoes compaction and cementation| S
+    Ma -->|cools and solidifies| I
+    P -->|undergoes heat and pressure| M

@@ -1,0 +1,18 @@
+graph LR
+    Organism[Game Character]
+    Trait[Ability]
+    Environment[Game World]
+    Population[Player's Team]
+    NaturalSelection[Resource Competition]
+    Evolution[Team Improvement]
+    Adaptation[Optimal Strategy]
+    Organism -->|possesses| Trait
+    Trait -->|influences| Survival
+    Environment -->|affects| Survival
+    Organism -->|part of| Population
+    NaturalSelection -->|drives| Evolution
+    Evolution -->|leads to| Adaptation
+    Adaptation -->|improves fit with| Environment
+    NaturalSelection -->|affects frequency of| Trait
+    Trait -->|can be| Heritable
+    Heritable -->|passed to| Offspring

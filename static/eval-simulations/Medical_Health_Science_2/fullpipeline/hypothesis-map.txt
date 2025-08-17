@@ -1,0 +1,15 @@
+graph LR
+    DDS[Therapeutic Transport Network]
+    Drug[Drug Packages]
+    Body[Simulated Human Body]
+    ADME[Pharmacokinetic Processes]
+    Routes[Administration Sites]
+    Target[Organ Targeting Mechanisms]
+    Release[Controlled-Release Formulations]
+    DDS -->|manages| Drug
+    DDS -->|simulates delivery in| Body
+    ADME -->|governs| Drug
+    Body -->|contains| Routes
+    Routes -->|enables| ADME
+    DDS -->|incorporates| Target
+    DDS -->|incorporates| Release

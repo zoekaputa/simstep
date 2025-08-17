@@ -1,0 +1,26 @@
+graph LR
+    SW[Studio Sound]
+    M[Room Air]
+    S[Studio Surfaces]
+    HFS[Reflective Walls]
+    SPM[Acoustic Panels]
+    E[Flutter Echo]
+    R[Room Reverb]
+    F[Audio Frequency]
+    W[Sound Wavelength]
+    StW[Room Modes]
+    N[Pressure Minima]
+    AN[Pressure Maxima]
+    SW -->|propagates through| M
+    SW -->|interacts with| S
+    S -->|can be| HFS
+    S -->|can be| SPM
+    HFS -->|create| E
+    HFS -->|produce| R
+    SPM -->|reduce| SW
+    SW -->|contains| F
+    F -->|affects| W
+    SW -->|can generate| StW
+    StW -->|exhibit| N
+    StW -->|exhibit| AN
+    SW -->|oscillates| M

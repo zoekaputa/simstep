@@ -1,0 +1,20 @@
+graph LR
+    PS[Problem-Solving] -->|integrates| K[Knowledge]
+    PS -->|integrates| M[Methods]
+    PS -->|integrates| P[Perspectives]
+    PS -->|addresses| CC[Complex Challenges]
+    CI[Cognitive Integration] -->|core of| ID[Interdisciplinarity]
+    ID -->|requires| DP[Diverse Perspectives]
+    ID -->|requires| EM[Epistemological Methodologies]
+    PD[Problem Definition] -->|leads to| DG[Disciplinary Grounding]
+    DG -->|leads to| PT[Perspective Taking]
+    PT -->|leads to| CG[Common Ground]
+    CG -->|leads to| I[Integration]
+    IS[Integration Strategies] -->|includes| CF[Conceptual Frameworks]
+    IS -->|includes| MA[Metaphors and Analogies]
+    IS -->|includes| CV[Collaborative Visualization]
+    IS -->|includes| BO[Boundary Objects]
+    CS[Cognitive Skills] -->|needed for| EC[Effective Collaboration]
+    SS[Social Skills] -->|needed for| EC
+    B[Barriers] -->|hinder| EC
+    A[Assessment] -->|challenges| ID

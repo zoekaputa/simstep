@@ -1,0 +1,31 @@
+graph LR
+    A[Public Health Interventions]
+    B[Population Health]
+    C[Health Determinants]
+    D[Prevention Levels]
+    E[Infectious Disease Control]
+    F[Environmental Health]
+    G[Health Promotion]
+    H[Screening Programs]
+    I[Health Inequities]
+    J[Evidence-Based Public Health]
+    K[Implementation Science]
+    A -->|aims to improve| B
+    A -->|addresses| C
+    A -->|includes| D
+    A -->|employs| E
+    A -->|includes| F
+    A -->|uses| G
+    A -->|implements| H
+    A -->|targets| I
+    A -->|utilizes| J
+    A -->|incorporates| K
+    C -->|influences| B
+    D -->|ranges from primary to tertiary| A
+    E -->|uses vaccination, contact tracing, isolation, quarantine| A
+    F -->|targets physical surroundings| A
+    G -->|encourages beneficial behaviors| B
+    H -->|enables early intervention| B
+    I -->|addresses social determinants| B
+    J -->|evaluates effectiveness| A
+    K -->|examines real-world implementation| A

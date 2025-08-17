@@ -1,0 +1,53 @@
+graph LR
+    A[Secret Communication Center]
+    B[Substitution Ciphers]
+    C[Public-Key Systems]
+    D[Data Integrity Checks]
+    E[Key Exchange Methods]
+    F[Symmetric Algorithms]
+    G[RSA Implementation]
+    H[SHA-256 Hashing]
+    I[Diffie-Hellman Protocol]
+    L[Cryptographic Math]
+    M[Security Principles]
+    N[Secure Key Distribution]
+    O[Digital Signatures]
+    P[Public-Private Key Pairs]
+    Q[Message Integrity Verification]
+    R[Secure Initial Key Sharing]
+    S[Message Input]
+    T[Encryption Controls]
+    U[Decryption Controls]
+    V[System Analysis]
+    W[Encrypted Message Display]
+    X[Decrypted Message Display]
+    Y[Performance Metrics]
+    Z[Security Breach Simulation]
+    A -->|includes| B
+    A -->|includes| C
+    A -->|uses| D
+    A -->|uses| E
+    B -->|example| F
+    C -->|example| G
+    D -->|example| H
+    E -->|example| I
+    A -->|based on| L
+    A -->|based on| M
+    B -->|requires| N
+    C -->|enables| O
+    C -->|uses| P
+    D -->|supports| Q
+    E -->|enables| R
+    S -->|input to| A
+    T -->|controls| B
+    T -->|controls| C
+    T -->|controls| D
+    T -->|controls| E
+    U -->|controls| B
+    U -->|controls| C
+    U -->|controls| D
+    V -->|analyzes| Y
+    A -->|outputs| W
+    U -->|produces| X
+    A -->|generates| Y
+    Z -->|tests| A

@@ -1,0 +1,30 @@
+graph LR
+    Environment[City Environment]
+    Economy[City Economy]
+    Society[City Society]
+    Resources[City Resources]
+    Energy[Energy Systems]
+    Carbon[Carbon Emissions]
+    Nitrogen[Nitrogen Pollution]
+    Water[Water Management]
+    Future[Future City Generations]
+    Systems[City Systems]
+    Environment -->|Balanced with| Economy
+    Economy -->|Balanced with| Society
+    Society -->|Balanced with| Environment
+    Resources -->|Managed sustainably| Environment
+    Energy -->|Governed by| Thermodynamics[Energy Efficiency Laws]
+    Carbon -->|Cycles through| Atmosphere[City Atmosphere]
+    Nitrogen -->|Cycles through| Ecosystem[Urban Ecosystem]
+    Water -->|Follows| HydrologicalCycle[Urban Water Cycle]
+    Economy -->|Considers| Externalities[Environmental Costs]
+    Economy -->|Uses| DiscountRates[Long-term Investment Rates]
+    Society -->|Builds| SocialCapital[Community Engagement]
+    Society -->|Considers| IntergenerationalEquity[Future Resident Wellbeing]
+    Environment -->|Impacts| Future
+    Economy -->|Impacts| Future
+    Society -->|Impacts| Future
+    Systems -->|Require| HolisticApproach[Integrated Urban Planning]
+    Environment -->|Part of| Systems
+    Economy -->|Part of| Systems
+    Society -->|Part of| Systems

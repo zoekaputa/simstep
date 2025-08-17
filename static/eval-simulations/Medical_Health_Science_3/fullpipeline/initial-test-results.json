@@ -1,0 +1,12 @@
+{
+    "message": "Runtime test completed.",
+    "jsErrors": [],
+    "debugLogs": [
+        "DEBUG [2025-08-05T14:17:15.891Z]: Scene drawn",
+        "DEBUG [2025-08-05T14:17:15.891Z]: Simulation started with scenario: sprain",
+        "DEBUG [2025-08-05T14:17:15.916Z]: Assessment performed",
+        "DEBUG [2025-08-05T14:17:15.976Z]: Splint applied",
+        "DEBUG [2025-08-05T14:17:16.008Z]: Victim drawn",
+        "DEBUG [2025-08-05T14:17:16.008Z]: Victim placed in recovery position"
+    ]
+}

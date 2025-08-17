@@ -1,0 +1,26 @@
+graph LR
+    OceanCurrents[Ocean Currents]
+    SurfaceCurrents[Surface Currents]
+    DeepCurrents[Deep Ocean Currents]
+    Wind[Wind]
+    EarthRotation[Earth's Rotation]
+    DensityDifferences[Density Differences]
+    Gyres[Gyres]
+    GulfStream[Gulf Stream]
+    CaliforniaCurrent[California Current]
+    ThermohalineCirculation[Thermohaline Circulation]
+    Climate[Climate]
+    MarineEcosystems[Marine Ecosystems]
+    Upwelling[Upwelling]
+    OceanCurrents -->|types| SurfaceCurrents
+    OceanCurrents -->|types| DeepCurrents
+    Wind -->|drives| SurfaceCurrents
+    EarthRotation -->|influences| OceanCurrents
+    DensityDifferences -->|drives| DeepCurrents
+    SurfaceCurrents -->|form| Gyres
+    SurfaceCurrents -->|includes| GulfStream
+    SurfaceCurrents -->|includes| CaliforniaCurrent
+    DeepCurrents -->|part of| ThermohalineCirculation
+    OceanCurrents -->|influences| Climate
+    OceanCurrents -->|affects| MarineEcosystems
+    DeepCurrents -->|causes| Upwelling

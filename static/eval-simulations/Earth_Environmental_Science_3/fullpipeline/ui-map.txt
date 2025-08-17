@@ -1,0 +1,32 @@
+graph LR
+    OceanCurrents[Virtual Water Table]
+    SurfaceCurrents[Simulated Surface Flows]
+    DeepCurrents[3D Circulation Patterns]
+    Wind[Wind Pattern Controls]
+    EarthRotation[Coriolis Effect Slider]
+    DensityDifferences[Temperature Gradient Tool]
+    Climate[Climate Impact Visualization]
+    MarineEcosystems[Ecosystem Response Module]
+    DataCollectionTool[Data Collection Tool]
+    ResetButton[Reset Button]
+    ScenarioSelector[Scenario Selector]
+    OceanCurrents -->|types| SurfaceCurrents
+    OceanCurrents -->|types| DeepCurrents
+    Wind -->|drives| SurfaceCurrents
+    EarthRotation -->|influences| OceanCurrents
+    DensityDifferences -->|drives| DeepCurrents
+    OceanCurrents -->|influences| Climate
+    OceanCurrents -->|affects| MarineEcosystems
+    Wind -->|adjusts| OceanCurrents
+    EarthRotation -->|adjusts| OceanCurrents
+    DensityDifferences -->|adjusts| OceanCurrents
+    DataCollectionTool -->|records from| OceanCurrents
+    DataCollectionTool -->|records from| Climate
+    DataCollectionTool -->|records from| MarineEcosystems
+    ResetButton -->|resets| OceanCurrents
+    ResetButton -->|resets| Wind
+    ResetButton -->|resets| EarthRotation
+    ResetButton -->|resets| DensityDifferences
+    ScenarioSelector -->|configures| Wind
+    ScenarioSelector -->|configures| EarthRotation
+    ScenarioSelector -->|configures| DensityDifferences

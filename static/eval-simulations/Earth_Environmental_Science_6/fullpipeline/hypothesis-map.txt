@@ -1,0 +1,23 @@
+graph LR
+    Water[Rainfall Simulator]
+    Wind[Wind Tunnel]
+    Ice[Freeze-Thaw Chamber]
+    Gravity[Slope Steepness Control]
+    Soil[Virtual Soil Particles]
+    Landforms[Simulated Landscapes]
+    Climate[Climate Parameter Controls]
+    Vegetation[Digital Plant Models]
+    HumanActivity[Student Intervention Tools]
+    Water -->|causes| Erosion[Particle Displacement]
+    Wind -->|causes| Erosion
+    Ice -->|causes| Erosion
+    Gravity -->|causes| Erosion
+    Erosion -->|shapes| Landforms
+    Erosion -->|affects| Soil
+    Climate -->|influences| Erosion
+    Vegetation -->|affects| Erosion
+    HumanActivity -->|accelerates| Erosion
+    Water -->|creates| Channels[Virtual Riverbeds]
+    Wind -->|creates| Dunes[Simulated Sand Dunes]
+    Ice -->|creates| Valleys[Digital Glacial Valleys]
+    Gravity -->|causes| MassWasting[Landslide Simulation]

@@ -1,0 +1,10 @@
+{
+    "message": "Runtime test completed.",
+    "jsErrors": [],
+    "debugLogs": [
+        "DEBUG [2025-08-05T03:01:57.722Z]: Process selected: original",
+        "DEBUG [2025-08-05T03:01:57.723Z]: Updated observation console: This is the original sandwich. No rock formation process has occurred yet.",
+        "DEBUG [2025-08-05T03:01:57.723Z]: Applied changes",
+        "DEBUG [2025-08-05T03:01:57.739Z]: Drew SVG: \n            <svg xmlns=\"http://www.w3.org/2000/sv..."
+    ]
+}

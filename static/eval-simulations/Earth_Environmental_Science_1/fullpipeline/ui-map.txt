@@ -1,0 +1,47 @@
+graph LR
+    Lithosphere[Virtual Earth Model]
+    Asthenosphere[Simulated Mantle Layer]
+    Plates[Interactive Tectonic Plates]
+    Boundaries[Configurable Plate Interfaces]
+    Divergent[Spreading Center Creator]
+    Convergent[Collision Zone Simulator]
+    Transform[Lateral Boundary Tool]
+    Features[Generated Landforms]
+    Rate[Adjustable Time Scale]
+    RiftValley[Digital Rift Valleys]
+    MidOceanRidge[Simulated Mid-Ocean Ridges]
+    Trench[Virtual Ocean Trenches]
+    VolcanicArc[Erupting Volcanic Arcs]
+    Mountains[3D Mountain Ranges]
+    Fault[Animated Fault Lines]
+    BoundaryType[Boundary Type Selector]
+    SimulationTime[Simulation Duration Control]
+    RecordButton[Record Features Button]
+    MeasureTool[Feature Measurement Tool]
+    DataTable[Data Comparison Table]
+    AnalysisPanel[Data Analysis Panel]
+    PredictionTool[Feature Prediction Tool]
+    Lithosphere -->|divided into| Plates
+    Plates -->|glide over| Asthenosphere
+    Plates -->|move at| Rate
+    Plates -->|interact at| Boundaries
+    Boundaries -->|include| Divergent
+    Boundaries -->|include| Convergent
+    Boundaries -->|include| Transform
+    Divergent -->|create| RiftValley
+    Divergent -->|create| MidOceanRidge
+    Convergent -->|create| Trench
+    Convergent -->|create| VolcanicArc
+    Convergent -->|create| Mountains
+    Transform -->|create| Fault
+    Boundaries -->|form| Features
+    BoundaryType -->|configures| Boundaries
+    Rate -->|controls| SimulationTime
+    SimulationTime -->|runs| Lithosphere
+    RecordButton -->|captures| Features
+    MeasureTool -->|measures| Features
+    RecordButton -->|populates| DataTable
+    MeasureTool -->|populates| DataTable
+    DataTable -->|informs| AnalysisPanel
+    AnalysisPanel -->|guides| PredictionTool
+    PredictionTool -->|modifies| Lithosphere

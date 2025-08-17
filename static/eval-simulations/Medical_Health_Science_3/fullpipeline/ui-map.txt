@@ -1,0 +1,33 @@
+graph LR
+    FirstAid[Emergency Response Trainer]
+    Victim[Virtual Athlete]
+    Scene[Sports Injury Scenario]
+    ABCDE[Systematic Assessment]
+    RecoveryPosition[Safe Positioning]
+    CPR[Cardiopulmonary Resuscitation]
+    AED[Automated External Defibrillator]
+    BleedingControl[Wound Management]
+    FractureManagement[Splinting Techniques]
+    BurnTreatment[Burn Care]
+    ScenarioSelector[Scenario Selector]
+    StartButton[Start Simulation]
+    AssessmentPanel[Assessment Panel]
+    InterventionPanel[Intervention Panel]
+    MonitoringPanel[Monitoring Panel]
+    DataLogger[Data Logger]
+    ScenarioSelector -->|selects| Scene
+    StartButton -->|initiates| Scene
+    Scene -->|displays| Victim
+    AssessmentPanel -->|performs| ABCDE
+    ABCDE -->|assesses| Victim
+    InterventionPanel -->|applies| FirstAid
+    FirstAid -->|provides care to| Victim
+    FirstAid -->|may involve| CPR
+    FirstAid -->|may use| AED
+    FirstAid -->|includes| BleedingControl
+    FirstAid -->|includes| FractureManagement
+    FirstAid -->|includes| BurnTreatment
+    FirstAid -->|includes| RecoveryPosition
+    MonitoringPanel -->|tracks| Victim
+    DataLogger -->|records| Victim
+    DataLogger -->|records| FirstAid

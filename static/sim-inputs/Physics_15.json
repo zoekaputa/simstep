@@ -1,0 +1,12 @@
+{
+    "content": "Projectile motion describes the curved path of an object thrown or projected near Earth's surface. It combines constant horizontal velocity with accelerating vertical motion due to gravity. A basketball's trajectory follows a parabolic path governed by the initial velocity vector (magnitude and direction) and the acceleration due to gravity (9.8 m/s\u00c2\u00b2 downward). The horizontal component of motion is described by x = (v\u00e2\u0082\u0080cos\u00ce\u00b8)t, where x is horizontal displacement, v\u00e2\u0082\u0080 is initial velocity, \u00ce\u00b8 is launch angle, and t is time. The vertical component follows y = (v\u00e2\u0082\u0080sin\u00ce\u00b8)t - (1/2)gt\u00c2\u00b2, where y is vertical displacement and g is gravitational acceleration. For a given initial speed, the optimal launch angle for maximum range on level ground is 45\u00c2\u00b0. However, in basketball, the target is elevated above the launch point, so the optimal angle is typically less than 45\u00c2\u00b0. Air resistance affects real trajectories, particularly at higher speeds, causing the actual path to deviate from a perfect parabola. Basketball players intuitively adjust for these factors through practice.",
+    "scenario": {
+        "title": "Basketball Physics",
+        "content": "Students play a basketball shooting game where they control initial velocity and launch angle to score points. The simulation displays trajectory paths with velocity and acceleration vectors throughout the flight. Students can adjust player position, basket height, ball properties, and environmental conditions (wind, air density) to see how these factors affect optimal shooting strategies. The game provides immediate feedback on shot accuracy and allows students to compare multiple trajectories simultaneously. Advanced features include slow-motion replay with physics annotations, statistical analysis of shooting patterns, and challenges requiring specific shooting techniques. Students can toggle between idealized parabolic motion and realistic trajectories that include air resistance."
+    },
+    "hypothesis": {
+        "hypothesis": "Projectile Trajectory Analysis",
+        "type": "Procedural",
+        "description": "Students will predict projectile trajectories by calculating how initial conditions determine flight paths. They will analyze the relationship between launch angle, initial velocity, and gravitational effects, and apply these principles to achieve target accuracy under varying conditions."
+    }
+}

@@ -1,0 +1,26 @@
+graph LR
+    A[Atmosphere]
+    B[Biosphere]
+    H[Hydrosphere]
+    L[Lithosphere]
+    P[Plants]
+    O[Organisms]
+    F[Fossil Fuels]
+    M[Marine Organisms]
+    A -->|Photosynthesis| P
+    P -->|Food Web| O
+    O -->|Respiration| A
+    O -->|Death and Decomposition| A
+    O -->|Burial and Compression| F
+    F -->|Combustion| A
+    L -->|Volcanic Activity| A
+    A -->|Absorption| H
+    H -->|Carbonate Formation| M
+    M -->|Shell/Skeleton Formation| L
+    A -->|Human Activities| A
+    B -->|Carbon Transfer| A
+    A -->|Carbon Transfer| B
+    H -->|Carbon Transfer| A
+    A -->|Carbon Transfer| H
+    L -->|Carbon Transfer| A
+    A -->|Carbon Transfer| L

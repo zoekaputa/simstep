@@ -1,0 +1,42 @@
+graph LR
+    A[Virtual Personal Diary]
+    B[Virtual Network]
+    C[Sensitive Information]
+    D[Diary Security System]
+    E[Simulated Attackers]
+    F[Security Configurations]
+    G[Authentication System]
+    H[Access Control]
+    I[Encryption Mechanism]
+    J[Network Protection]
+    K[Security Management]
+    A -->|protected by| D
+    B -->|protected by| D
+    C -->|protected by| D
+    D -->|guided by| L[Security Principles]
+    L -->|includes| M[Data Privacy]
+    L -->|includes| N[Data Integrity]
+    L -->|includes| O[Diary Availability]
+    D -->|defends against| E
+    E -->|includes| P[Simulated Malware]
+    E -->|includes| Q[Social Engineering Attempts]
+    E -->|includes| R[DDoS Simulation]
+    D -->|implements| F
+    F -->|includes| G
+    F -->|includes| H
+    F -->|includes| I
+    F -->|includes| J
+    F -->|includes| K
+    G -->|uses| S[Password System]
+    G -->|uses| T[Virtual Security Tokens]
+    G -->|uses| U[Simulated Biometrics]
+    H -->|applies| V[Minimal Access Rights]
+    I -->|uses| W[Symmetric Encryption]
+    I -->|uses| X[Asymmetric Encryption]
+    J -->|uses| Y[Virtual Firewalls]
+    J -->|uses| Z[Simulated IDS]
+    J -->|uses| AA[Virtual VPNs]
+    K -->|performs| AB[Security Audits]
+    K -->|performs| AC[Student Penetration Testing]
+    K -->|performs| AD[Update Management]
+    K -->|implements| AE[Incident Response Simulation]

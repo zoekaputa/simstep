@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Black Hole Simulation</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cabin+Sketch:wght@400;700&family=Londrina+Sketch&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/roughjs@latest/bundled/rough.js"></script>
+    <style>
+        body {
+            font-family: 'Cabin Sketch', cursive;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        h1 {
+            font-family: 'Cabin Sketch', cursive;
+            font-weight: 700;
+            color: #333;
+        }
+        p {
+            font-family: 'Cabin Sketch', cursive;
+            font-weight: 400;
+            color: #666;
+            max-width: 800px;
+            text-align: center;
+        }
+        #canvas-container {
+            width: 800px;
+            height: 600px;
+            background-color: #000;
+            margin-bottom: 20px;
+        }
+        #controls {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+        }
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        label {
+            font-family: 'Cabin Sketch', cursive;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        input[type="range"] {
+            width: 200px;
+        }
+        button {
+            font-family: 'Cabin Sketch', cursive;
+            font-weight: 700;
+            background-color: #4CAF50;
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        #curvature-graph, #displacement-graph {
+            width: 400px;
+            height: 200px;
+            background-color: #fff;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Extreme Gravitational Phenomena: Black Hole Simulation</h1>
+    <p>Welcome to the Black Hole Simulator! In this experiment, you'll explore the fascinating world of extreme gravitational environments. Observe how objects behave near a black hole and how the fabric of spacetime gets distorted. Adjust the black hole's properties and see how they affect the surrounding space. Place test particles and watch their trajectories as they approach the event horizon. Can you predict what will happen to them?</p>
+    <div id="canvas-container">
+        <canvas id="simulation-canvas" width="800" height="600"></canvas>
+    </div>
+    <div id="controls">
+        <div class="control-group">
+            <label for="mass-slider">Black Hole Mass (Solar Masses)</label>
+            <input type="range" id="mass-slider" min="1" max="100" value="10">
+        </div>
+        <div class="control-group">
+            <label for="charge-slider">Black Hole Charge (Coulombs)</label>
+            <input type="range" id="charge-slider" min="0" max="100" value="0">
+        </div>
+        <div class="control-group">
+            <label for="spin-slider">Black Hole Spin (Angular Momentum)</label>
+            <input type="range" id="spin-slider" min="0" max="100" value="0">
+        </div>
+        <div class="control-group">
+            <label for="grid-density">Spacetime Grid Density</label>
+            <input type="range" id="grid-density" min="1" max="20" value="10">
+        </div>
+        <div class="control-group">
+            <button id="add-particle">Add Test Particle</button>
+        </div>
+    </div>
+    <div id="curvature-graph"></div>
+    <div id="displacement-graph"></div>
+    <script>
+        // Debug logging system
+        window.LOG_DEBUG = false;
+        function logDebug(message) {
+            if (window.LOG_DEBUG) {
+                console.log(`DEBUG [${new Date().toISOString()}]: ${message}`);
+            }
+        }
+
+        const canvas = document.getElementById('simulation-canvas');
+        const ctx = canvas.getContext('2d');
+        const rc = rough.canvas(canvas);
+
+        // SVG definitions
+        const blackHoleSVG = `
+            <svg width="100" height="100" viewBox="0 0 100 100">
+                <radialGradient id="blackHoleGradient" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
+                    <stop offset="0%" style="stop-color:rgb(0,0,0);stop-opacity:1" />
+                    <stop offset="70%" style="stop-color:rgb(20,20,20);stop-opacity:1" />
+                    <stop offset="100%" style="stop-color:rgb(40,40,40);stop-opacity:0" />
+                </radialGradient>
+                <circle cx="50" cy="50" r="40" fill="url(#blackHoleGradient)" />
+            </svg>
+        `;
+
+        const particleSVG = `
+            <svg width="10" height="10" viewBox="0 0 10 10">
+                <circle cx="5" cy="5" r="5" fill="#ffff00" />
+            </svg>
+        `;
+
+        let blackHole = {
+            x: 400,
+            y: 300,
+            mass: 10,
+            charge: 0,
+            spin: 0,
+            radius: 20
+        };
+
+        let particles = [];
+        let spacetimeGrid = [];
+
+        function drawBlackHole() {
+            ctx.drawImage(createSVGElement(blackHoleSVG), blackHole.x - blackHole.radius, blackHole.y - blackHole.radius, blackHole.radius * 2, blackHole.radius * 2);
+            logDebug(`Black hole drawn at (${blackHole.x}, ${blackHole.y}) with radius ${blackHole.radius}`);
+        }
+
+        function drawEventHorizon() {
+            const eventHorizonRadius = calculateSchwarzschildRadius();
+            rc.circle(blackHole.x, blackHole.y, eventHorizonRadius * 2, { stroke: '#ff0000', strokeWidth: 2 });
+            logDebug(`Event horizon drawn with radius ${eventHorizonRadius}`);
+        }
+
+        function calculateSchwarzschildRadius() {
+            const G = 6.674e-11;  // Gravitational constant
+            const c = 2.998e8;    // Speed of light
+            const M = blackHole.mass * 1.989e30;  // Convert solar masses to kg
+            const R = (2 * G * M) / (c * c);
+            logDebug(`Schwarzschild radius calculated: ${R} meters`);
+            return R / 1000;  // Convert to simulation units
+        }
+
+        function drawSpacetimeGrid() {
+            const gridDensity = parseInt(document.getElementById('grid-density').value);
+            spacetimeGrid = [];
+            for (let x = 0; x < canvas.width; x += canvas.width / gridDensity) {
+                for (let y = 0; y < canvas.height; y += canvas.height / gridDensity) {
+                    const distortion = calculateSpacetimeDistortion(x, y);
+                    spacetimeGrid.push({ x, y, distortion });
+                    rc.line(x, y, x + distortion.x, y + distortion.y, { stroke: '#ffffff', strokeWidth: 1 });
+                }
+            }
+            logDebug(`Spacetime grid drawn with density ${gridDensity}`);
+        }
+
+        function calculateSpacetimeDistortion(x, y) {
+            const dx = x - blackHole.x;
+            const dy = y - blackHole.y;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+            const force = blackHole.mass / (distance * distance);
+            return {
+                x: (dx / distance) * force * 10,
+                y: (dy / distance) * force * 10
+            };
+        }
+
+        function drawParticles() {
+            particles.forEach((particle, index) => {
+                ctx.drawImage(createSVGElement(particleSVG), particle.x - 5, particle.y - 5, 10, 10);
+                logDebug(`Particle ${index} drawn at (${particle.x}, ${particle.y})`);
+            });
+        }
+
+        function updateParticles() {
+            particles.forEach(particle => {
+                const dx = blackHole.x - particle.x;
+                const dy = blackHole.y - particle.y;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+                const force = blackHole.mass / (distance * distance);
+                particle.x += (dx / distance) * force;
+                particle.y += (dy / distance) * force;
+                logDebug(`Particle updated: (${particle.x}, ${particle.y})`);
+            });
+        }
+
+        function createSVGElement(svgString) {
+            const svg = new Blob([svgString], {type: 'image/svg+xml'});
+            const url = URL.createObjectURL(svg);
+            const img = new Image();
+            img.src = url;
+            return img;
+        }
+
+        function updateSimulation() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            drawSpacetimeGrid();
+            drawBlackHole();
+            drawEventHorizon();
+            updateParticles();
+            drawParticles();
+            updateGraphs();
+            requestAnimationFrame(updateSimulation);
+        }
+
+        function updateGraphs() {
+            // Placeholder for graph updates
+            logDebug('Graphs updated');
+        }
+
+        document.getElementById('mass-slider').addEventListener('input', (e) => {
+            blackHole.mass = parseInt(e.target.value);
+            blackHole.radius = 10 + blackHole.mass / 5;
+            logDebug(`Black hole mass changed to ${blackHole.mass} solar masses`);
+        });
+
+        document.getElementById('charge-slider').addEventListener('input', (e) => {
+            blackHole.charge = parseInt(e.target.value);
+            logDebug(`Black hole charge changed to ${blackHole.charge} Coulombs`);
+        });
+
+        document.getElementById('spin-slider').addEventListener('input', (e) => {
+            blackHole.spin = parseInt(e.target.value);
+            logDebug(`Black hole spin changed to ${blackHole.spin}`);
+        });
+
+        document.getElementById('add-particle').addEventListener('click', () => {
+            particles.push({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height
+            });
+            logDebug('New particle added');
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            updateSimulation();
+            if (window.LOG_DEBUG) {
+                logDebug('Simulation initialized');
+                document.querySelectorAll('svg').forEach((svg, index) => {
+                    const rect = svg.getBoundingClientRect();
+                    logDebug(`SVG #${index}: Position {x: ${rect.x}, y: ${rect.y}}, Size {w: ${rect.width}, h: ${rect.height}}`);
+                });
+                document.querySelectorAll('input, button, select').forEach((control) => {
+                    logDebug(`Control ${control.id || 'unnamed'} (${control.tagName}): Initial value: ${control.value || 'N/A'}`);
+                });
+                
+                document.querySelectorAll('button').forEach((button) => {
+                    button.addEventListener('click', () => logDebug(`Button ${button.id || 'unnamed'} clicked`));
+                });
+                document.querySelectorAll('input').forEach((input) => {
+                    input.addEventListener('change', (e) => logDebug(`Input ${input.id || 'unnamed'} changed to ${e.target.value}`));
+                });
+            }
+        });
+    </script>
+</body>
+</html>

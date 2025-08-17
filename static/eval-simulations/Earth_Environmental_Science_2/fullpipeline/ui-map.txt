@@ -1,0 +1,42 @@
+graph LR
+    A[School Atmosphere]
+    B[School Grounds]
+    H[School Pool]
+    L[School Building]
+    P[School Garden]
+    O[Students and Staff]
+    F[Parking Lot]
+    V[Visualization: Carbon Distribution]
+    T[Timer]
+    R[Round Counter]
+    C[Carbon Token Counter]
+    S[Start/Stop Button]
+    HA[Human Activity Toggle]
+    A -->|Photosynthesis| P
+    P -->|Cafeteria Food| O
+    O -->|Breathing| A
+    O -->|Waste Disposal| A
+    F -->|Car Emissions| A
+    L -->|HVAC System| A
+    A -->|Dissolved CO2| H
+    A -->|Student Activities| A
+    B -->|Carbon Transfer| A
+    A -->|Carbon Transfer| B
+    H -->|Carbon Transfer| A
+    A -->|Carbon Transfer| H
+    L -->|Carbon Transfer| A
+    A -->|Carbon Transfer| L
+    A -->|Updates| V
+    B -->|Updates| V
+    H -->|Updates| V
+    L -->|Updates| V
+    P -->|Updates| V
+    O -->|Updates| V
+    F -->|Updates| V
+    T -->|Controls| S
+    S -->|Starts/Stops| T
+    T -->|Increments| R
+    R -->|Updates| V
+    C -->|Updates| V
+    HA -->|Modifies| F
+    HA -->|Updates| V

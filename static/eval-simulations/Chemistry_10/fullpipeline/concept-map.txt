@@ -1,0 +1,22 @@
+graph LR
+    Catalyst[Catalyst]
+    Reactants[Reactants]
+    Products[Products]
+    ActivationEnergy[Activation Energy]
+    Intermediates[Intermediates]
+    HomogeneousCatalysis[Homogeneous Catalysis]
+    HeterogeneousCatalysis[Heterogeneous Catalysis]
+    Biocatalysis[Biocatalysis]
+    Enzymes[Enzymes]
+    Catalyst -->|lowers| ActivationEnergy
+    Reactants -->|transform into| Products
+    Catalyst -->|forms temporary| Intermediates
+    Intermediates -->|facilitate| Products
+    Catalyst -->|categorized into| HomogeneousCatalysis
+    Catalyst -->|categorized into| HeterogeneousCatalysis
+    Catalyst -->|categorized into| Biocatalysis
+    Biocatalysis -->|uses| Enzymes
+    Catalyst -->|adsorbs| Reactants
+    Catalyst -->|activates| Reactants
+    Catalyst -->|desorbs| Products
+    Catalyst -->|regenerated after| Products

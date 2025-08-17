@@ -1,0 +1,17 @@
+graph LR
+    Task[Task]
+    Subtask[Subtask]
+    ProcessingUnit[Processing Unit]
+    Memory[Memory]
+    ParallelAlgorithm[Parallel Algorithm]
+    ProgrammingModel[Programming Model]
+    Application[Application]
+    Task -->|divided into| Subtask
+    Subtask -->|executed by| ProcessingUnit
+    ProcessingUnit -->|accesses| Memory
+    ParallelAlgorithm -->|implemented in| ProgrammingModel
+    ProgrammingModel -->|used in| Application
+    Task -->|processed by| ParallelAlgorithm
+    ParallelAlgorithm -->|utilizes| ProcessingUnit
+    ProcessingUnit -->|coordinated by| ParallelAlgorithm
+    Memory -->|shared or distributed| ProcessingUnit

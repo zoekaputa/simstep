@@ -1,0 +1,28 @@
+graph LR
+    FirstAid[First Aid]
+    Victim[Victim]
+    Scene[Scene]
+    ABCDE[ABCDE Framework]
+    RecoveryPosition[Recovery Position]
+    CPR[CPR]
+    AED[AED]
+    BleedingControl[Bleeding Control]
+    FractureManagement[Fracture Management]
+    BurnTreatment[Burn Treatment]
+    PoisoningManagement[Poisoning Management]
+    FirstAid -->|provides care to| Victim
+    FirstAid -->|begins with| Scene
+    Scene -->|leads to| ABCDE
+    ABCDE -->|includes| RecoveryPosition
+    FirstAid -->|may involve| CPR
+    FirstAid -->|may use| AED
+    FirstAid -->|includes| BleedingControl
+    FirstAid -->|includes| FractureManagement
+    FirstAid -->|includes| BurnTreatment
+    FirstAid -->|includes| PoisoningManagement
+    CPR -->|involves| Victim
+    AED -->|analyzes| Victim
+    BleedingControl -->|applied to| Victim
+    FractureManagement -->|applied to| Victim
+    BurnTreatment -->|applied to| Victim
+    PoisoningManagement -->|applied to| Victim

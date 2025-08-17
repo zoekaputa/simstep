@@ -1,0 +1,31 @@
+graph LR
+    Gene[Pet Gene]
+    Allele[Pet Trait Variant]
+    Trait[Pet Trait]
+    Parent[Parent Pet]
+    Offspring[Offspring Pet]
+    Gamete[Pet Gamete]
+    PunnettSquare[Digital Punnett Square]
+    ParentSelection[Parent Selection UI]
+    TraitSelection[Trait Selection UI]
+    GenerateOffspring[Generate Offspring Button]
+    OffspringDisplay[Offspring Display]
+    DataAnalysis[Data Analysis Display]
+    RepeatExperiment[Repeat Experiment Button]
+    Gene -->|contains| Allele
+    Gene -->|determines| Trait
+    Parent -->|passes| Gene
+    Parent -->|produces| Gamete
+    Gamete -->|contains| Allele
+    Gamete -->|forms| Offspring
+    Offspring -->|inherits| Trait
+    PunnettSquare -->|predicts| Trait
+    Allele -->|can be dominant or recessive| Trait
+    ParentSelection -->|selects| Parent
+    TraitSelection -->|chooses| Trait
+    GenerateOffspring -->|creates| Offspring
+    OffspringDisplay -->|shows| Offspring
+    DataAnalysis -->|compares to| PunnettSquare
+    RepeatExperiment -->|resets| ParentSelection
+    ParentSelection -->|populates| PunnettSquare
+    GenerateOffspring -->|triggers| DataAnalysis

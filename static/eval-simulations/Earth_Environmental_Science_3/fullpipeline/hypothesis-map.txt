@@ -1,0 +1,16 @@
+graph LR
+    OceanCurrents[Virtual Water Table]
+    SurfaceCurrents[Simulated Surface Flows]
+    DeepCurrents[3D Circulation Patterns]
+    Wind[Wind Pattern Controls]
+    EarthRotation[Coriolis Effect Slider]
+    DensityDifferences[Temperature Gradient Tool]
+    Climate[Climate Impact Visualization]
+    MarineEcosystems[Ecosystem Response Module]
+    OceanCurrents -->|types| SurfaceCurrents
+    OceanCurrents -->|types| DeepCurrents
+    Wind -->|drives| SurfaceCurrents
+    EarthRotation -->|influences| OceanCurrents
+    DensityDifferences -->|drives| DeepCurrents
+    OceanCurrents -->|influences| Climate
+    OceanCurrents -->|affects| MarineEcosystems

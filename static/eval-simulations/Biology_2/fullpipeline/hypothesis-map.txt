@@ -1,0 +1,23 @@
+graph LR
+    Glucose[Carbohydrate Intake]
+    Pyruvate[Muscle Glycogen]
+    AcetylCoA[Fatty Acid Breakdown]
+    ATP[Cyclist Energy]
+    NADH[Electron Carriers]
+    FADH2[Reduced Coenzymes]
+    CO2[Exhaled CO2]
+    LacticAcid[Muscle Fatigue]
+    ETC[Oxygen Utilization]
+    ATPSynthase[Energy Production]
+    Glucose -->|Energy Conversion| Pyruvate
+    Pyruvate -->|Oxygen-dependent Process| AcetylCoA
+    AcetylCoA -->|Endurance Metabolism| NADH
+    AcetylCoA -->|Aerobic Energy Production| FADH2
+    AcetylCoA -->|Sustained Power Output| ATP
+    NADH -->|Oxygen Consumption| ETC
+    FADH2 -->|Aerobic Respiration| ETC
+    ETC -->|Energy Transfer| ATPSynthase
+    ATPSynthase -->|Power Generation| ATP
+    Glucose -->|Sprinting Power| LacticAcid
+    Pyruvate -->|Anaerobic Threshold| LacticAcid
+    AcetylCoA -->|Metabolic Waste| CO2

@@ -1,0 +1,44 @@
+graph LR
+    Light[Terrarium Light Source]
+    CO2[CO2 Concentration Control]
+    H2O[Water Dispenser]
+    Glucose[Glucose Synthesis Monitor]
+    O2[Oxygen Output Sensor]
+    ATP[ATP Production Visualizer]
+    NADPH[NADPH Formation Display]
+    Chloroplast[Virtual Chloroplast Model]
+    Thylakoid[Interactive Thylakoid Membrane]
+    Stroma[Simulated Stroma Environment]
+    RuBisCO[RuBisCO Activity Tracker]
+    Environment[Environmental Controls Panel]
+    LightSlider[Light Intensity Slider]
+    WaterSlider[Water Availability Slider]
+    CO2Slider[CO2 Concentration Slider]
+    RunButton[Run Simulation Button]
+    DataTable[Data Collection Table]
+    ComparisonChart[Efficiency Comparison Chart]
+    ResetButton[Reset Experiment Button]
+    Light -->|powers| Chloroplast
+    CO2 -->|input| Chloroplast
+    H2O -->|input| Chloroplast
+    Chloroplast -->|produces| Glucose
+    Chloroplast -->|releases| O2
+    Chloroplast -->|contains| Thylakoid
+    Chloroplast -->|contains| Stroma
+    Thylakoid -->|site of| LightReactions[Light Reaction Simulator]
+    Stroma -->|site of| CalvinCycle[Calvin Cycle Visualization]
+    LightReactions -->|produces| ATP
+    LightReactions -->|produces| NADPH
+    LightReactions -->|splits| H2O
+    CalvinCycle -->|uses| ATP
+    CalvinCycle -->|uses| NADPH
+    CalvinCycle -->|fixes| CO2
+    RuBisCO -->|catalyzes| CalvinCycle
+    Environment -->|affects| Chloroplast
+    LightSlider -->|controls| Light
+    WaterSlider -->|controls| H2O
+    CO2Slider -->|controls| CO2
+    RunButton -->|starts| Chloroplast
+    Chloroplast -->|outputs to| DataTable
+    DataTable -->|generates| ComparisonChart
+    ResetButton -->|resets| Environment

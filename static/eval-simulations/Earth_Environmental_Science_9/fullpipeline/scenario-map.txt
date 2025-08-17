@@ -1,0 +1,25 @@
+graph LR
+    AirMass[Simulated Air Mass]
+    PressureSystem[Virtual Pressure System]
+    Front[Visualized Front]
+    Geography[Regional Map Features]
+    WeatherPattern[Forecast Weather Sequence]
+    AirMass -->|influences| WeatherPattern
+    PressureSystem -->|drives| WeatherPattern
+    Front -->|causes changes in| WeatherPattern
+    Geography -->|modifies| WeatherPattern
+    AirMass -->|interacts with| PressureSystem
+    AirMass -->|forms| Front
+    PressureSystem -->|creates| Front
+    AirMass -->|classified by| SourceRegion[Air Mass Origin]
+    AirMass -->|classified by| Latitude[Simulated Latitude]
+    PressureSystem -->|types| HighPressure[High Pressure System]
+    PressureSystem -->|types| LowPressure[Low Pressure System]
+    Front -->|types| ColdFront[Approaching Cold Front]
+    Front -->|types| WarmFront[Approaching Warm Front]
+    Front -->|types| StationaryFront[Stationary Front Boundary]
+    Front -->|types| OccludedFront[Occluded Front Formation]
+    Geography -->|examples| Mountains[Virtual Mountain Ranges]
+    Geography -->|examples| WaterBodies[Simulated Lakes/Oceans]
+    Geography -->|examples| UrbanAreas[Virtual City Effects]
+    WeatherPattern -->|affects| HumanActivity[School Activity Planning]

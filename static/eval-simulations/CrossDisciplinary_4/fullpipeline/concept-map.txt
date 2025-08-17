@@ -1,0 +1,34 @@
+graph LR
+    Sun[Sun]
+    Wind[Wind]
+    Water[Water]
+    Earth[Earth]
+    Biomass[Biomass]
+    PVCells[Photovoltaic Cells]
+    SolarThermal[Solar Thermal Systems]
+    WindTurbines[Wind Turbines]
+    HydroTurbines[Hydro Turbines]
+    Geothermal[Geothermal Systems]
+    Batteries[Batteries]
+    PumpedHydro[Pumped Hydro Storage]
+    Hydrogen[Hydrogen Production]
+    Microgrids[Microgrids]
+    Sun -->|provides energy to| PVCells
+    Sun -->|heats| SolarThermal
+    Wind -->|drives| WindTurbines
+    Water -->|flows through| HydroTurbines
+    Earth -->|provides heat to| Geothermal
+    Biomass -->|converted in| BiomassEnergy[Biomass Energy Systems]
+    PVCells -->|generate| Electricity[Electricity]
+    SolarThermal -->|generate| Electricity
+    WindTurbines -->|generate| Electricity
+    HydroTurbines -->|generate| Electricity
+    Geothermal -->|generate| Electricity
+    BiomassEnergy -->|generate| Electricity
+    Electricity -->|stored in| Batteries
+    Electricity -->|powers| PumpedHydro
+    Electricity -->|used in| Hydrogen
+    Electricity -->|managed by| Microgrids
+    Batteries -->|supply| Microgrids
+    PumpedHydro -->|supply| Microgrids
+    Hydrogen -->|supply| Microgrids

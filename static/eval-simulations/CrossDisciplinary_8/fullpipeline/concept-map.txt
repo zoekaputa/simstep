@@ -1,0 +1,31 @@
+graph LR
+    A[Human Activities]
+    B[Product Lifecycle]
+    C[Environmental Impacts]
+    D[Production Phases]
+    E[Transportation]
+    F[Consumer Use]
+    G[Disposal]
+    H[Ecosystems]
+    I[Communities]
+    J[Future Generations]
+    K[Policy Interventions]
+    A -->|affects| H
+    A -->|evaluated through| B
+    B -->|includes| D
+    B -->|includes| E
+    B -->|includes| F
+    B -->|includes| G
+    B -->|analyzed by| C
+    C -->|categories| L[Climate Change]
+    C -->|categories| M[Resource Depletion]
+    C -->|categories| N[Water Use]
+    C -->|categories| O[Land Use Change]
+    C -->|categories| P[Pollution]
+    D -->|contributes to| C
+    E -->|contributes to| C
+    F -->|contributes to| C
+    G -->|contributes to| C
+    C -->|affects| I
+    C -->|affects| J
+    K -->|addresses| C

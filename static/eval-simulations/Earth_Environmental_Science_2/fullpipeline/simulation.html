@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>School Carbon Cycle Simulation</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cabin+Sketch:wght@400;700&family=Londrina+Sketch&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/roughjs@latest/bundled/rough.js"></script>
+    <style>
+        body {
+            font-family: 'Cabin Sketch', cursive;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #f0f0f0;
+        }
+        h1 {
+            font-family: 'Cabin Sketch', cursive;
+            font-weight: 700;
+            color: #2c3e50;
+        }
+        #description {
+            max-width: 800px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        #simulation {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        #controls {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        button, input {
+            font-family: 'Cabin Sketch', cursive;
+            font-size: 16px;
+            padding: 5px 10px;
+            border: 2px solid #2c3e50;
+            border-radius: 5px;
+            background-color: #ecf0f1;
+            cursor: pointer;
+        }
+        button:hover, input:hover {
+            background-color: #bdc3c7;
+        }
+    </style>
+</head>
+<body>
+    <h1>School Carbon Cycle Simulation</h1>
+    <div id="description">
+        <p>Welcome to the School Carbon Cycle Simulation! In this experiment, you'll explore how carbon moves through different parts of a school environment. Watch as carbon travels between the atmosphere, school grounds, buildings, and even the school pool. Learn about the impacts of human activities on carbon distribution and see how different elements of the school interact in this miniature carbon cycle.</p>
+    </div>
+    <div id="simulation">
+        <canvas id="canvas" width="800" height="600"></canvas>
+        <div id="controls">
+            <button id="startStop">Start/Stop</button>
+            <input type="checkbox" id="humanActivity" name="humanActivity">
+            <label for="humanActivity">Human Activity</label>
+            <span id="timer">Time: 0s</span>
+            <span id="round">Round: 1</span>
+            <span id="carbonTokens">Carbon Tokens: 1000</span>
+        </div>
+    </div>
+    <script>
+        window.LOG_DEBUG = false;
+
+        function logDebug(message) {
+            if (window.LOG_DEBUG) {
+                console.log(`DEBUG [${new Date().toISOString()}]: ${message}`);
+            }
+        }
+
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const rc = rough.canvas(canvas);
+
+        let isSimulationRunning = false;
+        let timer = 0;
+        let round = 1;
+        let carbonTokens = 1000;
+        let humanActivityEnabled = false;
+
+        const schoolSVG = `
+            <svg width="800" height="600" viewBox="0 0 800 600">
+                <rect x="100" y="100" width="600" height="400" fill="#f5d76e" stroke="#000000" stroke-width="2"/>
+                <rect x="300" y="200" width="200" height="200" fill="#95a5a6" stroke="#000000" stroke-width="2"/>
+                <rect x="150" y="450" width="100" height="50" fill="#3498db" stroke="#000000" stroke-width="2"/>
+                <circle cx="700" cy="150" r="50" fill="#2ecc71" stroke="#000000" stroke-width="2"/>
+                <rect x="550" y="450" width="150" height="50" fill="#e74c3c" stroke="#000000" stroke-width="2"/>
+            </svg>
+        `;
+
+        const atmosphereSVG = `
+            <svg width="800" height="600" viewBox="0 0 800 600">
+                <path d="M0 0 L800 0 L800 100 Q400 150 0 100 Z" fill="#87CEEB" opacity="0.5"/>
+            </svg>
+        `;
+
+        function drawSchool() {
+            ctx.drawImage(new Image(), 0, 0);
+            const schoolImg = new Image();
+            schoolImg.onload = () => {
+                ctx.drawImage(schoolImg, 0, 0);
+                logDebug('School SVG drawn');
+            };
+            schoolImg.src = 'data:image/svg+xml,' + encodeURIComponent(schoolSVG);
+
+            const atmosphereImg = new Image();
+            atmosphereImg.onload = () => {
+                ctx.drawImage(atmosphereImg, 0, 0);
+                logDebug('Atmosphere SVG drawn');
+            };
+            atmosphereImg.src = 'data:image/svg+xml,' + encodeURIComponent(atmosphereSVG);
+        }
+
+        function updateSimulation() {
+            if (!isSimulationRunning) return;
+
+            timer++;
+            document.getElementById('timer').textContent = `Time: ${timer}s`;
+
+            if (timer % 60 === 0) {
+                round++;
+                document.getElementById('round').textContent = `Round: ${round}`;
+            }
+
+            // Carbon token distribution logic
+            const distribution = {
+                atmosphere: 0.4,
+                grounds: 0.2,
+                building: 0.15,
+                pool: 0.1,
+                garden: 0.1,
+                parking: 0.05
+            };
+
+            Object.entries(distribution).forEach(([key, value]) => {
+                const tokens = Math.floor(carbonTokens * value);
+                logDebug(`Distributed ${tokens} tokens to ${key}`);
+            });
+
+            if (humanActivityEnabled) {
+                carbonTokens += 10;
+                logDebug('Human activity increased carbon tokens by 10');
+            }
+
+            document.getElementById('carbonTokens').textContent = `Carbon Tokens: ${carbonTokens}`;
+
+            drawSchool();
+            requestAnimationFrame(updateSimulation);
+        }
+
+        document.getElementById('startStop').addEventListener('click', () => {
+            isSimulationRunning = !isSimulationRunning;
+            logDebug(`Simulation ${isSimulationRunning ? 'started' : 'stopped'}`);
+            if (isSimulationRunning) {
+                updateSimulation();
+            }
+        });
+
+        document.getElementById('humanActivity').addEventListener('change', (e) => {
+            humanActivityEnabled = e.target.checked;
+            logDebug(`Human activity ${humanActivityEnabled ? 'enabled' : 'disabled'}`);
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            drawSchool();
+            logDebug('Initial school drawing complete');
+
+            if (window.LOG_DEBUG) {
+                logDebug('Simulation initialized');
+                document.querySelectorAll('svg').forEach((svg, index) => {
+                    const rect = svg.getBoundingClientRect();
+                    logDebug(`SVG #${index}: Position {x: ${rect.x}, y: ${rect.y}}, Size {w: ${rect.width}, h: ${rect.height}}`);
+                });
+                document.querySelectorAll('input, button, select').forEach((control) => {
+                    logDebug(`Control ${control.id || 'unnamed'} (${control.tagName}): Initial value: ${control.value || 'N/A'}`);
+                });
+                
+                document.querySelectorAll('button').forEach((button) => {
+                    button.addEventListener('click', () => logDebug(`Button ${button.id || 'unnamed'} clicked`));
+                });
+                document.querySelectorAll('input').forEach((input) => {
+                    input.addEventListener('change', (e) => logDebug(`Input ${input.id || 'unnamed'} changed to ${e.target.value}`));
+                });
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Planning Network Simulator</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cabin+Sketch:wght@400;700&family=Londrina+Sketch&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/roughjs@latest/bundled/rough.js"></script>
+    <style>
+        body {
+            font-family: 'Cabin Sketch', cursive;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 20px;
+        }
+        h1 {
+            font-family: 'Cabin Sketch', cursive;
+            font-weight: 700;
+            color: #333;
+        }
+        #description {
+            font-family: 'Cabin Sketch', cursive;
+            font-weight: 400;
+            max-width: 800px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        #canvas {
+            border: 2px solid #333;
+            background-color: white;
+        }
+        #controls {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        button {
+            font-family: 'Cabin Sketch', cursive;
+            font-weight: 700;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #elementList, #connectionList {
+            width: 200px;
+            height: 100px;
+            overflow-y: auto;
+            border: 1px solid #ccc;
+            padding: 5px;
+            margin: 10px;
+        }
+        #predictionDisplay {
+            width: 300px;
+            height: 100px;
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin-top: 20px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>Event Planning Network Simulator</h1>
+    <div id="description">
+        Welcome to the Event Planning Network Simulator! This interactive tool helps you understand how different elements of an event interact and influence each other. By mapping out these connections, you'll discover how small changes can have big impacts, and how to design better events by considering the whole system. Experiment with adding elements, connecting them, and predicting outcomes to see systems thinking in action!
+    </div>
+    <canvas id="canvas" width="800" height="600"></canvas>
+    <div id="controls">
+        <button id="addElement">Add Element</button>
+        <button id="addConnection">Add Connection</button>
+        <button id="changeElement">Change Element</button>
+        <button id="predictEffects">Predict Effects</button>
+    </div>
+    <div id="elementList"></div>
+    <div id="connectionList"></div>
+    <div id="predictionDisplay"></div>
+
+    <script>
+        window.LOG_DEBUG = false;
+
+        function logDebug(message) {
+            if (window.LOG_DEBUG) {
+                console.log(`DEBUG [${new Date().toISOString()}]: ${message}`);
+            }
+        }
+
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const rc = rough.canvas(canvas);
+
+        let elements = [];
+        let connections = [];
+        let leveragePoints = [];
+
+        function drawElement(x, y, label) {
+            rc.circle(x, y, 40, { fill: 'lightblue', stroke: 'blue' });
+            ctx.font = '14px Cabin Sketch';
+            ctx.fillStyle = 'black';
+            ctx.textAlign = 'center';
+            ctx.fillText(label, x, y);
+        }
+
+        function drawConnection(x1, y1, x2, y2) {
+            rc.line(x1, y1, x2, y2, { stroke: 'gray' });
+        }
+
+        function redraw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            elements.forEach(el => drawElement(el.x, el.y, el.label));
+            connections.forEach(conn => drawConnection(conn.from.x, conn.from.y, conn.to.x, conn.to.y));
+            leveragePoints.forEach(lp => {
+                rc.circle(lp.x, lp.y, 45, { stroke: 'red', strokeWidth: 2 });
+            });
+        }
+
+        function addElement() {
+            const label = prompt('Enter element label:');
+            if (label) {
+                const x = Math.random() * (canvas.width - 80) + 40;
+                const y = Math.random() * (canvas.height - 80) + 40;
+                elements.push({ x, y, label });
+                updateElementList();
+                redraw();
+                logDebug(`Added element: ${label} at (${x}, ${y})`);
+            }
+        }
+
+        function addConnection() {
+            const fromIndex = prompt('Enter index of first element:');
+            const toIndex = prompt('Enter index of second element:');
+            if (fromIndex && toIndex) {
+                const from = elements[parseInt(fromIndex)];
+                const to = elements[parseInt(toIndex)];
+                if (from && to) {
+                    connections.push({ from, to });
+                    updateConnectionList();
+                    redraw();
+                    logDebug(`Added connection: ${from.label} -> ${to.label}`);
+                }
+            }
+        }
+
+        function changeElement() {
+            const index = prompt('Enter index of element to change:');
+            if (index) {
+                const element = elements[parseInt(index)];
+                if (element) {
+                    const newLabel = prompt('Enter new label:', element.label);
+                    if (newLabel) {
+                        element.label = newLabel;
+                        updateElementList();
+                        redraw();
+                        logDebug(`Changed element ${index} label to: ${newLabel}`);
+                    }
+                }
+            }
+        }
+
+        function predictEffects() {
+            const prediction = `Predicted effects: ${Math.random() < 0.5 ? 'Positive' : 'Negative'} impact on overall event experience.`;
+            document.getElementById('predictionDisplay').textContent = prediction;
+            logDebug(`Prediction made: ${prediction}`);
+        }
+
+        function updateElementList() {
+            const list = document.getElementById('elementList');
+            list.innerHTML = '<h3>Elements:</h3>' + elements.map((el, i) => `${i}: ${el.label}`).join('<br>');
+        }
+
+        function updateConnectionList() {
+            const list = document.getElementById('connectionList');
+            list.innerHTML = '<h3>Connections:</h3>' + connections.map((conn, i) => `${i}: ${conn.from.label} -> ${conn.to.label}`).join('<br>');
+        }
+
+        document.getElementById('addElement').addEventListener('click', addElement);
+        document.getElementById('addConnection').addEventListener('click', addConnection);
+        document.getElementById('changeElement').addEventListener('click', changeElement);
+        document.getElementById('predictEffects').addEventListener('click', predictEffects);
+
+        canvas.addEventListener('click', (e) => {
+            const rect = canvas.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            const clickedElement = elements.find(el => 
+                Math.sqrt((el.x - x) ** 2 + (el.y - y) ** 2) < 20
+            );
+            if (clickedElement) {
+                if (leveragePoints.includes(clickedElement)) {
+                    leveragePoints = leveragePoints.filter(lp => lp !== clickedElement);
+                } else {
+                    leveragePoints.push(clickedElement);
+                }
+                redraw();
+                logDebug(`Toggled leverage point: ${clickedElement.label}`);
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            if (window.LOG_DEBUG) {
+                logDebug('Simulation initialized');
+                document.querySelectorAll('svg').forEach((svg, index) => {
+                    const rect = svg.getBoundingClientRect();
+                    logDebug(`SVG #${index}: Position {x: ${rect.x}, y: ${rect.y}}, Size {w: ${rect.width}, h: ${rect.height}}`);
+                });
+                document.querySelectorAll('input, button, select').forEach((control) => {
+                    logDebug(`Control ${control.id || 'unnamed'} (${control.tagName}): Initial value: ${control.value || 'N/A'}`);
+                });
+                
+                document.querySelectorAll('button').forEach((button) => {
+                    button.addEventListener('click', () => logDebug(`Button ${button.id || 'unnamed'} clicked`));
+                });
+                document.querySelectorAll('input').forEach((input) => {
+                    input.addEventListener('change', (e) => logDebug(`Input ${input.id || 'unnamed'} changed to ${e.target.value}`));
+                });
+            }
+        });
+
+        redraw();
+    </script>
+</body>
+</html>

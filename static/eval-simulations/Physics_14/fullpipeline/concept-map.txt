@@ -1,0 +1,34 @@
+graph LR
+    EM[Electromagnetic Spectrum]
+    RW[Radio Waves]
+    MW[Microwaves]
+    IR[Infrared]
+    VL[Visible Light]
+    UV[Ultraviolet]
+    XR[X-rays]
+    GR[Gamma Rays]
+    SP[Speed of Light]
+    WL[Wavelength]
+    FR[Frequency]
+    EN[Energy]
+    EM -->|encompasses| RW
+    EM -->|encompasses| MW
+    EM -->|encompasses| IR
+    EM -->|encompasses| VL
+    EM -->|encompasses| UV
+    EM -->|encompasses| XR
+    EM -->|encompasses| GR
+    EM -->|travels at| SP
+    EM -->|has| WL
+    EM -->|has| FR
+    EM -->|has| EN
+    SP -->|c = 3×10⁸ m/s| EM
+    WL -->|c = fλ| FR
+    FR -->|E = hf| EN
+    RW -->|penetrates| NM[Non-metallic barriers]
+    IR -->|blocked by| OO[Opaque objects]
+    MW -->|blocked by| FC[Faraday cages]
+    MW -->|absorbed by| WM[Water molecules]
+    UV -->|penetrates| LM[Lower frequency materials]
+    XR -->|penetrates| LM
+    GR -->|penetrates| LM

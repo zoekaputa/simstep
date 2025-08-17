@@ -1,0 +1,10 @@
+{
+    "message": "Runtime test completed.",
+    "jsErrors": [
+        "Failed to execute 'drawImage' on 'CanvasRenderingContext2D': The provided value is not of type '(CSSImageValue or HTMLCanvasElement or HTMLImageElement or HTMLVideoElement or ImageBitmap or OffscreenCanvas or SVGImageElement or VideoFrame)'.",
+        "Canvas is already in use. Chart with ID '0' must be destroyed before the canvas with ID 'proficiency-graph' can be reused."
+    ],
+    "debugLogs": [
+        "DEBUG [2025-08-05T14:21:56.240Z]: Training started"
+    ]
+}

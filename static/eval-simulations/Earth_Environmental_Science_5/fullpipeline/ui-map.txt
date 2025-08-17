@@ -1,0 +1,38 @@
+graph LR
+    ParentMaterial[Rock and Sediment Selection]
+    Soil[Virtual Soil Profile]
+    Organisms[Simulated Microbes and Plants]
+    Climate[Climate Variable Controls]
+    Topography[Terrain Adjustment Tools]
+    Time[Time-lapse Slider]
+    Weathering[Mineral Breakdown Visualization]
+    OrganicMatter[Decomposition Simulator]
+    SoilHorizons[Layer Development Display]
+    ParentMaterialSelect[Parent Material Dropdown]
+    ClimateControls[Climate Control Sliders]
+    TopographyAdjust[Topography Adjustment Slider]
+    OrganismSettings[Organism Population Controls]
+    RunSimulation[Run Simulation Button]
+    DataTable[Data Recording Table]
+    ParentMaterial -->|Undergoes| Weathering
+    Weathering -->|Contributes to| Soil
+    Organisms -->|Contribute| OrganicMatter
+    OrganicMatter -->|Improves| Soil
+    Climate -->|Influences| Weathering
+    Climate -->|Affects| Soil
+    Topography -->|Influences| Soil
+    Time -->|Allows development of| Soil
+    Soil -->|Develops| SoilHorizons
+    ParentMaterialSelect -->|Sets| ParentMaterial
+    ClimateControls -->|Adjusts| Climate
+    TopographyAdjust -->|Modifies| Topography
+    OrganismSettings -->|Controls| Organisms
+    Time -->|Controls| RunSimulation
+    RunSimulation -->|Updates| Soil
+    RunSimulation -->|Updates| Weathering
+    RunSimulation -->|Updates| OrganicMatter
+    RunSimulation -->|Updates| SoilHorizons
+    Soil -->|Provides data for| DataTable
+    Weathering -->|Provides data for| DataTable
+    OrganicMatter -->|Provides data for| DataTable
+    SoilHorizons -->|Provides data for| DataTable

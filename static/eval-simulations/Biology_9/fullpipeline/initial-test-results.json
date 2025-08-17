@@ -1,0 +1,10 @@
+{
+    "message": "Runtime test completed.",
+    "jsErrors": [
+        "rc.svg is not a function",
+        "rc.svg is not a function"
+    ],
+    "debugLogs": [
+        "DEBUG [2025-08-05T03:28:42.375Z]: Disabled sensor: temperature"
+    ]
+}

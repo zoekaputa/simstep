@@ -1,0 +1,51 @@
+graph LR
+    B[Garden Biodiversity]
+    S[Plant and Animal Species Diversity]
+    E[Garden Ecosystem Diversity]
+    ES[Garden Stability]
+    ER[Garden Resilience]
+    A[Food Production]
+    H[Community Benefits]
+    FR[Functional Redundancy of Species]
+    D[Garden Disturbances]
+    PC[Natural Pest Control]
+    CR[Crop Variety Resilience]
+    PlotA[Plot A: 10 species]
+    PlotB[Plot B: 5 species]
+    PlotC[Plot C: 3 species]
+    PlotD[Plot D: 1 species]
+    TimeSlider[Time Slider]
+    DisturbanceButton[Simulate Disturbance]
+    DataDisplay[Data Display]
+    B -->|encompasses| S
+    B -->|encompasses| E
+    B -->|contributes to| ES
+    B -->|enhances| ER
+    B -->|supports| A
+    B -->|provides| H
+    S -->|creates| ES
+    E -->|increases| ER
+    ES -->|through| FR
+    ER -->|resists| D
+    A -->|benefits from| PC
+    H -->|includes| CR
+    PlotA -->|represents| B
+    PlotB -->|represents| B
+    PlotC -->|represents| B
+    PlotD -->|represents| B
+    TimeSlider -->|controls| PlotA
+    TimeSlider -->|controls| PlotB
+    TimeSlider -->|controls| PlotC
+    TimeSlider -->|controls| PlotD
+    DisturbanceButton -->|affects| PlotA
+    DisturbanceButton -->|affects| PlotB
+    DisturbanceButton -->|affects| PlotC
+    DisturbanceButton -->|affects| PlotD
+    PlotA -->|provides data to| DataDisplay
+    PlotB -->|provides data to| DataDisplay
+    PlotC -->|provides data to| DataDisplay
+    PlotD -->|provides data to| DataDisplay
+    DataDisplay -->|shows| ES
+    DataDisplay -->|shows| ER
+    DataDisplay -->|shows| PC
+    DataDisplay -->|shows| CR

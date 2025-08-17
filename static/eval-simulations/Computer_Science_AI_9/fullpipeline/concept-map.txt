@@ -1,0 +1,36 @@
+graph LR
+    NLP[Natural Language Processing]
+    Text[Text]
+    Computer[Computer]
+    Preprocessing[Preprocessing]
+    StatisticalTechniques[Statistical Techniques]
+    LanguageModeling[Language Modeling]
+    WordEmbeddings[Word Embeddings]
+    Transformers[Transformers]
+    Applications[NLP Applications]
+    Challenges[NLP Challenges]
+    NLP -->|enables| Computer
+    NLP -->|processes| Text
+    Text -->|undergoes| Preprocessing
+    NLP -->|uses| StatisticalTechniques
+    NLP -->|employs| LanguageModeling
+    NLP -->|utilizes| WordEmbeddings
+    NLP -->|relies on| Transformers
+    NLP -->|has| Applications
+    NLP -->|faces| Challenges
+    Preprocessing -->|includes| Tokenization[Tokenization]
+    Preprocessing -->|includes| Normalization[Normalization]
+    Preprocessing -->|includes| Stemming[Stemming/Lemmatization]
+    StatisticalTechniques -->|includes| BagOfWords[Bag-of-Words]
+    StatisticalTechniques -->|includes| TFIDF[TF-IDF]
+    StatisticalTechniques -->|includes| NGrams[N-grams]
+    WordEmbeddings -->|examples| Word2Vec[Word2Vec]
+    WordEmbeddings -->|examples| GloVe[GloVe]
+    Transformers -->|examples| BERT[BERT]
+    Transformers -->|examples| GPT[GPT]
+    Applications -->|includes| SentimentAnalysis[Sentiment Analysis]
+    Applications -->|includes| NER[Named Entity Recognition]
+    Applications -->|includes| Translation[Machine Translation]
+    Applications -->|includes| QA[Question Answering]
+    Applications -->|includes| Summarization[Text Summarization]
+    Applications -->|includes| Chatbots[Chatbots]

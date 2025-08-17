@@ -1,0 +1,12 @@
+{
+    "content": "The law of conservation of momentum states that in a closed system, the total momentum before a collision equals the total momentum after the collision. Momentum is the product of mass and velocity (p = mv), making it a vector quantity with both magnitude and direction. In bumper car collisions, this principle determines how the cars move after impact. When two bumper cars collide, the momentum transferred between them depends on their relative masses and initial velocities. A heavier car will experience less change in velocity than a lighter car during a collision. In perfectly elastic collisions, kinetic energy is conserved; in inelastic collisions (like most real-world bumper car impacts), some kinetic energy converts to other forms like sound and heat. During a head-on collision between two bumper cars, if one car is initially stationary, the moving car will transfer some of its momentum to the stationary car, causing the first car to slow down and the second to start moving.",
+    "scenario": {
+        "title": "Bumper Car Physics",
+        "content": "Students operate virtual bumper cars in an amusement park arena, experimenting with collisions by controlling car mass, initial velocity, and impact angle. The simulation displays momentum vectors before and after collisions, allowing students to verify the conservation of momentum principle. They can switch between elastic and inelastic collision models to observe differences in energy conservation. Challenge modes ask students to predict collision outcomes or achieve specific post-collision trajectories by selecting appropriate initial conditions. A data collection tool lets students gather and analyze information from multiple collision scenarios."
+    },
+    "hypothesis": {
+        "hypothesis": "Momentum Conservation Challenge",
+        "type": "Explanatory",
+        "description": "Students will calculate momentum in one and two-dimensional collisions and verify that total system momentum is conserved. They will predict how the exchange of momentum affects object motion after collisions of varying elasticity, and apply conservation principles to design collision sequences with specific outcomes."
+    }
+}

@@ -1,0 +1,20 @@
+graph LR
+    Swing[Virtual Playground Swing]
+    Pendulum[Virtual Swing Pendulum]
+    Motion[Simulated Harmonic Motion]
+    Force[Virtual Restoring Force]
+    Period[Measured Swing Period]
+    Length[Adjustable Chain Length]
+    Gravity[Variable Gravitational Field]
+    Energy[Energy Conversion Display]
+    Swing -->|is an example of| Pendulum
+    Pendulum -->|exhibits| Motion
+    Motion -->|characterized by| Force
+    Pendulum -->|has| Period
+    Length -->|determines| Period
+    Gravity -->|affects| Period
+    Period -->|calculated by| Formula[T = 2π√(L/g) in Simulation]
+    Swing -->|demonstrates| Energy
+    Energy -->|alternates between| PotentialEnergy[Displayed Potential Energy]
+    Energy -->|alternates between| KineticEnergy[Displayed Kinetic Energy]
+    Friction[Simulated Friction] -->|reduces| Amplitude[Swing Amplitude]

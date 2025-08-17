@@ -1,0 +1,32 @@
+graph LR
+    Solid[Ice Crystals: Tightly packed water molecules]
+    Liquid[Cream: Close but mobile fat and water molecules]
+    Gas[Air Bubbles: Freely moving air molecules]
+    KineticEnergy[Freezer Temperature]
+    IntermolecularForces[Emulsifiers and Stabilizers]
+    IceCream[Ice Cream: Complex colloid]
+    TempControl[Temperature Slider]
+    TimeControl[Time Slider]
+    FirmnessDisplay[Firmness Meter]
+    MeltingDisplay[Melting Rate Display]
+    VolumeDisplay[Liquid Volume Display]
+    SampleVisual[Ice Cream Sample Visual]
+    Solid -->|Melting| Liquid
+    Liquid -->|Freezing| Solid
+    Liquid -->|Whipping| Gas
+    KineticEnergy -->|Influences| Solid
+    KineticEnergy -->|Influences| Liquid
+    KineticEnergy -->|Influences| Gas
+    IntermolecularForces -->|Influences| Solid
+    IntermolecularForces -->|Influences| Liquid
+    IntermolecularForces -->|Influences| Gas
+    Solid -->|Component of| IceCream
+    Liquid -->|Component of| IceCream
+    Gas -->|Component of| IceCream
+    TempControl -->|Controls| KineticEnergy
+    TimeControl -->|Affects| SampleVisual
+    SampleVisual -->|Shows| IceCream
+    SampleVisual -->|Updates| FirmnessDisplay
+    SampleVisual -->|Updates| MeltingDisplay
+    SampleVisual -->|Updates| VolumeDisplay
+    KineticEnergy -->|Affects| SampleVisual

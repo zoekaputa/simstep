@@ -1,0 +1,19 @@
+graph LR
+    BoatHull[Boat Hull]
+    Water[Water]
+    Gravity[Gravity]
+    Buoyancy[Buoyancy]
+    Friction[Friction]
+    Displacement[Displacement]
+    Cargo[Cargo]
+    BoatHull -->|affects| Displacement
+    BoatHull -->|experiences| Friction
+    Water -->|provides| Buoyancy
+    Gravity -->|pulls down| BoatHull
+    Gravity -->|pulls down| Water
+    Buoyancy -->|pushes up| BoatHull
+    Displacement -->|determines| Buoyancy
+    Cargo -->|affects| Displacement
+    BoatHull -->|designed for| Cargo
+    Friction -->|affects| BoatSpeed[Boat Speed]
+    Displacement -->|affects| BoatSpeed

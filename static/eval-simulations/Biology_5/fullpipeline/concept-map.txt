@@ -1,0 +1,19 @@
+graph LR
+    Heart[Heart: Muscular pump]
+    Blood[Blood: Transport medium]
+    Vessels[Blood vessels: Circulatory pathways]
+    Lungs[Lungs: Gas exchange organ]
+    Tissues[Body tissues: Oxygen and nutrient consumers]
+    Valves[Valves: One-way flow regulators]
+    Heart -->|Pumps| Blood
+    Blood -->|Carries oxygen and nutrients to| Tissues
+    Blood -->|Removes waste from| Tissues
+    Vessels -->|Contain| Blood
+    Heart -->|Pushes blood through| Vessels
+    Lungs -->|Oxygenate| Blood
+    Blood -->|Releases CO2 in| Lungs
+    Valves -->|Prevent backflow in| Heart
+    Valves -->|Ensure unidirectional flow in| Vessels
+    Vessels -->|Connect| Heart
+    Vessels -->|Connect| Lungs
+    Vessels -->|Connect| Tissues

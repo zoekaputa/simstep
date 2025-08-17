@@ -1,0 +1,22 @@
+graph LR
+    RL[Pet Training System]
+    A[Virtual Pet]
+    E[Training Environment]
+    S[Pet States]
+    AC[Pet Actions]
+    R[Treats and Rewards]
+    P[Training Strategy]
+    Q[Trick Proficiency Estimation]
+    RL -->|uses| A
+    RL -->|interacts with| E
+    RL -->|defines| S
+    RL -->|defines| AC
+    RL -->|provides| R
+    RL -->|learns| P
+    RL -->|uses algorithm| Q
+    A -->|takes| AC
+    A -->|receives| R
+    A -->|learns| P
+    E -->|contains| S
+    P -->|maximizes| R
+    Q -->|estimates| R

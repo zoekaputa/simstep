@@ -1,0 +1,12 @@
+graph LR
+    BoatHull[Hull Design]
+    Water[Simulated Water]
+    Buoyancy[Buoyancy Force]
+    Displacement[Water Displacement]
+    Cargo[Cargo Capacity]
+    BoatHull -->|influences| Displacement
+    Water -->|generates| Buoyancy
+    Buoyancy -->|counteracts| BoatHull
+    Displacement -->|determines| Buoyancy
+    Cargo -->|impacts| Displacement
+    BoatHull -->|optimized for| Cargo

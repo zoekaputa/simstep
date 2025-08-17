@@ -1,0 +1,25 @@
+graph LR
+    Device[Classroom]
+    Network[School Network]
+    Packet[Message]
+    IPAddress[Room Number]
+    RoutingProtocol[Hallway Route]
+    NetworkType[School Layout]
+    TransmissionProtocol[Message Passing Rules]
+    SecurityMechanism[Hall Monitor]
+    OSIModel[Communication Layers]
+    TCPIPModel[Simplified Layers]
+    PhysicalMedia[Hallway]
+    Device -->|communicates through| Network
+    Network -->|operates on| OSIModel
+    Network -->|implements| TCPIPModel
+    Device -->|connects via| PhysicalMedia
+    Network -->|transmits| Packet
+    Device -->|identified by| IPAddress
+    Network -->|uses| RoutingProtocol
+    Network -->|categorized as| NetworkType
+    Network -->|employs| TransmissionProtocol
+    Network -->|protected by| SecurityMechanism
+    Packet -->|contains| IPAddress
+    RoutingProtocol -->|determines path for| Packet
+    TransmissionProtocol -->|manages| Packet

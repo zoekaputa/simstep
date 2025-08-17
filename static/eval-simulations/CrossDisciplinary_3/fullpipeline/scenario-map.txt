@@ -1,0 +1,30 @@
+graph LR
+    DC[Community Values Simulator]
+    OI[Student Avatar]
+    PP[Privacy Settings]
+    DCN[Communication Choices]
+    IL[Information Evaluation]
+    CP[Conflict Resolution]
+    DRR[Ethical Decision-Making]
+    HW[Digital Well-being]
+    ET[Advanced Scenarios]
+    DC -->|encompasses| OI
+    DC -->|encompasses| PP
+    DC -->|encompasses| DCN
+    DC -->|encompasses| IL
+    DC -->|encompasses| CP
+    DC -->|encompasses| DRR
+    DC -->|encompasses| HW
+    DC -->|addresses| ET
+    OI -->|creates| DF[Reputation Score]
+    PP -->|requires| SM[Account Security]
+    DCN -->|emphasizes| CC[Clear Messaging]
+    IL -->|involves| CE[Source Credibility]
+    CP -->|addresses| OH[Virtual Disputes]
+    DRR -->|balances| FOE[Free Speech]
+    DRR -->|balances| IP[Copyright Rules]
+    HW -->|manages| ST[Usage Limits]
+    HW -->|considers| SME[Social Impact]
+    ET -->|includes| AI[AI Ethics]
+    ET -->|includes| FR[Identity Verification]
+    ET -->|includes| AR[Virtual Environments]

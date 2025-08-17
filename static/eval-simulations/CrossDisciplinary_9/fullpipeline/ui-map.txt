@@ -1,0 +1,36 @@
+graph LR
+    System[Event Planning Network]
+    Components[Event Elements]
+    EmergentProperties[Overall Event Experience]
+    Interconnectedness[Interdependent Decisions]
+    Emergence[Unexpected Outcomes]
+    Nonlinearity[Disproportionate Effects]
+    LeveragePoints[Key Decision Points]
+    SystemsMapping[Event System Visualization]
+    CausalLoopDiagrams[Event Interaction Maps]
+    AddElement[Add Element Button]
+    AddConnection[Add Connection Button]
+    ChangeElement[Change Element Button]
+    PredictEffects[Predict Effects Button]
+    SimulationCanvas[Simulation Canvas]
+    ElementList[Element List]
+    ConnectionList[Connection List]
+    PredictionDisplay[Prediction Display]
+    System -->|contains| Components
+    System -->|produces| EmergentProperties
+    System -->|exhibits| Interconnectedness
+    System -->|demonstrates| Emergence
+    System -->|shows| Nonlinearity
+    System -->|can be changed through| LeveragePoints
+    System -->|visualized by| SystemsMapping
+    SystemsMapping -->|tool| CausalLoopDiagrams
+    SimulationCanvas -->|displays| System
+    SimulationCanvas -->|shows| CausalLoopDiagrams
+    AddElement -->|adds to| SimulationCanvas
+    AddConnection -->|adds to| SimulationCanvas
+    ChangeElement -->|modifies| SimulationCanvas
+    PredictEffects -->|analyzes| SimulationCanvas
+    SimulationCanvas -->|populates| ElementList
+    SimulationCanvas -->|populates| ConnectionList
+    PredictEffects -->|updates| PredictionDisplay
+    LeveragePoints -->|highlighted in| SimulationCanvas

@@ -1,0 +1,31 @@
+graph LR
+    pH[Soil pH Meter]
+    H[Soil Acidity Level]
+    Soil[Virtual Garden Soil]
+    Plants[Garden Plants]
+    Nutrients[Soil Amendments]
+    pHSlider[pH Level Slider]
+    plotSelector[Garden Plot Selector]
+    plantSelector[Plant Species Selector]
+    timeControls[Time Controls]
+    dataDisplay[Data Display]
+    soilView[Soil Cross-section View]
+    plantView[Plant Growth View]
+    pH -->|measures| H
+    pH -->|affects| Soil
+    Soil -->|influences| Plants
+    pH -->|influences availability of| Nutrients
+    Plants -->|adapted to different| pH
+    Nutrients -->|essential for| Plants
+    pHSlider -->|adjusts| pH
+    plotSelector -->|selects| Soil
+    plantSelector -->|chooses| Plants
+    timeControls -->|advances| Plants
+    timeControls -->|updates| soilView
+    timeControls -->|updates| plantView
+    soilView -->|shows| Soil
+    soilView -->|shows| Nutrients
+    plantView -->|displays| Plants
+    Plants -->|data shown in| dataDisplay
+    Soil -->|data shown in| dataDisplay
+    Nutrients -->|data shown in| dataDisplay

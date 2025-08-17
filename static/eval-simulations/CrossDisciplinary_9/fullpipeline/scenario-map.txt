@@ -1,0 +1,39 @@
+graph LR
+    System[Event Planning Network]
+    Components[Event Elements]
+    EmergentProperties[Overall Event Experience]
+    Interconnectedness[Interdependent Decisions]
+    Emergence[Unexpected Outcomes]
+    Nonlinearity[Disproportionate Effects]
+    Boundaries[Event Scope and Limitations]
+    StocksFlows[Resource Management]
+    FeedbackLoops[Event Dynamics]
+    SystemArchetypes[Common Event Scenarios]
+    ComplexAdaptiveSystems[Adaptive Event Planning]
+    LeveragePoints[Key Decision Points]
+    SystemsMapping[Event System Visualization]
+    System -->|contains| Components
+    System -->|produces| EmergentProperties
+    System -->|exhibits| Interconnectedness
+    System -->|demonstrates| Emergence
+    System -->|shows| Nonlinearity
+    System -->|has| Boundaries
+    System -->|includes| StocksFlows
+    System -->|regulated by| FeedbackLoops
+    System -->|exemplified by| SystemArchetypes
+    System -->|can be| ComplexAdaptiveSystems
+    System -->|can be changed through| LeveragePoints
+    System -->|visualized by| SystemsMapping
+    FeedbackLoops -->|types| ReinforcingLoops[Promotional Buzz]
+    FeedbackLoops -->|types| BalancingLoops[Capacity Constraints]
+    SystemArchetypes -->|example| TragedyOfCommons[Overuse of Shared Resources]
+    SystemArchetypes -->|example| FixesThatFail[Short-term Solutions]
+    SystemArchetypes -->|example| LimitsToGrowth[Venue Capacity Limits]
+    ComplexAdaptiveSystems -->|feature| SelfOrganization[Emergent Event Structure]
+    ComplexAdaptiveSystems -->|feature| Adaptation[Flexible Planning]
+    ComplexAdaptiveSystems -->|feature| Coevolution[Evolving Event Expectations]
+    LeveragePoints -->|range from| ShallowLeverage[Minor Adjustments]
+    LeveragePoints -->|range to| DeepLeverage[Fundamental Changes]
+    SystemsMapping -->|tool| CausalLoopDiagrams[Event Interaction Maps]
+    SystemsMapping -->|tool| StockFlowDiagrams[Resource Flow Charts]
+    SystemsMapping -->|tool| SocialNetworkAnalyses[Attendee Interaction Models]

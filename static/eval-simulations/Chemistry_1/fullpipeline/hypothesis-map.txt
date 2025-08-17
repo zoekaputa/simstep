@@ -1,0 +1,11 @@
+graph LR
+    A[Element Profile] -->|contains| B[Atomic Core]
+    A -->|surrounded by| C[Digital Electrons]
+    B -->|contains| D[Proton Icons]
+    B -->|contains| E[Neutron Icons]
+    A -->|determined by| F[Proton Count]
+    F -->|defines| G[Element Identity]
+    A -->|can have| H[Isotope Variations]
+    C -->|occupy| I[Electron Shells]
+    C -->|outermost are| K[Valence Electron Icons]
+    K -->|determine| L[Bonding Behavior]

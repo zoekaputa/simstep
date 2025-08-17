@@ -1,0 +1,28 @@
+graph LR
+    A[Sugar and Flour Molecules]
+    B[Molecular Bonds in Dough]
+    C[Cookie Ingredients]
+    D[Oven Heat]
+    E[Egg Moisture]
+    F[Egg Proteins]
+    G[Sugar Molecules]
+    H[Cookie Browning]
+    J[Baking Powder]
+    K[CO2 Bubbles]
+    L[Baked Cookies]
+    M[Butter]
+    O[Oven Temperature]
+    P[Baking Speed]
+    A -->|form| B
+    B -->|create| C
+    C -->|undergo| H
+    D -->|triggers| H
+    E -->|influences| H
+    F -->|reacts with| G
+    G -->|participates in| H
+    H -->|produces| L
+    J -->|decomposes to| K
+    K -->|causes rising in| L
+    M -->|melts in| L
+    O -->|affects| P
+    P -->|influences| H

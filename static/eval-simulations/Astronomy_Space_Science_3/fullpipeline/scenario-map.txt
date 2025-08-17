@@ -1,0 +1,19 @@
+graph LR
+    Planet[Sealed Container]
+    Atmosphere[Model Atmosphere]
+    Composition[Gas Mixture]
+    Structure[Density and Pressure Layers]
+    Dynamics[Simulated Weather Patterns]
+    Greenhouse[Heat Trapping Visualization]
+    Escape[Gas Leakage Simulation]
+    Planet -->|surrounds| Atmosphere
+    Atmosphere -->|consists of| Composition
+    Atmosphere -->|organized into| Structure
+    Atmosphere -->|experiences| Dynamics
+    Atmosphere -->|affected by| Greenhouse
+    Atmosphere -->|undergoes| Escape
+    Planet -->|determines| Composition
+    Planet -->|influences| Structure
+    Planet -->|affects| Dynamics
+    Planet -->|impacts| Greenhouse
+    Planet -->|controls| Escape

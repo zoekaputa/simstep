@@ -1,0 +1,10 @@
+{
+    "message": "Runtime test completed.",
+    "jsErrors": [],
+    "debugLogs": [
+        "DEBUG [2025-08-05T14:34:08.220Z]: Simulation started",
+        "DEBUG [2025-08-05T14:34:08.221Z]: Defense stage updated to: Physical Barriers",
+        "DEBUG [2025-08-05T14:34:08.253Z]: Simulation reset",
+        "DEBUG [2025-08-05T14:34:08.253Z]: Defense stage updated to: none"
+    ]
+}

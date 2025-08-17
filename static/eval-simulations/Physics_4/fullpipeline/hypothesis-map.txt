@@ -1,0 +1,14 @@
+graph LR
+    Slide[Playground Slide]
+    Person[Child]
+    Friction[Slide Friction]
+    KineticEnergy[Child's Motion]
+    ThermalEnergy[Heat Generation]
+    SurfaceRoughness[Slide Texture]
+    Slide -->|generates| Friction
+    Person -->|experiences| Friction
+    Friction -->|converts| KineticEnergy
+    KineticEnergy -->|becomes| ThermalEnergy
+    SurfaceRoughness -->|affects| Friction
+    Person -->|weight influences| Friction
+    Slide -->|material affects| Friction

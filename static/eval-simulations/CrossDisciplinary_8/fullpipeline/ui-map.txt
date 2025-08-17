@@ -1,0 +1,56 @@
+graph LR
+    A[Student Choices]
+    B[Product Options]
+    C[Environmental Indicators]
+    D[Manufacturing]
+    E[Distribution]
+    F[Product Usage]
+    G[End-of-Life]
+    H[Global Ecosystems]
+    I[Global Communities]
+    J[Future Generations]
+    L[Carbon Footprint]
+    M[Resource Consumption]
+    N[Virtual Water]
+    O[Land Use Change]
+    P[Pollution Burden]
+    Q[Product Selection UI]
+    R[Environmental Impact Display]
+    S[Group Selection]
+    T[Survey Input]
+    U[Data Analysis Results]
+    V[Product Lifecycle Visualization]
+    A -->|affects| H
+    A -->|evaluated through| B
+    B -->|includes| D
+    B -->|includes| E
+    B -->|includes| F
+    B -->|includes| G
+    B -->|analyzed by| C
+    C -->|categories| L
+    C -->|categories| M
+    C -->|categories| N
+    C -->|categories| O
+    C -->|categories| P
+    D -->|contributes to| C
+    E -->|contributes to| C
+    F -->|contributes to| C
+    G -->|contributes to| C
+    C -->|affects| I
+    C -->|affects| J
+    S -->|determines| Q
+    Q -->|influences| A
+    A -->|displayed in| V
+    V -->|shows| D
+    V -->|shows| E
+    V -->|shows| F
+    V -->|shows| G
+    C -->|displayed in| R
+    R -->|shows| L
+    R -->|shows| M
+    R -->|shows| N
+    R -->|shows| O
+    R -->|shows| P
+    T -->|collects| A
+    U -->|compares| C
+    U -->|analyzes| T

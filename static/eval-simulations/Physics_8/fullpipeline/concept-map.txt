@@ -1,0 +1,16 @@
+graph LR
+    Light[Light]
+    Medium1[Medium 1]
+    Medium2[Medium 2]
+    UnderWaterObject[Underwater Object]
+    Observer[Observer]
+    Light -->|bends at interface| Medium1
+    Light -->|changes speed| Medium2
+    Medium1 -->|has| RefractiveIndex1[Refractive Index n1]
+    Medium2 -->|has| RefractiveIndex2[Refractive Index n2]
+    Light -->|follows| SnellsLaw[Snell's Law: n1sin(θ1) = n2sin(θ2)]
+    UnderWaterObject -->|appears displaced| Observer
+    Water[Water] -->|has refractive index| WaterRI[1.33]
+    Air[Air] -->|has refractive index| AirRI[1.0]
+    UnderWaterObject -->|apparent depth| ApparentDepth[3/4 of actual depth]
+    Stick[Straight Stick] -->|appears| BentStick[Bent when partially submerged]

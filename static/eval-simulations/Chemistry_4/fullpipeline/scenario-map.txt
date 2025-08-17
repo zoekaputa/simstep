@@ -1,0 +1,20 @@
+graph LR
+    Gas[Air molecules]
+    Pressure[Tire pressure gauge]
+    Volume[Tire volume]
+    Temperature[Ambient temperature]
+    Quantity[Number of air molecules]
+    BicycleTire[Virtual bicycle tire]
+    Pump[Virtual bicycle pump]
+    Gas -->|has| Pressure
+    Gas -->|has| Volume
+    Gas -->|has| Temperature
+    Gas -->|has| Quantity
+    Pressure -->|inversely proportional to| Volume
+    Volume -->|directly proportional to| Temperature
+    Pressure -->|directly proportional to| Temperature
+    Pump -->|decreases| Volume
+    Pump -->|increases| Pressure
+    Pressure -->|forces air into| BicycleTire
+    Temperature -->|affects| Pressure
+    BicycleTire -->|contains| Gas

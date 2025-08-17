@@ -1,0 +1,30 @@
+graph LR
+    NN[Neural Network]
+    AN[Artificial Neuron]
+    IL[Input Layer]
+    HL[Hidden Layer]
+    OL[Output Layer]
+    AF[Activation Function]
+    LF[Loss Function]
+    BP[Backpropagation]
+    CNN[Convolutional Neural Network]
+    RNN[Recurrent Neural Network]
+    TR[Transformer]
+    NN -->|consists of| AN
+    NN -->|has| IL
+    NN -->|has| HL
+    NN -->|has| OL
+    AN -->|uses| AF
+    NN -->|uses| LF
+    NN -->|uses| BP
+    NN -->|type| CNN
+    NN -->|type| RNN
+    NN -->|type| TR
+    AF -->|examples| SIG[Sigmoid]
+    AF -->|examples| RELU[ReLU]
+    AF -->|examples| TANH[Tanh]
+    LF -->|examples| MSE[Mean Squared Error]
+    LF -->|examples| CE[Cross-Entropy]
+    CNN -->|excels at| IP[Image Processing]
+    RNN -->|handles| SD[Sequential Data]
+    TR -->|processes| NLP[Natural Language Processing]

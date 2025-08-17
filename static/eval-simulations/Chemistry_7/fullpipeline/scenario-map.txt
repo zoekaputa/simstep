@@ -1,0 +1,23 @@
+graph LR
+    CE[Cafeteria Balance]
+    FR[Students Entering]
+    RR[Students Leaving]
+    RC[Waiting Student Count]
+    PC[Seated Student Count]
+    LCP[Cafeteria Adjustment Principle]
+    T[Serving Speed]
+    P[Cafeteria Capacity]
+    KEQ[Student Distribution Ratio]
+    CAT[Additional Serving Stations]
+    CE -->|characterized by| FR
+    CE -->|characterized by| RR
+    FR -->|equal rate to| RR
+    CE -->|affects| RC
+    CE -->|affects| PC
+    LCP -->|governs| CE
+    RC -->|influences| CE
+    PC -->|influences| CE
+    T -->|affects| CE
+    P -->|affects| CE
+    KEQ -->|describes| CE
+    CAT -->|speeds up| CE

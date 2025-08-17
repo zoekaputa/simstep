@@ -1,0 +1,9 @@
+graph LR
+    Sun[Cafeteria Lights] -->|provides energy for| Producers[Salad Bar]
+    Producers -->|convert 1-2% of light energy| ChemicalEnergy[Nutrients in Vegetables]
+    Producers -->|feed| PrimaryConsumers[Vegetarian Students]
+    PrimaryConsumers -->|feed| SecondaryConsumers[Omnivore Students]
+    SecondaryConsumers -->|feed| TertiaryConsumers[Carnivore Students]
+    PrimaryConsumers -->|transfer ~10% energy| SecondaryConsumers
+    SecondaryConsumers -->|transfer ~10% energy| TertiaryConsumers
+    Ecosystem[EcoTray] -->|modeled as| EnergyPyramid[Tray Arrangement]

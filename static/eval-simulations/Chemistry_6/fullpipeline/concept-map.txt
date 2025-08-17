@@ -1,0 +1,19 @@
+graph LR
+    Solid[Solid: Tightly packed molecules]
+    Liquid[Liquid: Close but mobile molecules]
+    Gas[Gas: Freely moving molecules]
+    KineticEnergy[Kinetic Energy]
+    IntermolecularForces[Intermolecular Forces]
+    IceCream[Ice Cream: Complex colloid]
+    Solid -->|Melting| Liquid
+    Liquid -->|Freezing| Solid
+    Liquid -->|Vaporization| Gas
+    KineticEnergy -->|Influences| Solid
+    KineticEnergy -->|Influences| Liquid
+    KineticEnergy -->|Influences| Gas
+    IntermolecularForces -->|Influences| Solid
+    IntermolecularForces -->|Influences| Liquid
+    IntermolecularForces -->|Influences| Gas
+    Solid -->|Component of| IceCream
+    Liquid -->|Component of| IceCream
+    Gas -->|Component of| IceCream

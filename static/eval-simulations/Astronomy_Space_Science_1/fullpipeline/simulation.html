@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Campfire Evolution Simulator</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cabin+Sketch:wght@400;700&family=Londrina+Sketch&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/roughjs@latest/bundled/rough.js"></script>
+    <style>
+        body {
+            font-family: 'Cabin Sketch', cursive;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 20px;
+        }
+        h1 {
+            font-family: 'Cabin Sketch', cursive;
+            font-weight: 700;
+            color: #4a4a4a;
+        }
+        p {
+            font-family: 'Cabin Sketch', cursive;
+            font-weight: 400;
+            color: #666;
+            max-width: 800px;
+            text-align: center;
+        }
+        #simulationArea {
+            width: 800px;
+            height: 400px;
+            background-color: #e0e0e0;
+            border: 2px solid #999;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        #controls {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+        button, input {
+            font-family: 'Cabin Sketch', cursive;
+            font-size: 16px;
+            padding: 5px 10px;
+            border: 2px solid #999;
+            border-radius: 5px;
+            background-color: #fff;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #e0e0e0;
+        }
+        #dataTable {
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        #dataTable th, #dataTable td {
+            border: 1px solid #999;
+            padding: 5px 10px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <h1>Campfire Evolution Simulator</h1>
+    <p>Welcome to the Campfire Evolution Simulator! In this experiment, you'll explore how a campfire changes over time, mimicking the lifecycle of celestial objects. Observe how the initial amount of fuel affects the fire's progression through various stages, from ignition to its final form. Pay attention to how energy is produced and transformed throughout the process.</p>
+    <canvas id="simulationArea"></canvas>
+    <div id="controls">
+        <div>
+            <label for="massSlider">Initial Fuel Amount (kg): </label>
+            <input type="range" id="massSlider" min="1" max="100" value="50">
+            <span id="massValue">50</span>
+        </div>
+        <button id="startButton">Start Simulation</button>
+        <div id="timeDisplay">Time Elapsed: 0s</div>
+        <div id="stageDisplay">Current Stage: Not Started</div>
+    </div>
+    <table id="dataTable">
+        <tr>
+            <th>Time (s)</th>
+            <th>Stage</th>
+            <th>Fuel Remaining (%)</th>
+            <th>Energy Output</th>
+        </tr>
+    </table>
+
+    <script>
+        window.LOG_DEBUG = false;
+
+        function logDebug(message) {
+            if (window.LOG_DEBUG) {
+                console.log(`DEBUG [${new Date().toISOString()}]: ${message}`);
+            }
+        }
+
+        const canvas = document.getElementById('simulationArea');
+        const ctx = canvas.getContext('2d');
+        const rc = rough.canvas(canvas);
+
+        const massSlider = document.getElementById('massSlider');
+        const massValue = document.getElementById('massValue');
+        const startButton = document.getElementById('startButton');
+        const timeDisplay = document.getElementById('timeDisplay');
+        const stageDisplay = document.getElementById('stageDisplay');
+        const dataTable = document.getElementById('dataTable');
+
+        let initialMass = 50;
+        let currentMass = initialMass;
+        let currentStage = 'Not Started';
+        let time = 0;
+        let animationId = null;
+
+        const stages = ['Nebula', 'Star', 'RedGiant', 'WhiteDwarf', 'NeutronStar', 'BlackHole', 'PlanetaryNebula', 'Supernova', 'ISM'];
+        const stageDurations = [5, 10, 8, 6, 4, 3, 5, 2, 4];
+        let currentStageIndex = 0;
+
+        const woodSVG = `<svg viewBox="0 0 100 30"><path d="M10 15 Q 30 5 50 15 T 90 15" fill="none" stroke="brown" stroke-width="10" /></svg>`;
+        const fireSVG = `<svg viewBox="0 0 100 100"><path d="M50 10 Q 30 40 40 70 T 50 90 Q 70 70 60 40 T 50 10" fill="orange" stroke="red" stroke-width="2" /></svg>`;
+        const smokeSVG = `<svg viewBox="0 0 100 100"><path d="M50 90 Q 30 60 40 30 T 50 10 Q 70 40 60 70 T 50 90" fill="#aaa" stroke="#888" stroke-width="2" /></svg>`;
+        const ashSVG = `<svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" fill="#333" /></svg>`;
+
+        function drawStage(stage) {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            switch (stage) {
+                case 'Nebula':
+                    drawSVG(woodSVG, 350, 200, 100, 30);
+                    break;
+                case 'Star':
+                case 'RedGiant':
+                    drawSVG(fireSVG, 350, 150, 100, 100);
+                    break;
+                case 'WhiteDwarf':
+                case 'NeutronStar':
+                    drawSVG(fireSVG, 375, 175, 50, 50);
+                    break;
+                case 'BlackHole':
+                    rc.circle(400, 200, 50, { fill: 'black', roughness: 0.5 });
+                    break;
+                case 'PlanetaryNebula':
+                case 'Supernova':
+                    drawSVG(smokeSVG, 350, 150, 100, 100);
+                    break;
+                case 'ISM':
+                    drawSVG(ashSVG, 375, 175, 50, 50);
+                    break;
+            }
+        }
+
+        function drawSVG(svgString, x, y, width, height) {
+            const img = new Image();
+            img.onload = function() {
+                ctx.drawImage(img, x, y, width, height);
+            }
+            img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svgString);
+        }
+
+        function updateSimulation() {
+            time += 1;
+            currentMass -= initialMass / 100;
+            if (currentMass < 0) currentMass = 0;
+
+            timeDisplay.textContent = `Time Elapsed: ${time}s`;
+            currentStage = stages[currentStageIndex];
+            stageDisplay.textContent = `Current Stage: ${currentStage}`;
+
+            drawStage(currentStage);
+
+            const row = dataTable.insertRow(-1);
+            row.insertCell(0).textContent = time;
+            row.insertCell(1).textContent = currentStage;
+            row.insertCell(2).textContent = Math.round((currentMass / initialMass) * 100);
+            row.insertCell(3).textContent = Math.round(Math.random() * 100);
+
+            if (time % stageDurations[currentStageIndex] === 0) {
+                currentStageIndex = (currentStageIndex + 1) % stages.length;
+            }
+
+            if (currentMass <= 0) {
+                stopSimulation();
+            } else {
+                animationId = requestAnimationFrame(updateSimulation);
+            }
+
+            logDebug(`Time: ${time}, Stage: ${currentStage}, Mass: ${currentMass}`);
+        }
+
+        function startSimulation() {
+            if (animationId) cancelAnimationFrame(animationId);
+            time = 0;
+            currentMass = initialMass;
+            currentStageIndex = 0;
+            dataTable.innerHTML = '<tr><th>Time (s)</th><th>Stage</th><th>Fuel Remaining (%)</th><th>Energy Output</th></tr>';
+            updateSimulation();
+            logDebug('Simulation started');
+        }
+
+        function stopSimulation() {
+            if (animationId) {
+                cancelAnimationFrame(animationId);
+                animationId = null;
+            }
+            logDebug('Simulation stopped');
+        }
+
+        massSlider.addEventListener('input', () => {
+            initialMass = parseInt(massSlider.value);
+            massValue.textContent = initialMass;
+            logDebug(`Initial mass set to ${initialMass}`);
+        });
+
+        startButton.addEventListener('click', startSimulation);
+
+        document.addEventListener('DOMContentLoaded', () => {
+            if (window.LOG_DEBUG) {
+                logDebug('Simulation initialized');
+                document.querySelectorAll('svg').forEach((svg, index) => {
+                    const rect = svg.getBoundingClientRect();
+                    logDebug(`SVG #${index}: Position {x: ${rect.x}, y: ${rect.y}}, Size {w: ${rect.width}, h: ${rect.height}}`);
+                });
+                document.querySelectorAll('input, button, select').forEach((control) => {
+                    logDebug(`Control ${control.id || 'unnamed'} (${control.tagName}): Initial value: ${control.value || 'N/A'}`);
+                });
+                
+                document.querySelectorAll('button').forEach((button) => {
+                    button.addEventListener('click', () => logDebug(`Button ${button.id || 'unnamed'} clicked`));
+                });
+                document.querySelectorAll('input').forEach((input) => {
+                    input.addEventListener('change', (e) => logDebug(`Input ${input.id || 'unnamed'} changed to ${e.target.value}`));
+                });
+            }
+        });
+    </script>
+</body>
+</html>

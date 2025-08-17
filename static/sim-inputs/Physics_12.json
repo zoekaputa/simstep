@@ -1,0 +1,12 @@
+{
+    "content": "Thermal conductivity is a measure of a material's ability to conduct heat, defined as the quantity of heat transmitted through a unit thickness of material in a direction normal to a surface of unit area due to a unit temperature gradient. Materials with high thermal conductivity transfer heat rapidly, while those with low thermal conductivity (insulators) transfer heat slowly. Metals generally have high thermal conductivity due to their free electrons that can efficiently transport kinetic energy. Wood, plastics, and air have low thermal conductivity, making them good insulators. Fourier's Law of Heat Conduction states that the rate of heat transfer is proportional to the negative temperature gradient and the area through which heat flows: q = -k A (dT/dx), where q is heat transfer rate, k is thermal conductivity, A is area, and dT/dx is the temperature gradient. When cooking s'mores, the choice of roasting stick (metal vs. wood) dramatically affects how quickly heat transfers from the fire to the marshmallow. Similarly, the aluminum foil often used to wrap s'mores conducts heat efficiently to melt the chocolate.",
+    "scenario": {
+        "title": "S'mores Science Challenge",
+        "content": "Students participate in a virtual cooking contest where they must prepare perfect s'mores by selecting appropriate materials and techniques. The simulation allows students to choose different roasting sticks (aluminum, steel, wood, plastic), cooking surfaces, and containment materials (foil, paper, leaves) to observe how heat transfers through each. Real-time temperature gradients are visualized with color overlays, showing how heat moves through different materials at varying rates. Students can monitor temperature changes at multiple points and adjust heat sources to achieve optimal melting conditions. The challenge requires understanding both conductivity and specific heat capacity to perfectly toast marshmallows while melting chocolate without overheating."
+    },
+    "hypothesis": {
+        "hypothesis": "Heat Transfer Properties",
+        "type": "Explanatory",
+        "description": "Students will compare thermal conductivity across different materials by analyzing temperature gradients and heat flow rates. They will predict how material choices affect heating and cooling processes in everyday applications, and select appropriate materials for specific thermal management requirements."
+    }
+}

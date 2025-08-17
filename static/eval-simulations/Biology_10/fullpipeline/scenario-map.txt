@@ -1,0 +1,32 @@
+graph LR
+    ImmuneSystem[SecurityNet System]
+    Barriers[Physical Barriers]
+    InnateResponse[First Response]
+    AdaptiveResponse[Specialized Response]
+    Pathogens[Intruders]
+    Skin[Locked Doors]
+    MucousMembranes[Fences]
+    PhagocyticCells[Security Guards]
+    ComplementSystem[Alarm System]
+    Inflammation[Lockdown]
+    BCells[SWAT Team]
+    TCells[Tactical Unit]
+    Antibodies[Arrest Warrants]
+    Memory[Intruder Database]
+    Tolerance[Normal Operations Protocol]
+    ImmuneSystem -->|consists of| Barriers
+    ImmuneSystem -->|consists of| InnateResponse
+    ImmuneSystem -->|consists of| AdaptiveResponse
+    ImmuneSystem -->|defends against| Pathogens
+    Barriers -->|includes| Skin
+    Barriers -->|includes| MucousMembranes
+    InnateResponse -->|involves| PhagocyticCells
+    InnateResponse -->|involves| ComplementSystem
+    InnateResponse -->|triggers| Inflammation
+    AdaptiveResponse -->|utilizes| BCells
+    AdaptiveResponse -->|utilizes| TCells
+    BCells -->|produce| Antibodies
+    AdaptiveResponse -->|establishes| Memory
+    ImmuneSystem -->|maintains| Tolerance
+    Pathogens -->|trigger| InnateResponse
+    Pathogens -->|trigger| AdaptiveResponse

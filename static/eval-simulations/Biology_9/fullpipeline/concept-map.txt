@@ -1,0 +1,25 @@
+graph TD
+    Hormones[Hormones: Chemical messengers]
+    EndocrineGlands[Endocrine Glands: Hormone producers]
+    Bloodstream[Bloodstream: Transport medium]
+    TargetCells[Target Cells: Hormone recipients]
+    Receptors[Receptors: Hormone binding sites]
+    FeedbackLoops[Feedback Loops: Regulatory mechanisms]
+    Hypothalamus[Hypothalamus: Control center]
+    PituitaryGland[Pituitary Gland: Master gland]
+    OtherEndocrineGlands[Other Endocrine Glands]
+    Homeostasis[Homeostasis: Stable internal environment]
+    CircadianRhythms[Circadian Rhythms: Daily hormone patterns]
+
+    EndocrineGlands -->|produce| Hormones
+    Hormones -->|transported through| Bloodstream
+    Bloodstream -->|delivers to| TargetCells
+    TargetCells -->|contain| Receptors
+    Hormones -->|bind to| Receptors
+    Receptors -->|initiate| PhysiologicalResponses[Physiological Responses]
+    FeedbackLoops -->|regulate| EndocrineGlands
+    Hypothalamus -->|controls| PituitaryGland
+    PituitaryGland -->|stimulates| OtherEndocrineGlands
+    EndocrineGlands -->|contribute to| Homeostasis
+    CircadianRhythms -->|influence| Hormones
+    Homeostasis -->|maintained by| FeedbackLoops

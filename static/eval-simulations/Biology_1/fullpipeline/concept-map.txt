@@ -1,0 +1,27 @@
+graph LR
+    Organism[Organism]
+    Trait[Trait]
+    Environment[Environment]
+    Population[Population]
+    Gene[Gene]
+    Allele[Allele]
+    Mutation[Mutation]
+    Recombination[Recombination]
+    NaturalSelection[Natural Selection]
+    Evolution[Evolution]
+    Adaptation[Adaptation]
+    Organism -->|possesses| Trait
+    Trait -->|influences| Survival
+    Trait -->|influences| Reproduction
+    Environment -->|affects| Survival
+    Organism -->|part of| Population
+    Gene -->|variant of| Allele
+    Mutation -->|creates| Genetic_Variation
+    Recombination -->|creates| Genetic_Variation
+    Genetic_Variation -->|provides basis for| NaturalSelection
+    NaturalSelection -->|drives| Evolution
+    Evolution -->|leads to| Adaptation
+    Adaptation -->|improves fit with| Environment
+    NaturalSelection -->|affects frequency of| Allele
+    Trait -->|can be| Heritable
+    Heritable -->|passed to| Offspring

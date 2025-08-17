@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tire Pressure Experiment</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cabin+Sketch:wght@400;700&family=Londrina+Sketch&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/roughjs@latest/bundled/rough.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        /* ... (keep existing styles) ... */
+    </style>
+</head>
+<body>
+    <h1>Tire Pressure Experiment</h1>
+    <div class="description">
+        <p>Welcome to the Tire Pressure Experiment! In this simulation, you'll explore how temperature affects the pressure inside a tire. Imagine you're a scientist studying the behavior of gases in confined spaces. Your mission is to understand the relationship between temperature and pressure in a tire filled with air molecules.</p>
+        <p>Use the controls below to adjust the initial pressure and temperature. Then, watch how changes in temperature affect the tire's pressure over time. Pay close attention to how the air molecules behave and how the pressure gauge responds. Can you predict what will happen when you increase or decrease the temperature?</p>
+    </div>
+    <div id="canvas-container">
+        <canvas id="canvas" width="800" height="400"></canvas>
+    </div>
+    <div class="controls">
+        <div class="control-group">
+            <label for="pressure-control">Initial Pressure (PSI):</label>
+            <input type="range" id="pressure-control" min="20" max="40" value="30" step="1">
+            <span id="pressure-value">30 PSI</span>
+        </div>
+        <div class="control-group">
+            <label for="temp-control">Temperature (°F):</label>
+            <input type="range" id="temp-control" min="0" max="100" value="70" step="1">
+            <span id="temp-value">70°F</span>
+        </div>
+        <div class="control-group">
+            <label for="time-control">Simulation Speed:</label>
+            <input type="range" id="time-control" min="1" max="5" value="3" step="1">
+            <span id="time-value">Normal</span>
+        </div>
+        <button id="start-stop">Start Simulation</button>
+    </div>
+    <div id="graph-container">
+        <canvas id="pressure-temp-graph"></canvas>
+    </div>
+
+    <script>
+        window.LOG_DEBUG = false;
+
+        function logDebug(message) {
+            if (window.LOG_DEBUG) {
+                console.log(`DEBUG [${new Date().toISOString()}]: ${message}`);
+            }
+        }
+
+        const canvas = document.getElementById('canvas');
+        const rc = rough.canvas(canvas);
+        const ctx = canvas.getContext('2d');
+
+        let isSimulationRunning = false;
+        let animationId;
+        let time = 0;
+        let pressure = 30;
+        let temperature = 70;
+        let volume = 100;
+        const initialPressure = 30;
+        const initialTemperature = 70;
+
+        const pressureControl = document.getElementById('pressure-control');
+        const tempControl = document.getElementById('temp-control');
+        const timeControl = document.getElementById('time-control');
+        const startStopButton = document.getElementById('start-stop');
+
+        const pressureValue = document.getElementById('pressure-value');
+        const tempValue = document.getElementById('temp-value');
+        const timeValue = document.getElementById('time-value');
+
+        const tireSVG = `
+            <svg width="300" height="300" viewBox="0 0 300 300">
+                <defs>
+                    <radialGradient id="tireGradient" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
+                        <stop offset="0%" style="stop-color:rgb(60,60,60);stop-opacity:1" />
+                        <stop offset="100%" style="stop-color:rgb(20,20,20);stop-opacity:1" />
+                    </radialGradient>
+                </defs>
+                <circle cx="150" cy="150" r="140" fill="url(#tireGradient)" />
+                <circle cx="150" cy="150" r="110" fill="#888" />
+                <circle cx="150" cy="150" r="100" fill="#ccc" />
+            </svg>
+        `;
+
+        const gaugeSVG = `
+            <svg width="200" height="200" viewBox="0 0 200 200">
+                <circle cx="100" cy="100" r="90" fill="none" stroke="#333" stroke-width="10" />
+                <path id="gauge-arc" d="M100,100 L100,10 A90,90 0 0,1 190,100 Z" fill="#f00" />
+                <circle cx="100" cy="100" r="80" fill="#fff" />
+                <text id="gauge-text" x="100" y="120" text-anchor="middle" font-size="24" font-weight="bold" fill="#333">0 PSI</text>
+            </svg>
+        `;
+
+        function drawTire() {
+            const tireImg = new Image();
+            tireImg.onload = () => {
+                ctx.drawImage(tireImg, 250, 50, 300, 300);
+                logDebug('Tire SVG drawn');
+            };
+            tireImg.src = 'data:image/svg+xml;base64,' + btoa(tireSVG);
+        }
+
+        function drawGauge() {
+            const gaugeImg = new Image();
+            gaugeImg.onload = () => {
+                ctx.drawImage(gaugeImg, 50, 100, 200, 200);
+                logDebug('Gauge SVG drawn');
+            };
+            gaugeImg.src = 'data:image/svg+xml;base64,' + btoa(gaugeSVG);
+        }
+
+        function drawMolecules() {
+            const numMolecules = Math.floor(pressure * 5);
+            for (let i = 0; i < numMolecules; i++) {
+                const x = 300 + Math.random() * 200;
+                const y = 100 + Math.random() * 200;
+                rc.circle(x, y, 5, { fill: 'blue', fillStyle: 'solid' });
+            }
+            logDebug(`Drew ${numMolecules} molecules`);
+        }
+
+        function updateGauge() {
+            const angle = (pressure - 20) * 4.5;
+            const endX = 100 + 90 * Math.sin(angle * Math.PI / 180);
+            const endY = 100 - 90 * Math.cos(angle * Math.PI / 180);
+            const newGaugeSVG = `
+                <svg width="200" height="200" viewBox="0 0 200 200">
+                    <circle cx="100" cy="100" r="90" fill="none" stroke="#333" stroke-width="10" />
+                    <path id="gauge-arc" d="M100,100 L100,10 A90,90 0 ${angle > 180 ? 1 : 0},1 ${endX},${endY} Z" fill="#f00" />
+                    <circle cx="100" cy="100" r="80" fill="#fff" />
+                    <text id="gauge-text" x="100" y="120" text-anchor="middle" font-size="24" font-weight="bold" fill="#333">${pressure.toFixed(1)} PSI</text>
+                </svg>
+            `;
+            const gaugeImg = new Image();
+            gaugeImg.onload = () => {
+                ctx.clearRect(50, 100, 200, 200);
+                ctx.drawImage(gaugeImg, 50, 100, 200, 200);
+            };
+            gaugeImg.src = 'data:image/svg+xml;base64,' + btoa(newGaugeSVG);
+            logDebug(`Updated gauge to ${pressure.toFixed(1)} PSI`);
+        }
+
+        function updateSimulation() {
+            time += 0.1 * parseInt(timeControl.value);
+            const temperatureChange = Math.sin(time * 0.1) * 5;
+            temperature = parseFloat(tempControl.value) + temperatureChange;
+            pressure = initialPressure * (temperature / initialTemperature);
+            volume = initialPressure * volume / pressure;
+
+            logDebug(`Time: ${time.toFixed(2)}, Temperature: ${temperature.toFixed(2)}°F, Pressure: ${pressure.toFixed(2)} PSI, Volume: ${volume.toFixed(2)}`);
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            drawTire();
+            drawGauge();
+            drawMolecules();
+            updateGauge();
+
+            if (isSimulationRunning) {
+                animationId = requestAnimationFrame(updateSimulation);
+            }
+        }
+
+        function startStopSimulation() {
+            isSimulationRunning = !isSimulationRunning;
+            if (isSimulationRunning) {
+                startStopButton.textContent = 'Stop Simulation';
+                animationId = requestAnimationFrame(updateSimulation);
+                logDebug('Simulation started');
+            } else {
+                startStopButton.textContent = 'Start Simulation';
+                cancelAnimationFrame(animationId);
+                logDebug('Simulation stopped');
+            }
+        }
+
+        const ctx2 = document.getElementById('pressure-temp-graph').getContext('2d');
+        const pressureTempChart = new Chart(ctx2, {
+            type: 'scatter',
+            data: {
+                datasets: [{
+                    label: 'Pressure vs Temperature',
+                    data: [],
+                    borderColor: 'rgb(75, 192, 192)',
+                    backgroundColor: 'rgba(75, 192, 192, 0.5)'
+                }]
+            },
+            options: {
+                scales: {
+                    x: {
+                        type: 'linear',
+                        position: 'bottom',
+                        title: {
+                            display: true,
+                            text: 'Temperature (°F)'
+                        }
+                    },
+                    y: {
+                        title: {
+                            display: true,
+                            text: 'Pressure (PSI)'
+                        }
+                    }
+                }
+            }
+        });
+
+        function updateGraph() {
+            pressureTempChart.data.datasets[0].data.push({x: temperature, y: pressure});
+            if (pressureTempChart.data.datasets[0].data.length > 100) {
+                pressureTempChart.data.datasets[0].data.shift();
+            }
+            pressureTempChart.update();
+            logDebug(`Updated graph with Temperature: ${temperature.toFixed(2)}°F, Pressure: ${pressure.toFixed(2)} PSI`);
+        }
+
+        pressureControl.addEventListener('input', (e) => {
+            pressure = parseFloat(e.target.value);
+            pressureValue.textContent = `${pressure} PSI`;
+            updateSimulation();
+            logDebug(`Initial pressure set to ${pressure} PSI`);
+        });
+
+        tempControl.addEventListener('input', (e) => {
+            temperature = parseFloat(e.target.value);
+            tempValue.textContent = `${temperature}°F`;
+            updateSimulation();
+            logDebug(`Temperature set to ${temperature}°F`);
+        });
+
+        timeControl.addEventListener('input', (e) => {
+            const speed = parseInt(e.target.value);
+            const speeds = ['Very Slow', 'Slow', 'Normal', 'Fast', 'Very Fast'];
+            timeValue.textContent = speeds[speed - 1];
+            logDebug(`Simulation speed set to ${speeds[speed - 1]}`);
+        });
+
+        startStopButton.addEventListener('click', startStopSimulation);
+
+        document.addEventListener('DOMContentLoaded', () => {
+            logDebug('Simulation initialized');
+            drawTire();
+            drawGauge();
+            drawMolecules();
+            updateGauge();
+
+            setInterval(updateGraph, 1000);
+
+            if (window.LOG_DEBUG) {
+                document.querySelectorAll('svg').forEach((svg, index) => {
+                    const rect = svg.getBoundingClientRect();
+                    logDebug(`SVG #${index}: Position {x: ${rect.x}, y: ${rect.y}}, Size {w: ${rect.width}, h: ${rect.height}}`);
+                });
+                document.querySelectorAll('input, button, select').forEach((control) => {
+                    logDebug(`Control ${control.id || 'unnamed'} (${control.tagName}): Initial value: ${control.value || 'N/A'}`);
+                });
+                
+                document.querySelectorAll('button').forEach((button) => {
+                    button.addEventListener('click', () => logDebug(`Button ${button.id || 'unnamed'} clicked`));
+                });
+                document.querySelectorAll('input').forEach((input) => {
+                    input.addEventListener('change', (e) => logDebug(`Input ${input.id || 'unnamed'} changed to ${e.target.value}`));
+                });
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,33 @@
+graph LR
+    Cell[Cell: Basic functional unit]
+    Tissue[Tissue: Groups of similar cells]
+    Organ[Organ: Collection of tissues]
+    OrganSystem[Organ System: Group of organs]
+    Skeleton[Skeleton: 206 bones]
+    Muscle[Muscle: Over 600 muscles]
+    ConnectiveTissue[Connective Tissue]
+    Heart[Heart: Four-chambered pump]
+    BloodVessel[Blood Vessel]
+    Blood[Blood: 5 liters]
+    Airway[Airway]
+    Alveoli[Alveoli: 300 million]
+    DigestiveTract[Digestive Tract: 9 meters]
+    Brain[Brain: 86 billion neurons]
+    SpinalCord[Spinal Cord]
+    PeripheralNerve[Peripheral Nerve]
+    Gland[Gland]
+    Hormone[Hormone]
+    Cell -->|Forms| Tissue
+    Tissue -->|Forms| Organ
+    Organ -->|Forms| OrganSystem
+    Skeleton -->|Part of| OrganSystem
+    Muscle -->|Part of| OrganSystem
+    ConnectiveTissue -->|Part of| OrganSystem
+    Heart -->|Part of| OrganSystem
+    BloodVessel -->|Part of| OrganSystem
+    Blood -->|Circulates in| BloodVessel
+    Airway -->|Leads to| Alveoli
+    DigestiveTract -->|Part of| OrganSystem
+    Brain -->|Connected to| SpinalCord
+    SpinalCord -->|Connected to| PeripheralNerve
+    Gland -->|Secretes| Hormone

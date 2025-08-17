@@ -1,0 +1,10 @@
+graph LR
+    W[Desert Water Supply] -->|Analyzed by| WF[Desert Water Footprint]
+    W -->|Conserved by| IC[Personal Water Rationing]
+    W -->|Conserved by| AC[Drip Irrigation]
+    W -->|Conserved by| INC[Water Recycling in Industry]
+    W -->|Conserved by| UP[Desert City Planning]
+    W -->|Protected by| WQP[Desert Water Quality Protection]
+    W -->|Managed by| IWM[Desert Water Resource Management]
+    W -->|Analyzed by| CE[Water Scarcity Economics]
+    CE -->|Studies| PR[Tiered Water Pricing]

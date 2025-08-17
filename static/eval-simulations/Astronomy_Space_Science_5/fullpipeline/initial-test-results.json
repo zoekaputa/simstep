@@ -1,0 +1,5 @@
+{
+    "error": "Failed to run test",
+    "status": 500,
+    "details": "{\"error\":\"Navigation timeout of 30000 ms exceeded\"}"
+}

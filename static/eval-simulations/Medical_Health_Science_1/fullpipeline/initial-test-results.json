@@ -1,0 +1,7 @@
+{
+    "message": "Runtime test completed.",
+    "jsErrors": [
+        "this.canvas.getContext is not a function"
+    ],
+    "debugLogs": []
+}

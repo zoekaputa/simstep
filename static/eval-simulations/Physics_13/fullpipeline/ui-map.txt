@@ -1,0 +1,47 @@
+graph LR
+    SW[Studio Sound]
+    M[Room Air]
+    S[Studio Surfaces]
+    HFS[Reflective Walls]
+    SPM[Acoustic Panels]
+    E[Flutter Echo]
+    R[Room Reverb]
+    F[Audio Frequency]
+    W[Sound Wavelength]
+    StW[Room Modes]
+    N[Pressure Minima]
+    AN[Pressure Maxima]
+    RoomView[Room Visualization]
+    FreqSlider[Frequency Slider]
+    MaterialSelect[Material Selector]
+    PanelCoverage[Panel Coverage Slider]
+    MicPosition[Microphone Position]
+    RoomDimensions[Room Dimension Controls]
+    MeasureButton[Measure Button]
+    ResultsDisplay[Results Display]
+    SW -->|propagates through| M
+    SW -->|interacts with| S
+    S -->|can be| HFS
+    S -->|can be| SPM
+    HFS -->|create| E
+    HFS -->|produce| R
+    SPM -->|reduce| SW
+    SW -->|contains| F
+    F -->|affects| W
+    SW -->|can generate| StW
+    StW -->|exhibit| N
+    StW -->|exhibit| AN
+    SW -->|oscillates| M
+    RoomView -->|displays| M
+    RoomView -->|shows| S
+    RoomView -->|visualizes| SW
+    FreqSlider -->|controls| F
+    MaterialSelect -->|changes| S
+    PanelCoverage -->|adjusts| SPM
+    MicPosition -->|affects| M
+    RoomDimensions -->|modifies| StW
+    MeasureButton -->|triggers measurement of| R
+    MeasureButton -->|triggers measurement of| E
+    ResultsDisplay -->|shows| R
+    ResultsDisplay -->|shows| E
+    ResultsDisplay -->|shows| StW

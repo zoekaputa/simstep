@@ -1,0 +1,33 @@
+graph LR
+            GravField[Earth's Gravity: 9.8 m/s²]
+            Basketball[Basketball]
+            Player[Student Player]
+            Hoop[Basketball Hoop]
+            Trajectory[Free Throw Arc]
+            LaunchAngle[Shot Angle Adjustment]
+            LaunchVelocity[Shot Force Slider]
+            GravityControl[Gravity Slider]
+            LaunchButton[Launch Button]
+            DataTable[Data Table]
+            SimulationArea[Simulation Area]
+            GravField -->|affects| Basketball
+            Player -->|shoots| Basketball
+            Basketball -->|follows| Trajectory
+            Trajectory -->|aims for| Hoop
+            Player -->|determines| LaunchAngle
+            Player -->|determines| LaunchVelocity
+            LaunchAngle -->|influences| Trajectory
+            LaunchVelocity -->|influences| Trajectory
+            GravField -->|shapes| Trajectory
+            GravityControl -->|adjusts| GravField
+            LaunchAngle -->|inputs to| SimulationArea
+            LaunchVelocity -->|inputs to| SimulationArea
+            LaunchButton -->|triggers| SimulationArea
+            SimulationArea -->|displays| Basketball
+            SimulationArea -->|displays| Player
+            SimulationArea -->|displays| Hoop
+            SimulationArea -->|displays| Trajectory
+            SimulationArea -->|records data to| DataTable
+            DataTable -->|shows| LaunchAngle
+            DataTable -->|shows| LaunchVelocity
+            DataTable -->|shows| GravField

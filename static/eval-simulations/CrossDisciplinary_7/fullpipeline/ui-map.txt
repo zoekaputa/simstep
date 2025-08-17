@@ -1,0 +1,31 @@
+graph LR
+    Bioethics[Pandemic Ethics Simulator]
+    Principles[Public Health Principles]
+    Dilemmas[Pandemic Dilemmas]
+    ResourceAllocation[Medical Resource Distribution]
+    Frameworks[Decision-Making Frameworks]
+    Bioethics -->|examines| Principles
+    Bioethics -->|addresses| Dilemmas
+    Principles -->|guide| ResourceAllocation
+    ResourceAllocation -->|informed by| Frameworks
+    Dilemmas -->|include| ResourceAllocation
+    Principles -->|include| Autonomy[Individual Rights]
+    Principles -->|include| Beneficence[Community Wellbeing]
+    Principles -->|include| NonMaleficence[Harm Prevention]
+    Principles -->|include| Justice[Equitable Access]
+    Frameworks -->|includes| Utilitarian[Lives Saved Maximization]
+    Frameworks -->|includes| Egalitarian[Equal Treatment]
+    Frameworks -->|includes| Prioritarian[Vulnerable Group Prioritization]
+    ScenarioDisplay[Scenario Display]
+    FrameworkSelector[Framework Selector]
+    DecisionInput[Decision Input]
+    RationaleInput[Rationale Input]
+    SubmitButton[Submit Button]
+    ResultsDisplay[Results Display]
+    Bioethics -->|displays| ScenarioDisplay
+    FrameworkSelector -->|selects| Frameworks
+    ScenarioDisplay -->|prompts| DecisionInput
+    DecisionInput -->|requires| RationaleInput
+    RationaleInput -->|enables| SubmitButton
+    SubmitButton -->|updates| ResultsDisplay
+    ResultsDisplay -->|compares| Frameworks

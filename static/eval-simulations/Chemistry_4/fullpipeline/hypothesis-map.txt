@@ -1,0 +1,12 @@
+graph LR
+    Gas[Air molecules]
+    Pressure[Tire pressure gauge]
+    Volume[Tire volume]
+    Temperature[Ambient temperature]
+    Gas -->|has| Pressure
+    Gas -->|has| Volume
+    Gas -->|has| Temperature
+    Pressure -->|inversely proportional to| Volume
+    Volume -->|directly proportional to| Temperature
+    Pressure -->|directly proportional to| Temperature
+    Temperature -->|affects| Pressure

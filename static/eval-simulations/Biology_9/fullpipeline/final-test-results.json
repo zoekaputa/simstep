@@ -1,0 +1,10 @@
+{
+    "message": "Runtime test completed.",
+    "jsErrors": [
+        "rc.text is not a function",
+        "rc.text is not a function"
+    ],
+    "debugLogs": [
+        "DEBUG [2025-08-07T14:39:51.184Z]: Disabled sensor: humidity"
+    ]
+}

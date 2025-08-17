@@ -1,0 +1,28 @@
+graph LR
+    NLP[Predictive Text System]
+    Text[User Input]
+    Preprocessing[Text Preprocessing]
+    StatisticalTechniques[Prediction Algorithms]
+    LanguageModeling[Language Models]
+    WordEmbeddings[Word Representations]
+    Transformers[Neural Models]
+    Applications[Prediction Applications]
+    NLP -->|analyzes| Text
+    Text -->|undergoes| Preprocessing
+    NLP -->|uses| StatisticalTechniques
+    NLP -->|employs| LanguageModeling
+    NLP -->|utilizes| WordEmbeddings
+    NLP -->|relies on| Transformers
+    NLP -->|has| Applications
+    Preprocessing -->|includes| Tokenization[Token Recognition]
+    Preprocessing -->|includes| Normalization[Text Normalization]
+    Preprocessing -->|includes| Stemming[Word Stemming]
+    StatisticalTechniques -->|includes| BagOfWords[Frequency-based Approach]
+    StatisticalTechniques -->|includes| TFIDF[Term Importance]
+    StatisticalTechniques -->|includes| NGrams[Phrase Patterns]
+    WordEmbeddings -->|examples| Word2Vec[Vector Representations]
+    WordEmbeddings -->|examples| GloVe[Global Vectors]
+    Transformers -->|examples| BERT[Bidirectional Encoder]
+    Transformers -->|examples| GPT[Generative Pre-trained Transformer]
+    Applications -->|includes| QA[Predictive Responses]
+    Applications -->|includes| Chatbots[AI Text Completion]

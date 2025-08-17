@@ -1,0 +1,31 @@
+graph LR
+    Atmosphere[Virtual Skyscraper]
+    Troposphere[Ground Floor: 0-15km, weather simulations]
+    Stratosphere[Middle Floors: 15-50km, ozone simulation]
+    Mesosphere[Upper Floors: 50-85km, meteor burn-up zone]
+    Thermosphere[Penthouse: 85-600km, high-energy absorption]
+    Exosphere[Rooftop: 600km+, space transition]
+    Surface[Lobby: Earth's surface conditions]
+    Ozone[Ozone Layer Exhibit]
+    DataTable[Data Table]
+    TempGraph[Temperature vs. Altitude Graph]
+    PressureGraph[Pressure vs. Altitude Graph]
+    CompositionGraph[Composition vs. Altitude Graph]
+    ElevatorControl[Elevator Control]
+    MeasureButton[Measure Button]
+    RecordButton[Record Button]
+    Atmosphere -->|contains| Troposphere
+    Atmosphere -->|contains| Stratosphere
+    Atmosphere -->|contains| Mesosphere
+    Atmosphere -->|contains| Thermosphere
+    Atmosphere -->|contains| Exosphere
+    Troposphere -->|temperature gradient| Surface
+    Stratosphere -->|houses| Ozone
+    Ozone -->|UV absorption demo| Stratosphere
+    Surface -->|pressure gradient display| Atmosphere
+    ElevatorControl -->|moves between| Atmosphere
+    MeasureButton -->|updates| DataTable
+    RecordButton -->|adds to| DataTable
+    DataTable -->|populates| TempGraph
+    DataTable -->|populates| PressureGraph
+    DataTable -->|populates| CompositionGraph

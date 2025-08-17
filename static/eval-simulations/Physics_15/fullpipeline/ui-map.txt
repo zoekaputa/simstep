@@ -1,0 +1,26 @@
+graph LR
+    G[Gravity]
+    P[Shot Trajectory]
+    T[Basket]
+    V[Initial Shot Velocity]
+    A[Air Resistance]
+    C[Court]
+    L[Launch Button]
+    VS[Velocity Slider]
+    AS[Angle Slider]
+    RS[Air Resistance Slider]
+    O[Outcome Display]
+    D[Data Table]
+    G -->|affects| P
+    P -->|has initial| V
+    P -->|aims for| T
+    A -->|affects| P
+    V -->|determines| P
+    C -->|contains| T
+    C -->|contains| P
+    L -->|triggers| P
+    VS -->|sets| V
+    AS -->|sets| P
+    RS -->|sets| A
+    P -->|results in| O
+    O -->|records to| D

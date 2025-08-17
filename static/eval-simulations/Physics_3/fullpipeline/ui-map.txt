@@ -1,0 +1,32 @@
+graph LR
+    Wave[Standing Wave on Guitar String]
+    Wavelength[String Vibration Pattern]
+    Frequency[Guitar Note Pitch]
+    Speed[Sound Wave Velocity]
+    String[Adjustable Guitar String]
+    Harmonics[Overtones]
+    TensionSlider[Tension Slider]
+    LengthSlider[Length Slider]
+    ThicknessDropdown[Thickness Dropdown]
+    PluckButton[Pluck String Button]
+    FrequencyDisplay[Frequency Display]
+    GraphDisplay[Graph Display]
+    Wave -->|has| Wavelength
+    Wave -->|has| Frequency
+    Wave -->|has| Speed
+    Wavelength -->|related by v = fλ| Frequency
+    Frequency -->|related by v = fλ| Speed
+    String -->|vibrates at| Harmonics
+    String -->|tension affects| Frequency
+    String -->|thickness affects| Frequency
+    String -->|length affects| Frequency
+    TensionSlider -->|adjusts| String
+    LengthSlider -->|adjusts| String
+    ThicknessDropdown -->|changes| String
+    PluckButton -->|activates| String
+    String -->|produces| Wave
+    Frequency -->|displayed on| FrequencyDisplay
+    TensionSlider -->|data for| GraphDisplay
+    LengthSlider -->|data for| GraphDisplay
+    ThicknessDropdown -->|data for| GraphDisplay
+    Frequency -->|data for| GraphDisplay

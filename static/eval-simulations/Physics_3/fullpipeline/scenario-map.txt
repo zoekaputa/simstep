@@ -1,0 +1,27 @@
+graph LR
+    Wave[Standing Wave on Guitar String]
+    Wavelength[String Vibration Pattern]
+    Frequency[Guitar Note Pitch]
+    Speed[Sound Wave Velocity]
+    Guitar[Virtual Guitar]
+    String[Adjustable Guitar String]
+    Pick[Virtual Guitar Pick]
+    Fingers[Virtual Fingers]
+    Air[Simulated Air Particles]
+    PressureWave[Simulated Sound Wave]
+    Harmonics[Overtones]
+    Wave -->|has| Wavelength
+    Wave -->|has| Frequency
+    Wave -->|has| Speed
+    Wavelength -->|related by v = fλ| Frequency
+    Frequency -->|related by v = fλ| Speed
+    Guitar -->|has| String
+    String -->|vibrates at| Harmonics
+    Pick -->|plucks| String
+    Fingers -->|pluck| String
+    String -->|vibrates| Air
+    Air -->|forms| PressureWave
+    PressureWave -->|transmits| Sound[Audible Guitar Tone]
+    String -->|tension affects| Frequency
+    String -->|thickness affects| Frequency
+    String -->|length affects| Frequency

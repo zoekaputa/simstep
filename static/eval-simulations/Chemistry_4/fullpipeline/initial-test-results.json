@@ -1,0 +1,12 @@
+{
+    "message": "Runtime test completed.",
+    "jsErrors": [
+        "Cannot read properties of null (reading 'setAttribute')",
+        "Cannot read properties of null (reading 'setAttribute')"
+    ],
+    "debugLogs": [
+        "DEBUG [2025-08-05T14:18:21.860Z]: Simulation started",
+        "DEBUG [2025-08-05T14:18:21.903Z]: Time: 0.30, Temperature: 70.15\u00b0F, Pressure: 30.06 PSI, Volume: 99.79",
+        "DEBUG [2025-08-05T14:18:21.906Z]: Drew 150 molecules"
+    ]
+}

@@ -1,0 +1,19 @@
+graph LR
+    TireFriction[Tire Grip]
+    CentripetalForce[Centripetal Force Vector]
+    CircularPath[Banked Turn]
+    CentripetalAcceleration[Radial Acceleration]
+    Velocity[Bike Velocity]
+    Speed[Speed Setting]
+    BankedTrack[Track Inclination]
+    LeanAngle[Avatar Lean]
+    Inertia[Avatar Mass]
+    TireFriction -->|provides| CentripetalForce
+    CentripetalForce -->|enables| CircularPath
+    CentripetalForce -->|causes| CentripetalAcceleration
+    CentripetalAcceleration -->|changes direction of| Velocity
+    CentripetalAcceleration -->|does not change| Speed
+    LeanAngle -->|affects| CentripetalForce
+    BankedTrack -->|contributes to| CentripetalForce
+    Inertia -->|opposes| CircularPath
+    Speed -->|increases| CentripetalForce

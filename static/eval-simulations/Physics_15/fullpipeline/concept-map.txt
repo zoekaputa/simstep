@@ -1,0 +1,15 @@
+graph LR
+    B[Basketball]
+    E[Earth]
+    G[Gravity]
+    P[Projectile]
+    T[Target]
+    V[Velocity]
+    A[Air]
+    B -->|follows| P
+    E -->|exerts| G
+    G -->|affects| P
+    P -->|has initial| V
+    P -->|aims for| T
+    A -->|affects| P
+    V -->|determines| P

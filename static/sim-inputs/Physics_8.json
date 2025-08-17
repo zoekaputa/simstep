@@ -1,0 +1,12 @@
+{
+    "content": "Refraction is the bending of light as it passes from one medium to another due to the change in speed of light in different materials. This phenomenon is described by Snell's Law: n\u00e2\u0082\u0081sin(\u00ce\u00b8\u00e2\u0082\u0081) = n\u00e2\u0082\u0082sin(\u00ce\u00b8\u00e2\u0082\u0082), where n represents the refractive index of each medium and \u00ce\u00b8 represents the angle of incidence or refraction. When looking at objects underwater from above, they appear to be in different positions than they actually are due to this bending of light. The refractive index of water is approximately 1.33, while air has a refractive index of nearly 1.0. This difference causes light rays from underwater objects to bend away from the normal when they exit the water into air. The apparent depth of an object underwater is about 3/4 of its actual depth due to refraction. This creates a significant visual displacement that increases with depth and viewing angle. The same principle explains why a straight stick appears bent when partially submerged in water.",
+    "scenario": {
+        "title": "Poolside Rescue",
+        "content": "Students play the role of lifeguards who must retrieve objects from the bottom of a virtual swimming pool. The simulation shows both the apparent position (what the student sees) and the actual position (where they need to reach) of underwater objects. Students can adjust water depth, viewing angle, water clarity, and refractive index to observe how these factors affect the apparent displacement. The game includes increasingly difficult challenges where students must compensate for refraction to successfully retrieve objects or rescue underwater targets. The simulation visualizes light ray paths and allows students to measure angles and positions to verify Snell's Law relationships."
+    },
+    "hypothesis": {
+        "hypothesis": "Light Paths and Properties",
+        "type": "Descriptive",
+        "description": "Students will explain how light refraction causes apparent displacement of underwater objects by applying Snell's Law to predict the path of light through different media. They will calculate apparent versus actual positions based on refractive indices and develop strategies for compensating for refractive effects in practical situations."
+    }
+}

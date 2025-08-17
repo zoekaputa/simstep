@@ -1,0 +1,19 @@
+graph LR
+    Earth[Basketball Court]
+    Sun[Campus Center]
+    Neptune[Edge of Campus]
+    KuiperBelt[Nearby Town]
+    OortCloud[Neighboring City]
+    ProximaCentauri[Distant Country]
+    MilkyWay[Continental Region]
+    Andromeda[Another Continent]
+    Universe[Entire Planet]
+    Earth -->|30 meters| Sun
+    Neptune -->|1.2 km| Sun
+    KuiperBelt -->|1.5 km| Sun
+    OortCloud -->|3 km| Sun
+    ProximaCentauri -->|127 km| Sun
+    MilkyWay -->|3000 km diameter| Sun
+    Andromeda -->|75,000 km| MilkyWay
+    Universe -->|1,395,000 km radius| MilkyWay
+    MilkyWay -->|Contains| Sun

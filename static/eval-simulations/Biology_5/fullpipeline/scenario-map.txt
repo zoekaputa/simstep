@@ -1,0 +1,19 @@
+graph LR
+    Heart[Gymnasium: Central hub]
+    Blood[Students: Moving entities]
+    Vessels[Hallways: Traffic routes]
+    Lungs[Science Lab: Oxygenation station]
+    Tissues[Classrooms: Resource destinations]
+    Valves[One-way doors: Traffic regulators]
+    Heart -->|Sends out| Blood
+    Blood -->|Delivers resources to| Tissues
+    Blood -->|Collects waste from| Tissues
+    Vessels -->|Guide| Blood
+    Heart -->|Directs students through| Vessels
+    Lungs -->|Provide oxygen to| Blood
+    Blood -->|Drops off CO2 at| Lungs
+    Valves -->|Prevent backflow in| Heart
+    Valves -->|Ensure one-way traffic in| Vessels
+    Vessels -->|Link| Heart
+    Vessels -->|Link| Lungs
+    Vessels -->|Link| Tissues

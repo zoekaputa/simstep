@@ -1,0 +1,28 @@
+graph LR
+    DataStructure[School Storage System]
+    Array[Numbered Locker Rows]
+    LinkedList[Chained Lockers]
+    HashTable[Student ID Based Assignments]
+    Tree[Club Storage Hierarchy]
+    OperationSelect[Operation Selector]
+    DatasetSelect[Dataset Size Selector]
+    StructureSelect[Data Structure Selector]
+    PerformanceGraph[Performance Graph]
+    Timer[Operation Timer]
+    Counter[Basic Operation Counter]
+    DataStructure -->|Includes| Array
+    DataStructure -->|Includes| LinkedList
+    DataStructure -->|Includes| HashTable
+    DataStructure -->|Includes| Tree
+    StructureSelect -->|Updates| DataStructure
+    OperationSelect -->|Triggers| Timer
+    OperationSelect -->|Triggers| Counter
+    DatasetSelect -->|Affects| DataStructure
+    Timer -->|Updates| PerformanceGraph
+    Counter -->|Updates| PerformanceGraph
+    Array -->|Has| ContiguousMemory[Sequential Locker Numbers]
+    LinkedList -->|Contains| Node[Individual Locker]
+    Node -->|Has| Data[Student Items]
+    Node -->|Has| Reference[Next Locker Direction]
+    Tree -->|Has| ParentChildRelationship[Club and Subclub Relation]
+    HashTable -->|Uses| HashFunction[Student ID Assignment Algorithm]

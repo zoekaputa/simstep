@@ -1,0 +1,23 @@
+graph LR
+    Nebula[Nebula: Diffuse gas cloud]
+    Star[Star: Main sequence]
+    RedGiant[Red Giant]
+    WhiteDwarf[White Dwarf]
+    NeutronStar[Neutron Star]
+    BlackHole[Black Hole]
+    PlanetaryNebula[Planetary Nebula]
+    Supernova[Supernova]
+    ISM[Interstellar Medium]
+    Nebula -->|Gravitational collapse| Star
+    Star -->|Core hydrogen depletion| RedGiant
+    RedGiant -->|Mass < 8 solar masses| PlanetaryNebula
+    PlanetaryNebula -->|Core remnant| WhiteDwarf
+    RedGiant -->|Mass 8-40 solar masses| Supernova
+    Supernova -->|Core remnant| NeutronStar
+    RedGiant -->|Mass > 40 solar masses| Supernova
+    Supernova -->|Extreme gravity| BlackHole
+    PlanetaryNebula -->|Ejects material| ISM
+    Supernova -->|Ejects material| ISM
+    ISM -->|Forms new| Nebula
+    Star -->|Hydrostatic equilibrium| Star
+    Star -->|Nuclear fusion E=mc²| Star

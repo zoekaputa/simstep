@@ -1,0 +1,17 @@
+graph LR
+    pH[pH Scale]
+    H[Hydrogen Ions]
+    Soil[Soil]
+    Plants[Plants]
+    Nutrients[Nutrients]
+    Microbes[Microbes]
+    pH -->|measures| H
+    pH -->|affects| Soil
+    Soil -->|influences| Plants
+    Soil -->|contains| Nutrients
+    Soil -->|hosts| Microbes
+    pH -->|influences availability of| Nutrients
+    pH -->|affects activity of| Microbes
+    Plants -->|adapted to different| pH
+    Nutrients -->|essential for| Plants
+    Microbes -->|contribute to| Nutrients

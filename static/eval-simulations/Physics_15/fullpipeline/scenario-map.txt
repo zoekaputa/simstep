@@ -1,0 +1,15 @@
+graph LR
+    B[Basketball]
+    E[Basketball Court]
+    G[Gravity]
+    P[Shot Trajectory]
+    T[Basket]
+    V[Initial Shot Velocity]
+    A[Air Resistance]
+    B -->|follows| P
+    E -->|exerts| G
+    G -->|affects| P
+    P -->|has initial| V
+    P -->|aims for| T
+    A -->|affects| P
+    V -->|determines| P

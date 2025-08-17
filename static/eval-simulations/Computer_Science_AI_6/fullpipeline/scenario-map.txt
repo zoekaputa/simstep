@@ -1,0 +1,29 @@
+graph LR
+    A[Secret Communication Center]
+    B[Substitution Ciphers]
+    C[Public-Key Systems]
+    D[Data Integrity Checks]
+    E[Key Exchange Methods]
+    F[Symmetric Algorithms]
+    G[RSA Implementation]
+    H[SHA-256 Hashing]
+    I[Diffie-Hellman Protocol]
+    J[Quantum Computing Threats]
+    K[Post-Quantum Cryptography]
+    A -->|includes| B
+    A -->|includes| C
+    A -->|uses| D
+    A -->|uses| E
+    B -->|example| F
+    C -->|example| G
+    D -->|example| H
+    E -->|example| I
+    A -->|based on| L[Cryptographic Math]
+    A -->|based on| M[Security Principles]
+    J -->|threatens| A
+    J -->|spurs development of| K
+    B -->|requires| N[Secure Key Distribution]
+    C -->|enables| O[Digital Signatures]
+    C -->|uses| P[Public-Private Key Pairs]
+    D -->|supports| Q[Message Integrity Verification]
+    E -->|enables| R[Secure Initial Key Sharing]

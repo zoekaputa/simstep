@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather Patterns Simulator</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cabin+Sketch:wght@400;700&family=Londrina+Sketch&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/roughjs@latest/bundled/rough.js"></script>
+    <style>
+        body {
+            font-family: 'Cabin Sketch', cursive;
+            margin: 0;
+            padding: 20px;
+            background-color: #f0f8ff;
+        }
+        h1 {
+            font-family: 'Cabin Sketch', cursive;
+            font-weight: 700;
+            color: #0066cc;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        #weatherMap {
+            width: 100%;
+            height: 400px;
+            background-color: #e6f2ff;
+            border: 2px solid #0066cc;
+            border-radius: 10px;
+        }
+        .controls {
+            margin-top: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .control-group {
+            flex: 1;
+            min-width: 200px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input[type="range"], input[type="text"], button {
+            width: 100%;
+            padding: 5px;
+            font-family: 'Cabin Sketch', cursive;
+        }
+        #dataAnalysisPanel {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #ffffff;
+            border: 1px solid #0066cc;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Weather Patterns Simulator</h1>
+        <p>Welcome to the Weather Patterns Simulator! In this interactive experiment, you'll explore how different atmospheric elements interact to create weather patterns. Observe how air masses, pressure systems, and fronts influence each other and learn to predict weather conditions based on these interactions.</p>
+        
+        <canvas id="weatherMap"></canvas>
+        
+        <div class="controls">
+            <div class="control-group">
+                <label for="timeSlider">Time (Hours):</label>
+                <input type="range" id="timeSlider" min="0" max="72" value="0">
+            </div>
+            <div class="control-group">
+                <label for="tempHumidityDisplay">Temperature & Humidity:</label>
+                <input type="text" id="tempHumidityDisplay" readonly>
+            </div>
+            <div class="control-group">
+                <label for="pressureDisplay">Pressure (hPa):</label>
+                <input type="text" id="pressureDisplay" readonly>
+            </div>
+            <div class="control-group">
+                <label for="frontPositionDisplay">Front Position:</label>
+                <input type="text" id="frontPositionDisplay" readonly>
+            </div>
+            <div class="control-group">
+                <label for="weatherConditionInput">Predict Weather:</label>
+                <input type="text" id="weatherConditionInput" placeholder="Enter your prediction">
+            </div>
+            <div class="control-group">
+                <button id="submitPrediction">Submit Prediction</button>
+            </div>
+        </div>
+        
+        <div id="dataAnalysisPanel">
+            <h3>Data Analysis</h3>
+            <p id="analysisResult"></p>
+        </div>
+    </div>
+
+    <script>
+        window.LOG_DEBUG = false;
+
+        function logDebug(message) {
+            if (window.LOG_DEBUG) {
+                console.log(`DEBUG [${new Date().toISOString()}]: ${message}`);
+            }
+        }
+
+        const canvas = document.getElementById('weatherMap');
+        const rc = rough.canvas(canvas);
+
+        let airMass = { x: 50, y: 200, radius: 100 };
+        let pressureSystem = { x: 400, y: 200, radius: 80 };
+        let front = { x: 250, y: 200, length: 300 };
+
+        function drawWeatherMap() {
+            rc.circle(airMass.x, airMass.y, airMass.radius * 2, {
+                fill: 'lightblue',
+                fillStyle: 'solid',
+                roughness: 2
+            });
+
+            rc.circle(pressureSystem.x, pressureSystem.y, pressureSystem.radius * 2, {
+                fill: 'lightyellow',
+                fillStyle: 'solid',
+                roughness: 2
+            });
+
+            rc.line(front.x - front.length / 2, front.y, front.x + front.length / 2, front.y, {
+                roughness: 1,
+                strokeWidth: 3,
+                stroke: 'red'
+            });
+
+            logDebug(`Air Mass drawn at (${airMass.x}, ${airMass.y})`);
+            logDebug(`Pressure System drawn at (${pressureSystem.x}, ${pressureSystem.y})`);
+            logDebug(`Front drawn from (${front.x - front.length / 2}, ${front.y}) to (${front.x + front.length / 2}, ${front.y})`);
+        }
+
+        function updateWeather() {
+            const time = parseInt(document.getElementById('timeSlider').value);
+            const temperature = Math.round(20 + 10 * Math.sin(time / 24 * Math.PI));
+            const humidity = Math.round(50 + 30 * Math.cos(time / 24 * Math.PI));
+            const pressure = Math.round(1000 + 20 * Math.sin(time / 12 * Math.PI));
+
+            document.getElementById('tempHumidityDisplay').value = `${temperature}°C, ${humidity}%`;
+            document.getElementById('pressureDisplay').value = `${pressure} hPa`;
+            document.getElementById('frontPositionDisplay').value = `${Math.round(front.x)} km`;
+
+            airMass.x = 50 + 200 * Math.sin(time / 24 * Math.PI);
+            pressureSystem.x = 400 + 100 * Math.cos(time / 12 * Math.PI);
+            front.x = 250 + 150 * Math.sin(time / 36 * Math.PI);
+
+            canvas.width = canvas.width; // Clear canvas
+            drawWeatherMap();
+
+            logDebug(`Weather updated for time: ${time}`);
+            logDebug(`Temperature: ${temperature}°C, Humidity: ${humidity}%, Pressure: ${pressure} hPa`);
+        }
+
+        document.getElementById('timeSlider').addEventListener('input', updateWeather);
+
+        document.getElementById('submitPrediction').addEventListener('click', function() {
+            const prediction = document.getElementById('weatherConditionInput').value;
+            const time = parseInt(document.getElementById('timeSlider').value);
+            const analysisResult = document.getElementById('analysisResult');
+            
+            let actualWeather;
+            if (time < 24) {
+                actualWeather = "Partly cloudy";
+            } else if (time < 48) {
+                actualWeather = "Rainy";
+            } else {
+                actualWeather = "Sunny";
+            }
+
+            if (prediction.toLowerCase().includes(actualWeather.toLowerCase())) {
+                analysisResult.textContent = "Great prediction! Your forecast matches the simulated weather.";
+            } else {
+                analysisResult.textContent = `Good try! The simulated weather is actually ${actualWeather}. Keep observing the patterns!`;
+            }
+
+            logDebug(`Prediction submitted: ${prediction}`);
+            logDebug(`Actual weather: ${actualWeather}`);
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            if (window.LOG_DEBUG) {
+                logDebug('Simulation initialized');
+                document.querySelectorAll('svg').forEach((svg, index) => {
+                    const rect = svg.getBoundingClientRect();
+                    logDebug(`SVG #${index}: Position {x: ${rect.x}, y: ${rect.y}}, Size {w: ${rect.width}, h: ${rect.height}}`);
+                });
+                document.querySelectorAll('input, button, select').forEach((control) => {
+                    logDebug(`Control ${control.id || 'unnamed'} (${control.tagName}): Initial value: ${control.value || 'N/A'}`);
+                });
+                
+                document.querySelectorAll('button').forEach((button) => {
+                    button.addEventListener('click', () => logDebug(`Button ${button.id || 'unnamed'} clicked`));
+                });
+                document.querySelectorAll('input').forEach((input) => {
+                    input.addEventListener('change', (e) => logDebug(`Input ${input.id || 'unnamed'} changed to ${e.target.value}`));
+                });
+            }
+            drawWeatherMap();
+            updateWeather();
+        });
+    </script>
+</body>
+</html>

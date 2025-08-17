@@ -1,0 +1,25 @@
+graph LR
+    Skateboarder[Skateboarder]
+    Skateboard[Skateboard]
+    Ramp[Ramp]
+    Surface[Surface]
+    Energy[Energy]
+    Force[Force]
+    Motion[Motion]
+    Rotation[Rotation]
+    Impact[Impact]
+    Materials[Materials]
+    Ergonomics[Ergonomics]
+    Skateboarder -->|rides| Skateboard
+    Skateboarder -->|performs on| Ramp
+    Skateboard -->|contacts| Surface
+    Skateboarder -->|converts| Energy
+    Force -->|affects| Motion
+    Skateboarder -->|controls| Rotation
+    Skateboarder -->|experiences| Impact
+    Materials -->|influence| Skateboard
+    Ergonomics -->|guide| Skateboard
+    Force -->|determines| Impact
+    Energy -->|enables| Motion
+    Rotation -->|depends on| Energy
+    Surface -->|affects| Motion

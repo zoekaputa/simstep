@@ -1,0 +1,26 @@
+graph LR
+    Gas[Air molecules]
+    Pressure[Tire pressure gauge]
+    Volume[Tire volume]
+    Temperature[Ambient temperature]
+    TireVisual[Tire visualization]
+    PressureControl[Pressure input]
+    TempControl[Temperature input]
+    TimeControl[Time control]
+    Graph[Pressure vs Temperature graph]
+    Gas -->|has| Pressure
+    Gas -->|has| Volume
+    Gas -->|has| Temperature
+    Pressure -->|inversely proportional to| Volume
+    Volume -->|directly proportional to| Temperature
+    Pressure -->|directly proportional to| Temperature
+    Temperature -->|affects| Pressure
+    TireVisual -->|displays| Gas
+    TireVisual -->|shows| Pressure
+    TireVisual -->|represents| Volume
+    TempControl -->|sets| Temperature
+    PressureControl -->|sets initial| Pressure
+    TimeControl -->|controls simulation| TireVisual
+    Pressure -->|plots| Graph
+    Temperature -->|plots| Graph
+    TimeControl -->|updates| Graph

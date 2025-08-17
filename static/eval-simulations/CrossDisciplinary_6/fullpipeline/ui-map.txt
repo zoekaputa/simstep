@@ -1,0 +1,28 @@
+graph LR
+    Materials[Bridge Components]
+    Properties[Bridge Properties]
+    MechanicalProperties[Bridge Mechanical Properties]
+    Strength[Load-Bearing Capacity]
+    Elasticity[Flexibility]
+    Toughness[Impact Resistance]
+    Environment[Environmental Conditions]
+    Applications[Bridge Applications]
+    MaterialSelector[Material Selector]
+    EnvironmentSelector[Environment Selector]
+    TestButton[Run Test]
+    ResultsDisplay[Results Display]
+    ComparisonTable[Comparison Table]
+    MaterialSelector -->|selects| Materials
+    EnvironmentSelector -->|sets| Environment
+    TestButton -->|triggers| MechanicalProperties
+    Materials -->|determines| Properties
+    Properties -->|include| MechanicalProperties
+    MechanicalProperties -->|includes| Strength
+    MechanicalProperties -->|includes| Elasticity
+    MechanicalProperties -->|includes| Toughness
+    Environment -->|affects| Properties
+    Properties -->|determine| Applications
+    Applications -->|influence| Materials
+    MechanicalProperties -->|updates| ResultsDisplay
+    ResultsDisplay -->|populates| ComparisonTable
+    ComparisonTable -->|informs| Applications

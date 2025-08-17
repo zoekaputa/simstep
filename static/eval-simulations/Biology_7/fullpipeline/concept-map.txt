@@ -1,0 +1,19 @@
+graph LR
+    Gene[Gene]
+    Allele[Allele]
+    Trait[Trait]
+    Parent[Parent]
+    Offspring[Offspring]
+    Gamete[Gamete]
+    Chromosome[Chromosome]
+    PunnettSquare[Punnett Square]
+    Gene -->|contains| Allele
+    Gene -->|determines| Trait
+    Parent -->|passes| Gene
+    Parent -->|produces| Gamete
+    Gamete -->|contains| Allele
+    Gamete -->|forms| Offspring
+    Offspring -->|inherits| Trait
+    Chromosome -->|carries| Gene
+    PunnettSquare -->|predicts| Trait
+    Allele -->|can be dominant or recessive| Trait

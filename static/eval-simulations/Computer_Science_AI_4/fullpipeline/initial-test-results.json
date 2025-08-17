@@ -1,0 +1,17 @@
+{
+    "message": "Runtime test completed.",
+    "jsErrors": [],
+    "debugLogs": [
+        "DEBUG [2025-08-05T15:09:58.445Z]: Simulation started",
+        "DEBUG [2025-08-05T15:09:58.496Z]: Simulation drawn with team size: 5 and strategy: divide",
+        "DEBUG [2025-08-05T15:09:58.546Z]: Simulation drawn with team size: 5 and strategy: divide",
+        "DEBUG [2025-08-05T15:09:58.597Z]: Simulation drawn with team size: 5 and strategy: divide",
+        "DEBUG [2025-08-05T15:09:58.647Z]: Simulation drawn with team size: 5 and strategy: divide",
+        "DEBUG [2025-08-05T15:09:58.697Z]: Simulation drawn with team size: 5 and strategy: divide",
+        "DEBUG [2025-08-05T15:09:58.747Z]: Simulation drawn with team size: 5 and strategy: divide",
+        "DEBUG [2025-08-05T15:09:58.797Z]: Simulation drawn with team size: 5 and strategy: divide",
+        "DEBUG [2025-08-05T15:09:58.845Z]: Simulation drawn with team size: 5 and strategy: divide",
+        "DEBUG [2025-08-05T15:09:58.897Z]: Simulation drawn with team size: 5 and strategy: divide",
+        "DEBUG [2025-08-05T15:09:58.946Z]: Simulation drawn with team size: 5 and strategy: divide"
+    ]
+}

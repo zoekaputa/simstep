@@ -1,0 +1,12 @@
+{
+    "content": "Gravitational fields are regions where objects experience a force of attraction due to the presence of mass. Near Earth's surface, this manifests as a nearly uniform downward acceleration of 9.8 m/s\u00c2\u00b2. When shooting a basketball, this gravitational field shapes the ball's trajectory into a parabola. The initial velocity (both magnitude and direction) determines how far and high the ball will travel before gravity brings it back down. For a successful free throw, players must intuitively calculate the precise combination of launch angle and force that will allow the ball to pass through the hoop. Too little force, and the ball falls short; too much, and it overshoots. Similarly, an angle that's too shallow or too steep will cause the shot to miss. The optimal launch angle for a free throw is typically between 45-55 degrees, depending on the player's height and distance from the basket. Launch velocity and angle combine to determine the ball's range and maximum height.",
+    "scenario": {
+        "title": "Basketball Trajectory Lab",
+        "content": "In this simulation, students take on the role of basketball players practicing free throws and various shots. They can adjust launch force, angle, release height, and ball properties (mass, size, air resistance) to see how these factors affect trajectory. The simulation visualizes gravitational field lines and shows force vectors acting on the ball throughout its flight. Students can view shot trajectories from different angles, compare multiple shots simultaneously, and analyze the physics behind successful and unsuccessful attempts. Advanced options allow exploration of how shots would differ on other planets or in varying gravitational fields."
+    },
+    "hypothesis": {
+        "hypothesis": "Gravity in Sports",
+        "type": "Explanatory",
+        "description": "Students will analyze how gravitational fields influence projectile motion by examining the relationship between launch conditions and trajectories. They will predict how changing variables like launch force, angle, and environmental conditions affect object paths, and apply these principles to optimize solutions for target-based challenges."
+    }
+}

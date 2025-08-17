@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smartphone Energy Transformation Simulation</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cabin+Sketch:wght@400;700&family=Londrina+Sketch&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/roughjs@latest/bundled/rough.js"></script>
+    <style>
+        body {
+            font-family: 'Cabin Sketch', cursive;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #f0f0f0;
+        }
+        h1 {
+            font-family: 'Cabin Sketch', cursive;
+            font-weight: 700;
+            color: #333;
+        }
+        #description {
+            max-width: 800px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        #simulationContainer {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        #canvas {
+            border: 2px solid #333;
+            background-color: white;
+        }
+        #controls {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        label {
+            margin-bottom: 5px;
+        }
+        input[type="range"] {
+            width: 200px;
+        }
+        button {
+            font-family: 'Cabin Sketch', cursive;
+            font-weight: 700;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #graph {
+            margin-top: 20px;
+            border: 2px solid #333;
+            background-color: white;
+        }
+    </style>
+</head>
+<body>
+    <h1>Smartphone Energy Transformation Simulation</h1>
+    <div id="description">
+        <p>Welcome to the Smartphone Energy Transformation Simulation! In this experiment, you'll explore how energy flows through a smartphone during the charging process. You'll observe how electrical energy from a power source is transformed into various forms within the device, including chemical energy in the battery and heat energy. Pay attention to how changes in power input and temperature affect the charging process and overall efficiency.</p>
+    </div>
+    <div id="simulationContainer">
+        <canvas id="canvas" width="800" height="600"></canvas>
+        <div id="controls">
+            <div class="control-group">
+                <label for="powerSlider">Power Setting (Watts)</label>
+                <input type="range" id="powerSlider" min="5" max="50" value="20" step="1">
+                <span id="powerValue">20W</span>
+            </div>
+            <div class="control-group">
+                <label for="tempInput">Initial Temperature (°C)</label>
+                <input type="number" id="tempInput" min="0" max="50" value="25">
+            </div>
+            <div class="control-group">
+                <label for="rapidCharging">Rapid Charging Mode</label>
+                <input type="checkbox" id="rapidCharging">
+            </div>
+            <button id="startButton">Start Charging</button>
+            <button id="resetButton">Reset</button>
+            <button id="graphButton">Show Graph</button>
+        </div>
+    </div>
+    <canvas id="graph" width="800" height="400" style="display: none;"></canvas>
+
+    <script>
+        window.LOG_DEBUG = false;
+
+        function logDebug(message) {
+            if (window.LOG_DEBUG) {
+                console.log(`DEBUG [${new Date().toISOString()}]: ${message}`);
+            }
+        }
+
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const rc = rough.canvas(canvas);
+
+        const graphCanvas = document.getElementById('graph');
+        const graphCtx = graphCanvas.getContext('2d');
+
+        let charging = false;
+        let batteryLevel = 0;
+        let temperature = 25;
+        let timeElapsed = 0;
+
+        const smartphoneSVG = `
+            <svg width="200" height="400" viewBox="0 0 200 400">
+                <rect x="10" y="10" width="180" height="380" rx="20" ry="20" fill="#333" />
+                <rect x="20" y="50" width="160" height="300" rx="5" ry="5" fill="#f0f0f0" />
+                <circle cx="100" cy="25" r="5" fill="#666" />
+                <rect x="85" y="370" width="30" height="10" rx="5" ry="5" fill="#666" />
+            </svg>
+        `;
+
+        const batterySVG = `
+            <svg width="100" height="50" viewBox="0 0 100 50">
+                <rect x="5" y="5" width="90" height="40" rx="5" ry="5" fill="#ccc" stroke="#333" stroke-width="2" />
+                <rect x="95" y="15" width="5" height="20" fill="#333" />
+            </svg>
+        `;
+
+        const heatSVG = `
+            <svg width="50" height="50" viewBox="0 0 50 50">
+                <path d="M25 5 L35 20 L25 15 L35 30 L25 25 L35 40 L25 35 L15 40 L25 35 L15 30 L25 25 L15 20 L25 15 Z" fill="orange" />
+            </svg>
+        `;
+
+        function drawSmartphone() {
+            const img = new Image();
+            img.onload = () => {
+                ctx.drawImage(img, 300, 100, 200, 400);
+                logDebug('Smartphone SVG drawn');
+            };
+            img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(smartphoneSVG);
+        }
+
+        function drawBattery() {
+            const img = new Image();
+            img.onload = () => {
+                ctx.drawImage(img, 350, 250, 100, 50);
+                logDebug('Battery SVG drawn');
+            };
+            img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(batterySVG);
+        }
+
+        function drawHeat() {
+            const img = new Image();
+            img.onload = () => {
+                ctx.drawImage(img, 460, 230, 50, 50);
+                logDebug('Heat SVG drawn');
+            };
+            img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(heatSVG);
+        }
+
+        function drawScene() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            drawSmartphone();
+            drawBattery();
+            drawHeat();
+
+            // Draw battery level
+            ctx.fillStyle = '#4CAF50';
+            ctx.fillRect(355, 255, 90 * (batteryLevel / 100), 40);
+
+            // Draw temperature
+            ctx.font = '20px Cabin Sketch';
+            ctx.fillStyle = '#333';
+            ctx.fillText(`Temperature: ${temperature.toFixed(1)}°C`, 320, 350);
+
+            // Draw charging time
+            ctx.fillText(`Charging Time: ${timeElapsed.toFixed(1)}s`, 320, 380);
+
+            logDebug(`Scene updated - Battery: ${batteryLevel}%, Temp: ${temperature}°C, Time: ${timeElapsed}s`);
+        }
+
+        function updateSimulation() {
+            if (charging) {
+                const power = parseInt(document.getElementById('powerSlider').value);
+                const rapidCharging = document.getElementById('rapidCharging').checked;
+
+                batteryLevel += power * 0.1;
+                temperature += power * 0.05 + (rapidCharging ? 0.1 : 0);
+                timeElapsed += 0.1;
+
+                if (batteryLevel >= 100) {
+                    batteryLevel = 100;
+                    charging = false;
+                }
+
+                drawScene();
+                logDebug(`Simulation updated - Power: ${power}W, Rapid: ${rapidCharging}`);
+
+                requestAnimationFrame(updateSimulation);
+            }
+        }
+
+        function startCharging() {
+            if (!charging) {
+                charging = true;
+                updateSimulation();
+                logDebug('Charging started');
+            }
+        }
+
+        function resetSimulation() {
+            charging = false;
+            batteryLevel = 0;
+            temperature = parseFloat(document.getElementById('tempInput').value);
+            timeElapsed = 0;
+            drawScene();
+            logDebug('Simulation reset');
+        }
+
+        function showGraph() {
+            graphCanvas.style.display = 'block';
+            const power = parseInt(document.getElementById('powerSlider').value);
+            const rapidCharging = document.getElementById('rapidCharging').checked;
+
+            graphCtx.clearRect(0, 0, graphCanvas.width, graphCanvas.height);
+
+            graphCtx.beginPath();
+            graphCtx.moveTo(50, 350);
+            graphCtx.lineTo(750, 350);
+            graphCtx.stroke();
+
+            graphCtx.beginPath();
+            graphCtx.moveTo(50, 350);
+            graphCtx.lineTo(50, 50);
+            graphCtx.stroke();
+
+            graphCtx.font = '16px Cabin Sketch';
+            graphCtx.fillText('Power (W)', 700, 380);
+            graphCtx.fillText('Temperature (°C)', 10, 30);
+
+            for (let i = 0; i <= 100; i += 10) {
+                const x = 50 + i * 7;
+                const y = 350 - (power * 0.05 + (rapidCharging ? 0.1 : 0)) * i * 3;
+                graphCtx.beginPath();
+                graphCtx.arc(x, y, 3, 0, Math.PI * 2);
+                graphCtx.fill();
+            }
+
+            logDebug('Graph displayed');
+        }
+
+        document.getElementById('startButton').addEventListener('click', startCharging);
+        document.getElementById('resetButton').addEventListener('click', resetSimulation);
+        document.getElementById('graphButton').addEventListener('click', showGraph);
+
+        document.getElementById('powerSlider').addEventListener('input', (e) => {
+            document.getElementById('powerValue').textContent = `${e.target.value}W`;
+            logDebug(`Power set to ${e.target.value}W`);
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            if (window.LOG_DEBUG) {
+                logDebug('Simulation initialized');
+                document.querySelectorAll('svg').forEach((svg, index) => {
+                    const rect = svg.getBoundingClientRect();
+                    logDebug(`SVG #${index}: Position {x: ${rect.x}, y: ${rect.y}}, Size {w: ${rect.width}, h: ${rect.height}}`);
+                });
+                document.querySelectorAll('input, button, select').forEach((control) => {
+                    logDebug(`Control ${control.id || 'unnamed'} (${control.tagName}): Initial value: ${control.value || 'N/A'}`);
+                });
+                
+                document.querySelectorAll('button').forEach((button) => {
+                    button.addEventListener('click', () => logDebug(`Button ${button.id || 'unnamed'} clicked`));
+                });
+                document.querySelectorAll('input').forEach((input) => {
+                    input.addEventListener('change', (e) => logDebug(`Input ${input.id || 'unnamed'} changed to ${e.target.value}`));
+                });
+            }
+
+            resetSimulation();
+        });
+    </script>
+</body>
+</html>

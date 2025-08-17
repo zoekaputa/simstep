@@ -1,0 +1,25 @@
+graph LR
+    BH[Simulated Black Hole]
+    EH[Visualized Event Horizon]
+    SR[Calculated Schwarzschild Radius]
+    ST[Distorted Spacetime Visualization]
+    LO[Virtual Light/Objects]
+    MP[Mass Panel]
+    GP[Grid Panel]
+    TP[Test Particles]
+    CG[Curvature Graph]
+    DG[Displacement Graph]
+    BH -->|Defined by| EH
+    EH -->|Located at| SR
+    SR -->|Calculated as R = 2GM/c²| BH
+    LO -->|Cannot escape| EH
+    BH -->|Distorts| ST
+    BH -->|Has properties: Mass, Charge, Spin| BH
+    MP -->|Controls| BH
+    GP -->|Displays| ST
+    TP -->|Placed on| ST
+    BH -->|Affects| TP
+    MP -->|Inputs for| CG
+    MP -->|Inputs for| DG
+    TP -->|Data for| DG
+    ST -->|Data for| CG

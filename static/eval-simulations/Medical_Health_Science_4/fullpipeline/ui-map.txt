@@ -1,0 +1,42 @@
+graph LR
+    A[Epidemic Management System]
+    B[Population Health Outcomes]
+    C[Disease Transmission Factors]
+    D[Intervention Types]
+    E[Vaccination Campaigns]
+    F[Environmental Modifications]
+    G[Public Education]
+    H[Testing Programs]
+    J[Evidence-Based Decision Making]
+    SimulationView[Simulation View]
+    PopulationSlider[Population Size Slider]
+    InitialPrevalenceSlider[Initial Disease Prevalence Slider]
+    InterventionCheckboxes[Intervention Checkboxes]
+    RunSimulationButton[Run Simulation Button]
+    ResultsGraph[Results Graph]
+    PredictionInput[Prediction Input]
+    ComparisonView[Prediction vs Actual Comparison]
+    A -->|aims to improve| B
+    A -->|addresses| C
+    A -->|includes| D
+    A -->|employs| E
+    A -->|includes| F
+    A -->|uses| G
+    A -->|implements| H
+    A -->|utilizes| J
+    C -->|influences| B
+    D -->|ranges from prevention to treatment| A
+    E -->|uses herd immunity thresholds| A
+    F -->|targets physical surroundings| A
+    G -->|encourages protective behaviors| B
+    H -->|enables early detection| B
+    J -->|evaluates intervention effectiveness| A
+    SimulationView -->|displays| A
+    PopulationSlider -->|sets| SimulationView
+    InitialPrevalenceSlider -->|sets| SimulationView
+    InterventionCheckboxes -->|configures| D
+    RunSimulationButton -->|triggers| SimulationView
+    SimulationView -->|generates| ResultsGraph
+    ResultsGraph -->|shows| B
+    PredictionInput -->|allows| J
+    ComparisonView -->|compares| J

@@ -1,0 +1,7 @@
+{
+    "message": "Runtime test completed.",
+    "jsErrors": [
+        "rc.svg is not a function"
+    ],
+    "debugLogs": []
+}

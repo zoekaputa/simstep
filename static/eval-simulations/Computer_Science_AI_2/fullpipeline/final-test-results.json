@@ -1,0 +1,9 @@
+{
+    "message": "Runtime test completed.",
+    "jsErrors": [],
+    "debugLogs": [
+        "DEBUG [2025-08-07T14:39:55.652Z]: Training started",
+        "DEBUG [2025-08-07T14:39:55.696Z]: Proficiency graph updated: {\"sit\":0,\"stay\":0,\"fetch\":0}",
+        "DEBUG [2025-08-07T14:39:55.696Z]: Training reset"
+    ]
+}

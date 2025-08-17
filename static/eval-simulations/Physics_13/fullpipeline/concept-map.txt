@@ -1,0 +1,32 @@
+graph LR
+    SW[Sound Waves]
+    M[Medium]
+    S[Surfaces]
+    HFS[Hard Flat Surfaces]
+    SPM[Soft Porous Materials]
+    E[Echoes]
+    R[Reverberation]
+    F[Frequency]
+    W[Wavelength]
+    LF[Low Frequency]
+    HF[High Frequency]
+    StW[Standing Waves]
+    N[Nodes]
+    AN[Antinodes]
+    SW -->|travel through| M
+    SW -->|interact with| S
+    S -->|can be| HFS
+    S -->|can be| SPM
+    HFS -->|cause| E
+    HFS -->|cause| R
+    SPM -->|absorb| SW
+    SW -->|have| F
+    F -->|determines| W
+    F -->|can be| LF
+    F -->|can be| HF
+    LF -->|diffracts easily| SW
+    HF -->|more directional| SW
+    SW -->|can form| StW
+    StW -->|have| N
+    StW -->|have| AN
+    SW -->|compress and expand| M

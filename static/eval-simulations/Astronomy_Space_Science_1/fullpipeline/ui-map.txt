@@ -1,0 +1,41 @@
+graph LR
+    Nebula[Fuel Gathering: Wood and Kindling]
+    Star[Steady Burning Campfire]
+    RedGiant[Large Bonfire]
+    WhiteDwarf[Smoldering Embers]
+    NeutronStar[Dense Charcoal Remnant]
+    BlackHole[Fire Pit Void]
+    PlanetaryNebula[Smoke and Ash Cloud]
+    Supernova[Explosive Flare-up]
+    ISM[Scattered Ashes and Debris]
+    MassSlider[Initial Mass Slider]
+    StartButton[Start Simulation]
+    TimeDisplay[Time Elapsed Display]
+    StageDisplay[Current Stage Display]
+    DataTable[Evolution Data Table]
+    SimulationArea[Star Visualization Area]
+    Nebula -->|Ignition| Star
+    Star -->|Fuel depletion| RedGiant
+    RedGiant -->|Small fire| PlanetaryNebula
+    PlanetaryNebula -->|Cooling down| WhiteDwarf
+    RedGiant -->|Medium fire| Supernova
+    Supernova -->|Compressed remains| NeutronStar
+    RedGiant -->|Large fire| Supernova
+    Supernova -->|Complete collapse| BlackHole
+    PlanetaryNebula -->|Dispersal| ISM
+    Supernova -->|Scattering| ISM
+    ISM -->|Regathering| Nebula
+    MassSlider -->|Sets initial mass| SimulationArea
+    StartButton -->|Begins evolution| SimulationArea
+    SimulationArea -->|Updates| TimeDisplay
+    SimulationArea -->|Updates| StageDisplay
+    SimulationArea -->|Records data| DataTable
+    SimulationArea -->|Visualizes| Nebula
+    SimulationArea -->|Visualizes| Star
+    SimulationArea -->|Visualizes| RedGiant
+    SimulationArea -->|Visualizes| WhiteDwarf
+    SimulationArea -->|Visualizes| NeutronStar
+    SimulationArea -->|Visualizes| BlackHole
+    SimulationArea -->|Visualizes| PlanetaryNebula
+    SimulationArea -->|Visualizes| Supernova
+    SimulationArea -->|Visualizes| ISM

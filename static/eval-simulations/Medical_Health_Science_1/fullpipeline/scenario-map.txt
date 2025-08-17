@@ -1,0 +1,23 @@
+graph LR
+    Vaccine[Castle Training Program]
+    Antigen[Mock Invader]
+    ImmuneSystem[Castle Defense System]
+    BCell[Archer]
+    TCell[Knight]
+    PlasmaCell[Arrow Factory]
+    Antibody[Arrows]
+    MemoryCell[Veteran Defender]
+    Pathogen[Real Invader]
+    Population[Kingdom]
+    Vaccine -->|contains| Antigen
+    Antigen -->|stimulates| ImmuneSystem
+    ImmuneSystem -->|activates| BCell
+    ImmuneSystem -->|activates| TCell
+    BCell -->|differentiates into| PlasmaCell
+    PlasmaCell -->|produces| Antibody
+    Antibody -->|binds to| Pathogen
+    BCell -->|produces| MemoryCell
+    TCell -->|produces| MemoryCell
+    MemoryCell -->|provides long-term protection against| Pathogen
+    Vaccine -->|immunizes| Population
+    Population -->|achieves| HerdImmunity[Kingdom-wide Protection]

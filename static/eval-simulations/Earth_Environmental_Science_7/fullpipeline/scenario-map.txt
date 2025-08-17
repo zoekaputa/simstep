@@ -1,0 +1,25 @@
+graph TD
+    Atmosphere[Virtual Skyscraper]
+    Troposphere[Ground Floor: 0-15km, weather simulations]
+    Stratosphere[Middle Floors: 15-50km, ozone simulation]
+    Mesosphere[Upper Floors: 50-85km, meteor burn-up zone]
+    Thermosphere[Penthouse: 85-600km, high-energy absorption]
+    Exosphere[Rooftop: 600km+, space transition]
+    Surface[Lobby: Earth's surface conditions]
+    Ozone[Ozone Layer Exhibit]
+    Aircraft[Virtual Aircraft]
+    Meteors[Virtual Meteors]
+    Atmosphere -->|contains| Troposphere
+    Atmosphere -->|contains| Stratosphere
+    Atmosphere -->|contains| Mesosphere
+    Atmosphere -->|contains| Thermosphere
+    Atmosphere -->|contains| Exosphere
+    Troposphere -->|temperature gradient| Surface
+    Troposphere -->|simulates| Weather[Weather Patterns Display]
+    Stratosphere -->|houses| Ozone
+    Ozone -->|UV absorption demo| Stratosphere
+    Stratosphere -->|flight simulator zone| Aircraft
+    Mesosphere -->|meteor burn-up simulator| Meteors
+    Thermosphere -->|energy absorption demo| Molecules[O2 and N2 Molecule Models]
+    Exosphere -->|space transition exhibit| Space[Space Vacuum Simulation]
+    Surface -->|pressure gradient display| Atmosphere

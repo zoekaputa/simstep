@@ -1,0 +1,7 @@
+{
+    "message": "Runtime test completed.",
+    "jsErrors": [],
+    "debugLogs": [
+        "DEBUG [2025-08-05T03:27:25.236Z]: Acoustics measured: Reverb: 6.355263157894737s, Flutter echo: true, Room modes: 17.15Hz"
+    ]
+}

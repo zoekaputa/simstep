@@ -1,0 +1,40 @@
+graph LR
+    Neuron[Device]
+    Soma[Central Processing Unit]
+    Dendrites[Receiving Antenna]
+    Axon[Transmitting Antenna]
+    MyelinSheath[Signal Insulation]
+    NodesOfRanvier[Insulation Gaps]
+    Neurotransmitters[Data Packets]
+    Receptors[Data Receivers]
+    IonChannels[Signal Amplifiers]
+    ActionPotential[Message Transmission]
+    Synapse[Connection Point]
+    PostsynapticNeuron[Next Device]
+    NeuronVisual[Neuron Visual]
+    NeurotransmitterSlider[Neurotransmitter Quantity Slider]
+    StartButton[Start Simulation Button]
+    ResetButton[Reset Button]
+    SpeedGraph[Signal Speed Graph]
+    SuccessGraph[Transmission Success Graph]
+    Neuron -->|contains| Soma
+    Neuron -->|has| Dendrites
+    Neuron -->|has| Axon
+    Axon -->|covered by| MyelinSheath
+    MyelinSheath -->|has gaps called| NodesOfRanvier
+    Dendrites -->|receive| Neurotransmitters
+    Neurotransmitters -->|bind to| Receptors
+    Receptors -->|affect| IonChannels
+    IonChannels -->|trigger| ActionPotential
+    ActionPotential -->|propagates along| Axon
+    Axon -->|releases neurotransmitters at| Synapse
+    Synapse -->|connects to| PostsynapticNeuron
+    PostsynapticNeuron -->|may generate new| ActionPotential
+    NeuronVisual -->|displays| Neuron
+    NeurotransmitterSlider -->|controls| Neurotransmitters
+    StartButton -->|initiates| ActionPotential
+    ResetButton -->|resets| NeuronVisual
+    SpeedGraph -->|shows| NodesOfRanvier
+    SpeedGraph -->|compares with| MyelinSheath
+    SuccessGraph -->|relates| Neurotransmitters
+    SuccessGraph -->|to| PostsynapticNeuron

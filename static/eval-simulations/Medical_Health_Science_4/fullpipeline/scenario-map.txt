@@ -1,0 +1,31 @@
+graph LR
+    A[Epidemic Management System]
+    B[Population Health Outcomes]
+    C[Disease Transmission Factors]
+    D[Intervention Types]
+    E[Vaccination Campaigns]
+    F[Environmental Modifications]
+    G[Public Education]
+    H[Testing Programs]
+    I[Health Inequities]
+    J[Evidence-Based Decision Making]
+    K[Real-World Implementation]
+    A -->|aims to improve| B
+    A -->|addresses| C
+    A -->|includes| D
+    A -->|employs| E
+    A -->|includes| F
+    A -->|uses| G
+    A -->|implements| H
+    A -->|targets| I
+    A -->|utilizes| J
+    A -->|incorporates| K
+    C -->|influences| B
+    D -->|ranges from prevention to treatment| A
+    E -->|uses herd immunity thresholds| A
+    F -->|targets physical surroundings| A
+    G -->|encourages protective behaviors| B
+    H -->|enables early detection| B
+    I -->|addresses social determinants| B
+    J -->|evaluates intervention effectiveness| A
+    K -->|examines societal impact| A

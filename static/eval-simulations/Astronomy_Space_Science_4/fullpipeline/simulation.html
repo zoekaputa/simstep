@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cosmic Distance Explorer</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cabin+Sketch:wght@400;700&family=Londrina+Sketch&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/roughjs@latest/bundled/rough.js"></script>
+    <style>
+        body {
+            font-family: 'Cabin Sketch', cursive;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        h1 {
+            font-family: 'Cabin Sketch', cursive;
+            font-weight: 700;
+            color: #333;
+        }
+        #canvas {
+            background-color: #fff;
+            border: 2px solid #333;
+            margin-bottom: 20px;
+        }
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        label {
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        select, input, button {
+            font-family: 'Cabin Sketch', cursive;
+            font-size: 16px;
+            padding: 5px;
+            border: 2px solid #333;
+            border-radius: 5px;
+        }
+        #explanation {
+            max-width: 600px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Cosmic Distance Explorer</h1>
+    <p id="explanation">
+        Welcome to the Cosmic Distance Explorer! In this experiment, we'll explore the vast distances in our solar system by comparing them to familiar places on our campus. You'll learn how astronomers measure cosmic distances and understand the scale of our universe.
+    </p>
+    <canvas id="canvas" width="800" height="600"></canvas>
+    <div class="controls">
+        <div class="control-group">
+            <label for="celestialObject">Celestial Object:</label>
+            <select id="celestialObject">
+                <option value="Earth">Basketball Court (Earth)</option>
+                <option value="Sun">Campus Center (Sun)</option>
+                <option value="Neptune">Edge of Campus (Neptune)</option>
+                <option value="KuiperBelt">Nearby Town (Kuiper Belt)</option>
+                <option value="OortCloud">Neighboring City (Oort Cloud)</option>
+            </select>
+        </div>
+        <div class="control-group">
+            <label for="distanceEstimate">Distance Estimate (meters):</label>
+            <input type="number" id="distanceEstimate" min="0" step="0.1">
+        </div>
+        <div class="control-group">
+            <label for="auConversion">AU Conversion:</label>
+            <input type="number" id="auConversion" readonly>
+        </div>
+        <div class="control-group">
+            <label for="measurementTechnique">Measurement Technique:</label>
+            <input type="text" id="measurementTechnique">
+        </div>
+        <div class="control-group">
+            <button id="updateButton">Update Solar System</button>
+        </div>
+    </div>
+    <div id="distanceMeasurementExplanation"></div>
+
+    <script>
+        // Debug logging system - only active when window.LOG_DEBUG is true
+        window.LOG_DEBUG = false;
+        function logDebug(message) {
+            if (window.LOG_DEBUG) {
+                console.log(`DEBUG [${new Date().toISOString()}]: ${message}`);
+            }
+        }
+
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const rc = rough.canvas(canvas);
+
+        const celestialObjects = {
+            Earth: { name: "Basketball Court", distance: 30, color: "#4CAF50" },
+            Sun: { name: "Campus Center", distance: 0, color: "#FFC107" },
+            Neptune: { name: "Edge of Campus", distance: 1200, color: "#2196F3" },
+            KuiperBelt: { name: "Nearby Town", distance: 1500, color: "#9C27B0" },
+            OortCloud: { name: "Neighboring City", distance: 3000, color: "#FF5722" }
+        };
+
+        function drawSolarSystem() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            const centerX = canvas.width / 2;
+            const centerY = canvas.height / 2;
+            const maxDistance = Math.max(...Object.values(celestialObjects).map(obj => obj.distance));
+            const scale = (canvas.width * 0.4) / maxDistance;
+
+            rc.circle(centerX, centerY, 40, { fill: celestialObjects.Sun.color, fillStyle: "solid" });
+
+            for (const [key, obj] of Object.entries(celestialObjects)) {
+                if (key !== "Sun") {
+                    const angle = Math.random() * Math.PI * 2;
+                    const x = centerX + Math.cos(angle) * obj.distance * scale;
+                    const y = centerY + Math.sin(angle) * obj.distance * scale;
+                    rc.circle(x, y, 20, { fill: obj.color, fillStyle: "solid" });
+                    ctx.fillStyle = "#333";
+                    ctx.font = "16px 'Cabin Sketch'";
+                    ctx.fillText(obj.name, x - 40, y + 30);
+                }
+            }
+
+            logDebug("Solar system redrawn");
+        }
+
+        function updateSolarSystem() {
+            const selectedObject = document.getElementById("celestialObject").value;
+            const distanceEstimate = parseFloat(document.getElementById("distanceEstimate").value);
+            const measurementTechnique = document.getElementById("measurementTechnique").value;
+
+            if (selectedObject && !isNaN(distanceEstimate)) {
+                celestialObjects[selectedObject].distance = distanceEstimate;
+                document.getElementById("auConversion").value = (distanceEstimate / 149597870700).toFixed(10);
+                
+                let explanation = `The ${celestialObjects[selectedObject].name} is approximately ${distanceEstimate} meters away from the Campus Center (Sun). `;
+                explanation += `This distance can be measured using ${measurementTechnique}. `;
+                explanation += `In astronomical units (AU), this distance is about ${(distanceEstimate / 149597870700).toFixed(10)} AU.`;
+                
+                document.getElementById("distanceMeasurementExplanation").textContent = explanation;
+                
+                drawSolarSystem();
+                
+                logDebug(`Updated ${selectedObject}: distance = ${distanceEstimate}m, technique = ${measurementTechnique}`);
+            }
+        }
+
+        document.getElementById("updateButton").addEventListener("click", updateSolarSystem);
+
+        document.addEventListener('DOMContentLoaded', () => {
+            drawSolarSystem();
+            
+            if (window.LOG_DEBUG) {
+                logDebug('Simulation initialized');
+                document.querySelectorAll('svg').forEach((svg, index) => {
+                    const rect = svg.getBoundingClientRect();
+                    logDebug(`SVG #${index}: Position {x: ${rect.x}, y: ${rect.y}}, Size {w: ${rect.width}, h: ${rect.height}}`);
+                });
+                document.querySelectorAll('input, button, select').forEach((control) => {
+                    logDebug(`Control ${control.id || 'unnamed'} (${control.tagName}): Initial value: ${control.value || 'N/A'}`);
+                });
+                
+                document.querySelectorAll('button').forEach((button) => {
+                    button.addEventListener('click', () => logDebug(`Button ${button.id || 'unnamed'} clicked`));
+                });
+                document.querySelectorAll('input').forEach((input) => {
+                    input.addEventListener('change', (e) => logDebug(`Input ${input.id || 'unnamed'} changed to ${e.target.value}`));
+                });
+            }
+        });
+    </script>
+</body>
+</html>

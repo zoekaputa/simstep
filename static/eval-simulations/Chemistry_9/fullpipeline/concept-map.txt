@@ -1,0 +1,17 @@
+graph LR
+    Fruit[Fruit]
+    Juice[Acidic Juice]
+    Zinc[Zinc Electrode]
+    Copper[Copper Electrode]
+    Electrons[Electrons]
+    LED[LED]
+    Fruit -->|contains| Juice
+    Juice -->|acts as| Electrolyte[Electrolyte]
+    Zinc -->|inserted into| Fruit
+    Copper -->|inserted into| Fruit
+    Zinc -->|oxidizes| Electrons
+    Electrons -->|flow through| Circuit[External Circuit]
+    Circuit -->|powers| LED
+    Copper -->|reduces H+ ions| HydrogenGas[Hydrogen Gas]
+    Fruit -->|produces| Voltage[Electric Potential Difference]
+    MultipleFruits[Multiple Fruit Cells] -->|connected in series| IncreasedVoltage[Increased Voltage]

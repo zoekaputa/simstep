@@ -1,0 +1,20 @@
+graph LR
+    PS[Escape Room Design] -->|integrates| K[Subject Knowledge]
+    PS -->|integrates| M[Puzzle Creation Methods]
+    PS -->|integrates| P[Interdisciplinary Perspectives]
+    PS -->|addresses| CC[Complex Escape Scenarios]
+    CI[Knowledge Synthesis] -->|core of| ID[Interdisciplinary Puzzles]
+    ID -->|requires| DP[Multi-Subject Insights]
+    ID -->|requires| EM[Cross-Domain Problem-Solving]
+    PD[Scenario Planning] -->|leads to| DG[Subject-Specific Challenges]
+    DG -->|leads to| PT[Perspective Shifting]
+    PT -->|leads to| CG[Conceptual Bridges]
+    CG -->|leads to| I[Knowledge Integration]
+    IS[Integration Techniques] -->|includes| CF[Cross-Subject Frameworks]
+    IS -->|includes| MA[Interdisciplinary Analogies]
+    IS -->|includes| CV[Knowledge Mapping Tools]
+    IS -->|includes| BO[Multi-Domain Puzzles]
+    CS[Synthesis Skills] -->|needed for| EC[Team Problem-Solving]
+    SS[Collaboration Skills] -->|needed for| EC
+    B[Time Constraints] -->|hinder| EC
+    A[Performance Evaluation] -->|challenges| ID

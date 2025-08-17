@@ -1,0 +1,74 @@
+graph LR
+    Sun[Treehouse Sunlight]
+    Wind[Treetop Breezes]
+    Water[Nearby Stream]
+    Earth[Forest Floor Heat]
+    Biomass[Fallen Leaves and Branches]
+    PVCells[Rooftop Solar Panels]
+    SolarThermal[Solar Water Heater]
+    WindTurbines[Mini Wind Turbines]
+    HydroTurbines[Micro-Hydro Generator]
+    Geothermal[Ground Heat Exchanger]
+    Batteries[Treehouse Battery Bank]
+    PumpedHydro[Elevated Water Tank]
+    Hydrogen[DIY Hydrogen Fuel Cell]
+    Microgrids[Treehouse Energy Management System]
+    Treehouse[Digital Treehouse Model]
+    SunSlider[Sunlight Slider]
+    WindSlider[Wind Slider]
+    WaterSlider[Water Flow Slider]
+    EarthSlider[Ground Temperature Slider]
+    BiomassSlider[Biomass Availability Slider]
+    EnergyMeter[Electricity Production Meter]
+    StorageMeter[Energy Storage Meter]
+    ConsumptionMeter[Energy Consumption Meter]
+    EnvironmentControls[Environmental Condition Controls]
+    UsageControls[Energy Usage Pattern Controls]
+    PerformanceData[System Performance Data]
+    Sun -->|provides energy to| PVCells
+    Sun -->|heats| SolarThermal
+    Wind -->|drives| WindTurbines
+    Water -->|flows through| HydroTurbines
+    Earth -->|provides heat to| Geothermal
+    Biomass -->|converted in| BiomassEnergy[Biomass Stove]
+    PVCells -->|generate| Electricity[Treehouse Electricity]
+    SolarThermal -->|generate| Electricity
+    WindTurbines -->|generate| Electricity
+    HydroTurbines -->|generate| Electricity
+    Geothermal -->|generate| Electricity
+    BiomassEnergy -->|generate| Electricity
+    Electricity -->|stored in| Batteries
+    Electricity -->|powers| PumpedHydro
+    Electricity -->|used in| Hydrogen
+    Electricity -->|managed by| Microgrids
+    Batteries -->|supply| Microgrids
+    PumpedHydro -->|supply| Microgrids
+    Hydrogen -->|supply| Microgrids
+    SunSlider -->|adjusts| Sun
+    WindSlider -->|adjusts| Wind
+    WaterSlider -->|adjusts| Water
+    EarthSlider -->|adjusts| Earth
+    BiomassSlider -->|adjusts| Biomass
+    Treehouse -->|displays| PVCells
+    Treehouse -->|displays| SolarThermal
+    Treehouse -->|displays| WindTurbines
+    Treehouse -->|displays| HydroTurbines
+    Treehouse -->|displays| Geothermal
+    Treehouse -->|displays| BiomassEnergy
+    Treehouse -->|displays| Batteries
+    Treehouse -->|displays| PumpedHydro
+    Treehouse -->|displays| Hydrogen
+    Treehouse -->|displays| Microgrids
+    Electricity -->|measured by| EnergyMeter
+    Batteries -->|measured by| StorageMeter
+    Microgrids -->|measured by| ConsumptionMeter
+    EnvironmentControls -->|affects| Sun
+    EnvironmentControls -->|affects| Wind
+    EnvironmentControls -->|affects| Water
+    EnvironmentControls -->|affects| Earth
+    EnvironmentControls -->|affects| Biomass
+    UsageControls -->|affects| Microgrids
+    Microgrids -->|records| PerformanceData
+    EnergyMeter -->|records| PerformanceData
+    StorageMeter -->|records| PerformanceData
+    ConsumptionMeter -->|records| PerformanceData

@@ -1,0 +1,35 @@
+graph LR
+    Light[Sunlight]
+    Medium1[Air above pool]
+    Medium2[Pool water]
+    UnderWaterObject[Submerged rescue target]
+    Observer[Student lifeguard]
+    RefractiveIndex1[Refractive Index of air]
+    RefractiveIndex2[Refractive Index of water]
+    SnellsLaw[Snell's Law in simulation]
+    Water[Pool water]
+    WaterRI[1.33]
+    Air[Air]
+    AirRI[1.0]
+    ApparentDepth[3/4 of actual pool depth]
+    PoolVisual[Pool visualization]
+    DepthSlider[Depth slider]
+    ObserveButton[Observe button]
+    DataTable[Data table]
+    Graph[Depth vs. Ratio graph]
+    Light -->|bends at water surface| Medium1
+    Light -->|slows down| Medium2
+    Medium1 -->|has| RefractiveIndex1
+    Medium2 -->|has| RefractiveIndex2
+    Light -->|follows| SnellsLaw
+    UnderWaterObject -->|appears higher than actual| Observer
+    Water -->|has refractive index| WaterRI
+    Air -->|has refractive index| AirRI
+    UnderWaterObject -->|apparent depth| ApparentDepth
+    PoolVisual -->|displays| UnderWaterObject
+    PoolVisual -->|displays| Observer
+    DepthSlider -->|controls| UnderWaterObject
+    ObserveButton -->|triggers| Observer
+    ObserveButton -->|updates| DataTable
+    DataTable -->|populates| Graph
+    SnellsLaw -->|applied in| PoolVisual

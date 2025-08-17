@@ -1,0 +1,12 @@
+{
+    "content": "Sound waves are longitudinal pressure waves that travel through mediums by compressing and expanding molecules. In a music studio, these waves interact with surfaces through reflection, absorption, and diffraction, dramatically affecting sound quality. When sound waves hit hard, flat surfaces like concrete walls, they reflect with minimal energy loss, creating echoes and reverberation. The angle of reflection equals the angle of incidence, following the same principle as light reflection. Soft, porous materials like acoustic foam absorb sound energy by converting it to heat through friction as the waves force air molecules to vibrate within the material. The frequency of sound waves determines their wavelength (\u00ce\u00bb = v/f), which affects how they interact with objects. Low-frequency sounds (long wavelengths) can diffract around obstacles and are difficult to block or absorb, while high-frequency sounds (short wavelengths) are more directional and easier to absorb. Standing waves occur when reflected waves overlap with incoming waves, creating interference patterns with fixed nodes (quiet points) and antinodes (loud points).",
+    "scenario": {
+        "title": "Studio Acoustics Designer",
+        "content": "Students design a virtual recording studio, experimenting with room dimensions, surface materials, and acoustic treatments to create optimal recording conditions. They can place sound sources and microphones throughout the space and hear how room characteristics affect recordings. The simulation visualizes sound wave propagation, reflection, and absorption in real-time, showing how different frequencies interact with various materials. Students can switch between frequency analysis views, reverberation time measurements, and standing wave patterns to diagnose acoustic problems. Challenge modes task students with solving specific acoustic issues like eliminating flutter echo, reducing ambient noise, or creating appropriate acoustics for different musical genres."
+    },
+    "hypothesis": {
+        "hypothesis": "Sound Wave Phenomena",
+        "type": "Descriptive",
+        "description": "Students will analyze how environment affects sound propagation by manipulating room design and materials. They will predict acoustic outcomes based on surface properties and room geometry, and design spaces with specific sonic characteristics for different applications."
+    }
+}

@@ -1,0 +1,20 @@
+graph LR
+    Swing[Playground Swing]
+    Pendulum[Simple Pendulum]
+    Motion[Simple Harmonic Motion]
+    Force[Restoring Force]
+    Period[Period of Oscillation]
+    Length[Length of Chain/Rope]
+    Gravity[Gravitational Field Strength]
+    Energy[Energy Conversion]
+    Swing -->|is an example of| Pendulum
+    Pendulum -->|exhibits| Motion
+    Motion -->|characterized by| Force
+    Pendulum -->|has| Period
+    Length -->|determines| Period
+    Gravity -->|affects| Period
+    Period -->|calculated by| Formula[T = 2π√(L/g)]
+    Swing -->|demonstrates| Energy
+    Energy -->|alternates between| PotentialEnergy[Potential Energy]
+    Energy -->|alternates between| KineticEnergy[Kinetic Energy]
+    Friction[Friction] -->|reduces| Amplitude[Amplitude]

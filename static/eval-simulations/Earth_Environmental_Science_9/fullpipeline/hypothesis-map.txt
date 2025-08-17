@@ -1,0 +1,17 @@
+graph LR
+    AirMass[Simulated Air Mass]
+    PressureSystem[Virtual Pressure System]
+    Front[Visualized Front]
+    WeatherPattern[Forecast Weather Sequence]
+    AirMass -->|influences| WeatherPattern
+    PressureSystem -->|drives| WeatherPattern
+    Front -->|causes changes in| WeatherPattern
+    AirMass -->|interacts with| PressureSystem
+    AirMass -->|forms| Front
+    PressureSystem -->|creates| Front
+    PressureSystem -->|types| HighPressure[High Pressure System]
+    PressureSystem -->|types| LowPressure[Low Pressure System]
+    Front -->|types| ColdFront[Approaching Cold Front]
+    Front -->|types| WarmFront[Approaching Warm Front]
+    Front -->|types| StationaryFront[Stationary Front Boundary]
+    Front -->|types| OccludedFront[Occluded Front Formation]

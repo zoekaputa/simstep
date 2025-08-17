@@ -1,0 +1,14 @@
+{
+    "message": "Runtime test completed.",
+    "jsErrors": [],
+    "debugLogs": [
+        "DEBUG [2025-08-05T03:21:33.669Z]: Bike position: {x: 625.00, y: 300.08}, Lean angle: 0.65\u00b0",
+        "DEBUG [2025-08-05T03:21:33.671Z]: Centripetal Force: 7.78 N, Radial Acceleration: 0.11 m/s\u00b2",
+        "DEBUG [2025-08-05T03:21:33.671Z]: Simulation started",
+        "DEBUG [2025-08-05T03:21:33.698Z]: Bike position: {x: 625.00, y: 300.16}, Lean angle: 0.65\u00b0",
+        "DEBUG [2025-08-05T03:21:33.699Z]: Centripetal Force: 7.78 N, Radial Acceleration: 0.11 m/s\u00b2",
+        "DEBUG [2025-08-05T03:21:33.699Z]: Bike position: {x: 625.00, y: 300.24}, Lean angle: 0.65\u00b0",
+        "DEBUG [2025-08-05T03:21:33.699Z]: Centripetal Force: 7.78 N, Radial Acceleration: 0.11 m/s\u00b2",
+        "DEBUG [2025-08-05T03:21:33.703Z]: Simulation reset"
+    ]
+}

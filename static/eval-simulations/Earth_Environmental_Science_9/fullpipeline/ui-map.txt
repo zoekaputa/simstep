@@ -1,0 +1,29 @@
+graph LR
+    AirMass[Simulated Air Mass]
+    PressureSystem[Virtual Pressure System]
+    Front[Visualized Front]
+    WeatherPattern[Forecast Weather Sequence]
+    Map[Interactive Weather Map]
+    TimeSlider[Time Advancement Slider]
+    TempHumidityDisplay[Temperature and Humidity Display]
+    PressureDisplay[Pressure Reading Display]
+    FrontPositionDisplay[Front Position Display]
+    WeatherConditionInput[Weather Condition Prediction Input]
+    DataAnalysisPanel[Data Analysis Panel]
+    AirMass -->|influences| WeatherPattern
+    PressureSystem -->|drives| WeatherPattern
+    Front -->|causes changes in| WeatherPattern
+    AirMass -->|interacts with| PressureSystem
+    AirMass -->|forms| Front
+    PressureSystem -->|creates| Front
+    Map -->|displays| AirMass
+    Map -->|shows| PressureSystem
+    Map -->|illustrates| Front
+    Map -->|visualizes| WeatherPattern
+    TimeSlider -->|controls| Map
+    TimeSlider -->|updates| TempHumidityDisplay
+    TimeSlider -->|modifies| PressureDisplay
+    TimeSlider -->|adjusts| FrontPositionDisplay
+    WeatherConditionInput -->|records predictions for| WeatherPattern
+    DataAnalysisPanel -->|compares| WeatherConditionInput
+    DataAnalysisPanel -->|analyzes| WeatherPattern

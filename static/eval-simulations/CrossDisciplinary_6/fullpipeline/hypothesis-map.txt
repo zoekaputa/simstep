@@ -1,0 +1,19 @@
+graph LR
+    Materials[Bridge Components]
+    Structure[Structural Design]
+    Properties[Bridge Properties]
+    MechanicalProperties[Bridge Mechanical Properties]
+    Strength[Load-Bearing Capacity]
+    Elasticity[Flexibility]
+    Toughness[Impact Resistance]
+    Environment[Environmental Conditions]
+    Applications[Bridge Applications]
+    Materials -->|influences| Structure
+    Materials -->|determines| Properties
+    Properties -->|include| MechanicalProperties
+    MechanicalProperties -->|includes| Strength
+    MechanicalProperties -->|includes| Elasticity
+    MechanicalProperties -->|includes| Toughness
+    Environment -->|affects| Properties
+    Properties -->|determine| Applications
+    Applications -->|influence| Materials

@@ -1,0 +1,12 @@
+{
+    "content": "The pH scale measures the acidity or alkalinity of a solution, ranging from 0 (highly acidic) to 14 (highly alkaline), with 7 being neutral. It's a logarithmic scale, meaning each unit represents a tenfold change in hydrogen ion concentration [H\u00e2\u0081\u00ba]. Mathematically, pH = -log[H\u00e2\u0081\u00ba]. In soil chemistry, pH significantly influences nutrient availability and plant growth. Acid-loving plants (acidophiles) like blueberries, rhododendrons, and azaleas thrive in soil with pH 4.5-6.0 because they've evolved mechanisms to tolerate higher aluminum levels that become soluble in acidic conditions. Neutral to slightly alkaline soils (pH 6.5-7.5) favor vegetables like lettuce, broccoli, and beans by optimizing the availability of essential nutrients like nitrogen, phosphorus, and potassium. Highly alkaline soils (pH >8.0) can cause micronutrient deficiencies, particularly iron, manganese, and zinc, as these elements become less soluble. Soil pH affects microbial activity too\u00e2\u0080\u0094fungi generally tolerate acidity better than bacteria, affecting decomposition rates and nutrient cycling.",
+    "scenario": {
+        "title": "Garden Soil Simulator",
+        "content": "Students design and maintain virtual gardens, selecting plants and adjusting soil conditions to create thriving ecosystems. The simulation allows students to test soil pH in different areas, add amendments to modify acidity/alkalinity, and observe how plants respond over time. Visualizations show nutrient availability changing with pH levels and root systems interacting with soil particles. Students can zoom in to see molecular-level processes or zoom out to observe ecosystem-wide effects. The simulation includes a diverse plant database with pH preferences and visible symptoms of pH-related stress. Challenge scenarios require students to diagnose and address soil pH problems in established gardens or design specialized gardens for plants with specific pH requirements."
+    },
+    "hypothesis": {
+        "hypothesis": "Acid-Base Environments",
+        "type": "Descriptive",
+        "description": "Students will interpret the pH scale by analyzing how soil acidity affects nutrient availability and plant health. They will predict how changes in pH influence various species' growth patterns and develop strategies for creating optimal soil conditions for diverse plant communities."
+    }
+}

@@ -1,0 +1,14 @@
+{
+    "message": "Runtime test completed.",
+    "jsErrors": [],
+    "debugLogs": [
+        "DEBUG [2025-08-05T02:59:40.889Z]: Scene redrawn. Water supply: 100",
+        "DEBUG [2025-08-05T02:59:40.890Z]: Measured water supply: 100",
+        "DEBUG [2025-08-05T02:59:40.909Z]: Recorded metrics: {\"supply\":100,\"measures\":[],\"qualityProtection\":false,\"integratedManagement\":false}",
+        "DEBUG [2025-08-05T02:59:40.926Z]: Scene redrawn. Water supply: 100",
+        "DEBUG [2025-08-05T02:59:40.926Z]: Water quality protection activated. New water supply: 100",
+        "DEBUG [2025-08-05T02:59:40.951Z]: Scene redrawn. Water supply: 100",
+        "DEBUG [2025-08-05T02:59:40.951Z]: Integrated management activated. New water supply: 100",
+        "DEBUG [2025-08-05T02:59:40.976Z]: Comparison results: Water Management Plan Efficiency: 40.00%"
+    ]
+}

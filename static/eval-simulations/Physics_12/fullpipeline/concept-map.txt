@@ -1,0 +1,25 @@
+graph LR
+    Material[Material]
+    Heat[Heat]
+    Electrons[Free Electrons]
+    Metals[Metals]
+    Insulators[Insulators]
+    Fire[Fire]
+    Marshmallow[Marshmallow]
+    Stick[Roasting Stick]
+    Smores[S'mores]
+    Chocolate[Chocolate]
+    AluminumFoil[Aluminum Foil]
+    Material -->|conducts| Heat
+    Material -->|characterized by| ThermalConductivity[Thermal Conductivity]
+    ThermalConductivity -->|measured by| FouriersLaw[Fourier's Law]
+    Metals -->|have| Electrons
+    Electrons -->|efficiently transport| Heat
+    Metals -->|high| ThermalConductivity
+    Insulators -->|low| ThermalConductivity
+    Fire -->|transfers heat to| Stick
+    Stick -->|transfers heat to| Marshmallow
+    Fire -->|heats| Smores
+    AluminumFoil -->|conducts heat to| Chocolate
+    Smores -->|contains| Chocolate
+    Smores -->|contains| Marshmallow

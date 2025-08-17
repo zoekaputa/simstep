@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SecurityNet System Simulation</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cabin+Sketch:wght@400;700&family=Londrina+Sketch&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/roughjs@latest/bundled/rough.js"></script>
+    <style>
+        body {
+            font-family: 'Cabin Sketch', cursive;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #f0f8ff;
+            margin: 0;
+            padding: 20px;
+        }
+        h1 {
+            font-family: 'Cabin Sketch', cursive;
+            font-weight: 700;
+            color: #4a4a4a;
+        }
+        #description {
+            font-family: 'Cabin Sketch', cursive;
+            font-weight: 400;
+            max-width: 800px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        #simulation-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        #controls {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        button, select {
+            font-family: 'Cabin Sketch', cursive;
+            font-size: 16px;
+            padding: 10px;
+            border: 2px solid #4a4a4a;
+            border-radius: 5px;
+            background-color: #ffffff;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover, select:hover {
+            background-color: #e0e0e0;
+        }
+        #defense-stage-indicator {
+            margin-top: 20px;
+            font-weight: bold;
+        }
+        #response-diagram {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>SecurityNet System Simulation</h1>
+    <div id="description">
+        Welcome to the SecurityNet System Simulation! In this experiment, you'll explore how our body's defense mechanisms work together to protect us from intruders. Just like a high-tech security system, our body has multiple layers of protection. You'll see how physical barriers, rapid response teams, and specialized units work together to keep us safe. Get ready to control the simulation and see these defenses in action!
+    </div>
+    <div id="simulation-container">
+        <canvas id="canvas" width="800" height="600"></canvas>
+        <div id="controls">
+            <select id="pathogen-selector">
+                <option value="virus">Virus</option>
+                <option value="bacteria">Bacteria</option>
+                <option value="fungus">Fungus</option>
+            </select>
+            <button id="start-simulation">Start Simulation</button>
+            <button id="reset-simulation">Reset Simulation</button>
+        </div>
+        <div id="defense-stage-indicator">Current Defense Stage: None</div>
+        <div id="response-diagram"></div>
+    </div>
+    <script>
+        window.LOG_DEBUG = false;
+
+        function logDebug(message) {
+            if (window.LOG_DEBUG) {
+                console.log(`DEBUG [${new Date().toISOString()}]: ${message}`);
+            }
+        }
+
+        const canvas = document.getElementById('canvas');
+        const rc = rough.canvas(canvas);
+        const ctx = canvas.getContext('2d');
+
+        const bodySvg = `
+            <svg width="400" height="600" viewBox="0 0 400 600">
+                <path d="M200,50 Q100,200 100,350 Q100,550 200,550 Q300,550 300,350 Q300,200 200,50" fill="#f8d5a3" stroke="#000000" stroke-width="5"/>
+            </svg>
+        `;
+
+        const pathogenSvgs = {
+            virus: `
+                <svg width="50" height="50" viewBox="0 0 50 50">
+                    <circle cx="25" cy="25" r="20" fill="#ff7f7f" stroke="#000000" stroke-width="2"/>
+                    <circle cx="25" cy="25" r="15" fill="none" stroke="#000000" stroke-width="2"/>
+                    <line x1="25" y1="5" x2="25" y2="45" stroke="#000000" stroke-width="2"/>
+                    <line x1="5" y1="25" x2="45" y2="25" stroke="#000000" stroke-width="2"/>
+                </svg>
+            `,
+            bacteria: `
+                <svg width="50" height="50" viewBox="0 0 50 50">
+                    <ellipse cx="25" cy="25" rx="20" ry="15" fill="#7fbfff" stroke="#000000" stroke-width="2"/>
+                    <line x1="10" y1="20" x2="40" y2="20" stroke="#000000" stroke-width="2"/>
+                    <line x1="10" y1="30" x2="40" y2="30" stroke="#000000" stroke-width="2"/>
+                </svg>
+            `,
+            fungus: `
+                <svg width="50" height="50" viewBox="0 0 50 50">
+                    <path d="M25,5 Q40,20 25,35 Q10,20 25,5" fill="#9f7fbf" stroke="#000000" stroke-width="2"/>
+                    <line x1="25" y1="35" x2="25" y2="45" stroke="#000000" stroke-width="2"/>
+                </svg>
+            `
+        };
+
+        let currentStage = 'none';
+        let selectedPathogen = 'virus';
+        let pathogens = [];
+
+        function drawBody() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            const img = new Image();
+            img.onload = () => {
+                ctx.drawImage(img, 200, 0, 400, 600);
+                logDebug('Body drawn');
+            };
+            img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(bodySvg);
+        }
+
+        function drawPathogens() {
+            pathogens.forEach(pathogen => {
+                const img = new Image();
+                img.onload = () => {
+                    ctx.drawImage(img, pathogen.x, pathogen.y, 50, 50);
+                    logDebug(`Pathogen drawn at {x: ${pathogen.x}, y: ${pathogen.y}}`);
+                };
+                img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(pathogenSvgs[selectedPathogen]);
+            });
+        }
+
+        function updateDefenseStageIndicator() {
+            document.getElementById('defense-stage-indicator').textContent = `Current Defense Stage: ${currentStage}`;
+            logDebug(`Defense stage updated to: ${currentStage}`);
+        }
+
+        function startSimulation() {
+            logDebug('Simulation started');
+            currentStage = 'Physical Barriers';
+            pathogens = [{x: 100, y: 100}];
+            updateDefenseStageIndicator();
+            drawBody();
+            drawPathogens();
+            setTimeout(() => {
+                currentStage = 'First Response';
+                updateDefenseStageIndicator();
+                drawBody();
+                drawPathogens();
+            }, 2000);
+            setTimeout(() => {
+                currentStage = 'Specialized Response';
+                updateDefenseStageIndicator();
+                drawBody();
+                drawPathogens();
+            }, 4000);
+        }
+
+        function resetSimulation() {
+            logDebug('Simulation reset');
+            currentStage = 'none';
+            pathogens = [];
+            updateDefenseStageIndicator();
+            drawBody();
+        }
+
+        document.getElementById('start-simulation').addEventListener('click', startSimulation);
+        document.getElementById('reset-simulation').addEventListener('click', resetSimulation);
+        document.getElementById('pathogen-selector').addEventListener('change', (e) => {
+            selectedPathogen = e.target.value;
+            logDebug(`Selected pathogen changed to: ${selectedPathogen}`);
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            drawBody();
+            if (window.LOG_DEBUG) {
+                logDebug('Simulation initialized');
+                document.querySelectorAll('svg').forEach((svg, index) => {
+                    const rect = svg.getBoundingClientRect();
+                    logDebug(`SVG #${index}: Position {x: ${rect.x}, y: ${rect.y}}, Size {w: ${rect.width}, h: ${rect.height}}`);
+                });
+                document.querySelectorAll('input, button, select').forEach((control) => {
+                    logDebug(`Control ${control.id || 'unnamed'} (${control.tagName}): Initial value: ${control.value || 'N/A'}`);
+                });
+                document.querySelectorAll('button').forEach((button) => {
+                    button.addEventListener('click', () => logDebug(`Button ${button.id || 'unnamed'} clicked`));
+                });
+                document.querySelectorAll('input').forEach((input) => {
+                    input.addEventListener('change', (e) => logDebug(`Input ${input.id || 'unnamed'} changed to ${e.target.value}`));
+                });
+            }
+        });
+    </script>
+</body>
+</html>

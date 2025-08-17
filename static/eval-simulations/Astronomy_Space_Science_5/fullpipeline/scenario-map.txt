@@ -1,0 +1,21 @@
+graph LR
+    BH[Simulated Black Hole]
+    S[Virtual Star]
+    SN[Simulated Supernova]
+    EH[Visualized Event Horizon]
+    SR[Calculated Schwarzschild Radius]
+    AD[Rendered Accretion Disk]
+    R[Simulated Radiation]
+    LO[Virtual Light/Objects]
+    ST[Distorted Spacetime Visualization]
+    S -->|Collapses into| BH
+    S -->|Undergoes| SN
+    SN -->|Forms| BH
+    BH -->|Defined by| EH
+    EH -->|Located at| SR
+    SR -->|Calculated as R = 2GM/c²| BH
+    BH -->|Characterized by| AD
+    AD -->|Emits| R
+    LO -->|Cannot escape| EH
+    BH -->|Distorts| ST
+    BH -->|Has properties: Mass, Charge, Spin| BH

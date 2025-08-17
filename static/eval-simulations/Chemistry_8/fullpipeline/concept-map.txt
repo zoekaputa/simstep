@@ -1,0 +1,18 @@
+graph LR
+    E[Energy] -->|Conserved| F[First Law]
+    E -->|Transforms| S[Smartphone]
+    S -->|Charges| B[Battery]
+    B -->|Discharges| S
+    E -->|Converts| H[Heat]
+    H -->|Increases| En[Entropy]
+    En -->|Never decreases| SL[Second Law]
+    H[Enthalpy] -->|Part of| G[Gibbs Free Energy]
+    En -->|Part of| G
+    G -->|Determines| Sp[Spontaneity]
+    Sp -->|Affects| B
+    E -->|Converts| C[Chemical Energy]
+    E -->|Converts| El[Electrical Energy]
+    C -->|Stored in| B
+    El -->|Powers| S
+    FC[Fast Charging] -->|Increases| En
+    FC -->|Affects| B

@@ -1,0 +1,12 @@
+{
+    "content": "Friction is a force that opposes motion between two objects in contact. When you slide down a playground slide, friction between your body and the slide surface slows you down. Different materials create different amounts of friction - a metal slide typically creates less friction than a plastic one, making metal slides faster but potentially more dangerous. Friction converts kinetic energy into thermal energy, which is why slides can get hot on sunny days. The amount of friction depends on both the types of surfaces in contact and the force pressing them together. A heavier person experiences more friction on a slide than a lighter person. When designing playground equipment, engineers must carefully balance safety considerations (sufficient friction to prevent dangerous speeds) with enjoyment (enough speed to make the slide fun). Surface roughness plays a major role in friction - smoother surfaces generally produce less friction.",
+    "scenario": {
+        "title": "Playground Design Studio",
+        "content": "Students become playground engineers who must design slides with appropriate friction characteristics for different user groups. The simulation allows students to select different slide materials (metal, plastic, composite), surface treatments (smooth, textured, coated), and environmental conditions (dry, wet, hot, cold). They can test their designs with virtual users of different weights and wearing different clothing types. The simulation visualizes friction forces with color overlays and provides data on speed, stopping distance, and safety factors. Students must balance fun (adequate speed) with safety (preventing excessive velocity) while working within budget constraints."
+    },
+    "hypothesis": {
+        "hypothesis": "Friction Forces at Work",
+        "type": "Explanatory",
+        "description": "Students will analyze how different material combinations and surface characteristics affect friction forces in everyday applications. They will predict how changes in surface type, weight, and environmental conditions alter frictional forces and apply this knowledge to design optimal surfaces for specific purposes."
+    }
+}

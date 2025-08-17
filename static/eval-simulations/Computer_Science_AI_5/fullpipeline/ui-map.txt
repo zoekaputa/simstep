@@ -1,0 +1,30 @@
+graph LR
+    NN[Neural Network Simulator]
+    CNN[CNN Architect]
+    RNN[RNN Architect]
+    TR[Transformer Architect]
+    LF[Performance Metrics]
+    BP[Training Progress]
+    IP[Image Input]
+    SD[Time Series Input]
+    NLP[Text Input]
+    LayerSlider[Layer Slider]
+    NeuronSlider[Neuron Slider]
+    LRSlider[Learning Rate Slider]
+    TrainButton[Train Button]
+    ResultsTable[Results Table]
+    NN -->|type| CNN
+    NN -->|type| RNN
+    NN -->|type| TR
+    NN -->|uses| LF
+    NN -->|uses| BP
+    CNN -->|processes| IP
+    RNN -->|analyzes| SD
+    TR -->|handles| NLP
+    LayerSlider -->|adjusts| NN
+    NeuronSlider -->|adjusts| NN
+    LRSlider -->|adjusts| NN
+    TrainButton -->|initiates| NN
+    NN -->|outputs to| ResultsTable
+    LF -->|populates| ResultsTable
+    BP -->|updates| ResultsTable

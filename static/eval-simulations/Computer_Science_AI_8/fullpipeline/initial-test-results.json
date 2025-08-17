@@ -1,0 +1,12 @@
+{
+    "message": "Runtime test completed.",
+    "jsErrors": [],
+    "debugLogs": [
+        "DEBUG [2025-08-05T15:04:40.933Z]: Starting simulation with method: rule-based, uncertainty: low, scenario: forest",
+        "DEBUG [2025-08-05T15:04:41.034Z]: Step 1: Adventurer moved to (52.4938886855455, 448.40194054068223)",
+        "DEBUG [2025-08-05T15:04:41.135Z]: Step 2: Adventurer moved to (49.73194151082751, 446.79080541334844)",
+        "DEBUG [2025-08-05T15:04:41.235Z]: Step 3: Adventurer moved to (48.38453070665527, 449.01803321893055)",
+        "DEBUG [2025-08-05T15:04:41.336Z]: Step 4: Adventurer moved to (45.24385656177121, 448.7381636615688)",
+        "DEBUG [2025-08-05T15:04:41.435Z]: Step 5: Adventurer moved to (48.316728118683436, 453.4311431106405)"
+    ]
+}

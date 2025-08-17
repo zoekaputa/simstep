@@ -1,0 +1,7 @@
+{
+    "message": "Runtime test completed.",
+    "jsErrors": [],
+    "debugLogs": [
+        "DEBUG [2025-08-05T03:10:19.110Z]: Button analyze-btn clicked"
+    ]
+}

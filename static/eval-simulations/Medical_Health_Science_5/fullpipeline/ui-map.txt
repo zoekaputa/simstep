@@ -1,0 +1,63 @@
+graph LR
+    Cell[Brick: Basic building unit]
+    Tissue[Wall: Groups of similar bricks]
+    Organ[Room: Collection of walls]
+    OrganSystem[Floor: Group of rooms]
+    Skeleton[Framework: Steel beams]
+    Muscle[Support Cables: Tension elements]
+    ConnectiveTissue[Insulation Material]
+    Heart[Pump Station: Central water pump]
+    BloodVessel[Water Pipe]
+    Blood[Water: Circulating fluid]
+    Airway[Air Duct]
+    Alveoli[Air Vents: Multiple outlets]
+    DigestiveTract[Waste Pipe: Drainage system]
+    Brain[Control Room: Central computer]
+    SpinalCord[Main Cable Trunk]
+    PeripheralNerve[Electrical Wiring]
+    Gland[HVAC System]
+    Hormone[Temperature Control Signal]
+    Cell -->|Forms| Tissue
+    Tissue -->|Forms| Organ
+    Organ -->|Forms| OrganSystem
+    Skeleton -->|Part of| OrganSystem
+    Muscle -->|Part of| OrganSystem
+    ConnectiveTissue -->|Part of| OrganSystem
+    Heart -->|Part of| OrganSystem
+    BloodVessel -->|Part of| OrganSystem
+    Blood -->|Circulates in| BloodVessel
+    Airway -->|Leads to| Alveoli
+    DigestiveTract -->|Part of| OrganSystem
+    Brain -->|Connected to| SpinalCord
+    SpinalCord -->|Connected to| PeripheralNerve
+    Gland -->|Secretes| Hormone
+    SystemSelector[System Selector Dropdown]
+    BuildingDisplay[Building Blueprint Display]
+    ComponentList[Component List]
+    ConnectionTool[Connection Drawing Tool]
+    QuizInterface[Quiz Interface]
+    ScoreDisplay[Score Display]
+    SystemSelector -->|Updates| BuildingDisplay
+    SystemSelector -->|Filters| ComponentList
+    ComponentList -->|Populates| BuildingDisplay
+    ConnectionTool -->|Draws on| BuildingDisplay
+    QuizInterface -->|Assesses| BuildingDisplay
+    QuizInterface -->|Generates| ScoreDisplay
+    BuildingDisplay -->|Shows| OrganSystem
+    BuildingDisplay -->|Contains| Organ
+    BuildingDisplay -->|Illustrates| Cell
+    BuildingDisplay -->|Demonstrates| Tissue
+    BuildingDisplay -->|Displays| Skeleton
+    BuildingDisplay -->|Includes| Muscle
+    BuildingDisplay -->|Features| ConnectiveTissue
+    BuildingDisplay -->|Highlights| Heart
+    BuildingDisplay -->|Shows| BloodVessel
+    BuildingDisplay -->|Represents| Blood
+    BuildingDisplay -->|Includes| Airway
+    BuildingDisplay -->|Shows| Alveoli
+    BuildingDisplay -->|Represents| DigestiveTract
+    BuildingDisplay -->|Includes| Brain
+    BuildingDisplay -->|Shows| SpinalCord
+    BuildingDisplay -->|Represents| PeripheralNerve
+    BuildingDisplay -->|Includes| Gland
+    BuildingDisplay -->|Represents| Hormone

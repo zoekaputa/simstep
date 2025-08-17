@@ -1,0 +1,12 @@
+{
+    "content": "Simple harmonic motion (SHM) is a type of periodic motion where a restoring force acts in the opposite direction to displacement, proportional to the displacement from equilibrium. A playground swing is an excellent example of a simple pendulum displaying SHM for small oscillations. The period of a simple pendulum depends primarily on the length of the chain or rope and the gravitational field strength, given by the formula T = 2\u00cf\u0080\u00e2\u0088\u009a(L/g), where T is the period, L is the length, and g is gravitational acceleration. Remarkably, the period does not depend on the mass of the swinger or the amplitude of the swing (for small angles). This is why children of different weights can swing side by side at the same frequency if their swings have equal chain lengths. When a swing is pulled back and released, gravitational potential energy converts to kinetic energy at the lowest point, then back to potential energy as it rises on the opposite side. This energy conversion continues with each oscillation, though friction gradually reduces the amplitude.",
+    "scenario": {
+        "title": "Playground Pendulum Lab",
+        "content": "Students interact with virtual playground swings where they can adjust chain length, pendulum mass, initial displacement, and gravitational field strength. The simulation displays position, velocity, and acceleration graphs in real-time as the swing oscillates. Students can measure period and frequency using built-in tools and verify the relationship between chain length and period. The simulation demonstrates the connection between circular motion and sinusoidal oscillation, showing how SHM can be viewed as the projection of uniform circular motion. Interactive challenges ask students to design swings with specific periods or to synchronize multiple swings with different properties."
+    },
+    "hypothesis": {
+        "hypothesis": "Rhythms of Motion",
+        "type": "Descriptive",
+        "description": "Students will analyze simple harmonic motion by relating pendulum properties to oscillation characteristics. They will predict how changes in length, mass, amplitude, and gravitational field affect period and frequency, and explain the energy transformations occurring during pendulum motion."
+    }
+}

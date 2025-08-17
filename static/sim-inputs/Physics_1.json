@@ -1,0 +1,12 @@
+{
+    "content": "Newton's laws of motion are three physical laws that describe the relationship between the motion of an object and the forces acting on it. These laws, which provide the basis for Newtonian mechanics, can be paraphrased as follows: A body remains at rest, or in motion at a constant speed in a straight line, unless it is acted upon by a force. At any instant of time, the net force on a body is equal to the body's acceleration multiplied by its mass or, equivalently, the rate at which the body's momentum is changing with time. If two bodies exert forces on each other, these forces have the same magnitude but opposite directions. In skateboarding, Newton's First Law applies to your speed, motion, and the friction you cause. Newton's second law is best stated by Force = Mass X Acceleration. It describes motion produced by unbalanced forces. Acceleration is always in the direction of the unbalanced force. The units of force are 'Newtons.' Newton's Third Law states why forces act in pairs. For every action, there is an equal or opposite reaction.",
+    "scenario": {
+        "title": "Skateboard Physics Lab",
+        "content": "In this interactive simulation, students control a virtual skateboarder performing tricks in a skate park. They can adjust factors like push force, rider mass, wheel friction, and terrain inclination to observe how these variables affect the skateboarder's motion. Students observe color-coded force vectors in real-time and can pause the simulation at any point to analyze the forces at work. Different skateboarding tricks demonstrate specific aspects of Newton's laws, allowing students to experiment with the physical principles in a visually engaging context."
+    },
+    "hypothesis": {
+        "hypothesis": "Understanding Forces in Motion",
+        "type": "Explanatory",
+        "description": "Students will be able to explain and predict how forces affect motion by analyzing the relationship between force, mass, and acceleration in skateboarding contexts. They will identify all forces acting on a system, determine net forces, and predict resulting motion based on Newton's three laws."
+    }
+}

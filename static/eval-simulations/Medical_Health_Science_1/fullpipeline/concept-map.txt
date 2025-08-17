@@ -1,0 +1,23 @@
+graph LR
+    Vaccine[Vaccine]
+    Antigen[Antigen]
+    ImmuneSystem[Immune System]
+    BCell[B Lymphocyte]
+    TCell[T Lymphocyte]
+    PlasmaCell[Plasma Cell]
+    Antibody[Antibody]
+    MemoryCell[Memory Cell]
+    Pathogen[Pathogen]
+    Population[Population]
+    Vaccine -->|contains| Antigen
+    Antigen -->|stimulates| ImmuneSystem
+    ImmuneSystem -->|activates| BCell
+    ImmuneSystem -->|activates| TCell
+    BCell -->|differentiates into| PlasmaCell
+    PlasmaCell -->|produces| Antibody
+    Antibody -->|binds to| Pathogen
+    BCell -->|produces| MemoryCell
+    TCell -->|produces| MemoryCell
+    MemoryCell -->|provides long-term protection against| Pathogen
+    Vaccine -->|immunizes| Population
+    Population -->|achieves| HerdImmunity[Herd Immunity]

@@ -1,0 +1,32 @@
+graph LR
+    Organism[Game Character]
+    Trait[Ability]
+    Environment[Game World]
+    Population[Player's Team]
+    NaturalSelection[Resource Competition]
+    Evolution[Team Improvement]
+    Adaptation[Optimal Strategy]
+    GameBoard[Game Board]
+    AbilitySelector[Ability Selector]
+    GenerationCounter[Generation Counter]
+    ResourceDisplay[Resource Display]
+    DataGraph[Data Graph]
+    Organism -->|possesses| Trait
+    Trait -->|influences| Survival
+    Environment -->|affects| Survival
+    Organism -->|part of| Population
+    NaturalSelection -->|drives| Evolution
+    Evolution -->|leads to| Adaptation
+    Adaptation -->|improves fit with| Environment
+    NaturalSelection -->|affects frequency of| Trait
+    GameBoard -->|displays| Organism
+    GameBoard -->|shows| Environment
+    GameBoard -->|visualizes| Population
+    AbilitySelector -->|modifies| Trait
+    GenerationCounter -->|tracks| Evolution
+    ResourceDisplay -->|shows results of| NaturalSelection
+    DataGraph -->|displays| Adaptation
+    AbilitySelector -->|updates| GameBoard
+    GenerationCounter -->|updates| GameBoard
+    ResourceDisplay -->|updates| GameBoard
+    GameBoard -->|updates| DataGraph

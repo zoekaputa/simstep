@@ -1,0 +1,56 @@
+graph LR
+    A[Sugar and Flour Molecules]
+    B[Molecular Bonds in Dough]
+    C[Cookie Ingredients]
+    D[Oven Heat]
+    E[Egg Moisture]
+    F[Egg Proteins]
+    G[Sugar Molecules]
+    H[Cookie Browning]
+    J[Baking Powder]
+    K[CO2 Bubbles]
+    L[Baked Cookies]
+    M[Butter]
+    O[Oven Temperature]
+    P[Baking Speed]
+    V1[Virtual Kitchen]
+    V2[Mixing Bowl]
+    V3[Cookie Dough]
+    V4[Oven Display]
+    V5[Timer Display]
+    V6[Cookie Visual]
+    UI1[Ingredient Selector]
+    UI2[Mix Button]
+    UI3[Shape Button]
+    UI4[Temperature Slider]
+    UI5[Start/Stop Button]
+    UI6[Data Table]
+    A -->|form| B
+    B -->|create| C
+    C -->|undergo| H
+    D -->|triggers| H
+    E -->|influences| H
+    F -->|reacts with| G
+    G -->|participates in| H
+    H -->|produces| L
+    J -->|decomposes to| K
+    K -->|causes rising in| L
+    M -->|melts in| L
+    O -->|affects| P
+    P -->|influences| H
+    V1 -->|contains| V2
+    V2 -->|contains| V3
+    V1 -->|contains| V4
+    V4 -->|shows| O
+    V4 -->|shows| V5
+    V1 -->|contains| V6
+    UI1 -->|selects| C
+    UI2 -->|activates| V2
+    UI3 -->|shapes| V3
+    UI4 -->|sets| O
+    UI5 -->|controls| V5
+    V6 -->|updates| UI6
+    C -->|displayed in| V2
+    V3 -->|placed in| V4
+    V4 -->|bakes| V6
+    V6 -->|represents| L

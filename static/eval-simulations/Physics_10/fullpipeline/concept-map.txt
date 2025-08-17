@@ -1,0 +1,28 @@
+graph LR
+    Circuit[Electrical Circuit]
+    Source[Power Source]
+    Component[Circuit Component]
+    Current[Electric Current]
+    Series[Series Circuit]
+    Parallel[Parallel Circuit]
+    Voltage[Voltage]
+    Resistance[Resistance]
+    OhmsLaw[Ohm's Law: I = V/R]
+    SeriesResistance[Series Resistance: Rtotal = R1 + R2 + R3 + ...]
+    ParallelResistance[Parallel Resistance: 1/Rtotal = 1/R1 + 1/R2 + 1/R3 + ...]
+    Circuit -->|contains| Source
+    Circuit -->|contains| Component
+    Circuit -->|allows flow of| Current
+    Circuit -->|can be| Series
+    Circuit -->|can be| Parallel
+    Component -->|has| Resistance
+    Component -->|receives| Voltage
+    Series -->|single path for| Current
+    Series -->|divides| Voltage
+    Series -->|follows| SeriesResistance
+    Parallel -->|multiple paths for| Current
+    Parallel -->|maintains| Voltage
+    Parallel -->|follows| ParallelResistance
+    Current -->|governed by| OhmsLaw
+    Voltage -->|used in| OhmsLaw
+    Resistance -->|used in| OhmsLaw

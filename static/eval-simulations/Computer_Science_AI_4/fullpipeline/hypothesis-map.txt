@@ -1,0 +1,13 @@
+graph LR
+    Task[Complex Project]
+    Subtask[Team Member Task]
+    ProcessingUnit[Team Member]
+    Memory[Shared Project Resources]
+    ParallelAlgorithm[Parallelization Strategy]
+    Task -->|divided into| Subtask
+    Subtask -->|executed by| ProcessingUnit
+    ProcessingUnit -->|accesses| Memory
+    Task -->|processed by| ParallelAlgorithm
+    ParallelAlgorithm -->|utilizes| ProcessingUnit
+    ProcessingUnit -->|coordinated by| ParallelAlgorithm
+    Memory -->|shared or distributed| ProcessingUnit

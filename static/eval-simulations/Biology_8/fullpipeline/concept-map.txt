@@ -1,0 +1,16 @@
+graph LR
+    Sun[Sun] -->|provides energy for| Producers[Producers]
+    Producers -->|convert 1-2% of solar energy| ChemicalEnergy[Chemical Energy]
+    Producers -->|feed| PrimaryConsumers[Primary Consumers]
+    PrimaryConsumers -->|feed| SecondaryConsumers[Secondary Consumers]
+    SecondaryConsumers -->|feed| TertiaryConsumers[Tertiary Consumers]
+    Producers -->|provide energy for| Ecosystem[Ecosystem]
+    PrimaryConsumers -->|transfer ~10% energy| SecondaryConsumers
+    SecondaryConsumers -->|transfer ~10% energy| TertiaryConsumers
+    DeadOrganicMatter[Dead Organic Matter] -->|broken down by| Decomposers[Decomposers]
+    Decomposers -->|recycle nutrients to| Ecosystem
+    Ecosystem -->|contains| FoodWeb[Food Web]
+    FoodWeb -->|represents| EnergyTransfer[Energy Transfer]
+    Ecosystem -->|measured by| Biomass[Biomass]
+    EnergyTransfer -->|follows| SecondLawThermodynamics[Second Law of Thermodynamics]
+    Ecosystem -->|modeled as| EnergyPyramid[Energy Pyramid]

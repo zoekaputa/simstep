@@ -1,0 +1,23 @@
+graph LR
+    A[Element Profile] -->|contains| B[Atomic Core]
+    A -->|surrounded by| C[Digital Electrons]
+    B -->|contains| D[Proton Icons]
+    B -->|contains| E[Neutron Icons]
+    A -->|determined by| F[Proton Count]
+    F -->|defines| G[Element Identity]
+    A -->|can have| H[Isotope Variations]
+    C -->|occupy| I[Electron Shells]
+    C -->|outermost are| K[Valence Electron Icons]
+    K -->|determine| L[Bonding Behavior]
+    M[Element Selector] -->|updates| A
+    N[Proton Adjuster] -->|modifies| D
+    O[Neutron Adjuster] -->|modifies| E
+    P[Electron Adjuster] -->|modifies| C
+    Q[Data Table] -->|displays| R[Element Properties]
+    A -->|populates| Q
+    S[Reset Button] -->|resets| A
+    T[Next Element Button] -->|cycles| M
+    U[Simulation Canvas] -->|contains| A
+    V[Electron Configuration Display] -->|shows| C
+    W[Element Identity Display] -->|shows| G
+    X[Valence Electron Count Display] -->|shows| K

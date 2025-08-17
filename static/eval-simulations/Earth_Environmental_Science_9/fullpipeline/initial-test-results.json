@@ -1,0 +1,8 @@
+{
+    "message": "Runtime test completed.",
+    "jsErrors": [],
+    "debugLogs": [
+        "DEBUG [2025-08-05T15:20:26.549Z]: Prediction submitted: ",
+        "DEBUG [2025-08-05T15:20:26.550Z]: Actual weather: Partly cloudy"
+    ]
+}

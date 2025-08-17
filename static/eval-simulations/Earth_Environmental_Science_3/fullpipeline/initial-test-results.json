@@ -1,0 +1,20 @@
+{
+    "message": "Runtime test completed.",
+    "jsErrors": [],
+    "debugLogs": [
+        "DEBUG [2025-08-05T14:33:08.327Z]: Updated 100 particles",
+        "DEBUG [2025-08-05T14:33:08.346Z]: Reset button clicked",
+        "DEBUG [2025-08-05T14:33:08.346Z]: Controls updated",
+        "DEBUG [2025-08-05T14:33:08.355Z]: Data collection initiated",
+        "DEBUG [2025-08-05T14:33:08.377Z]: Updated 100 particles",
+        "DEBUG [2025-08-05T14:33:08.427Z]: Updated 100 particles",
+        "DEBUG [2025-08-05T14:33:08.477Z]: Updated 100 particles",
+        "DEBUG [2025-08-05T14:33:08.527Z]: Updated 100 particles",
+        "DEBUG [2025-08-05T14:33:08.577Z]: Updated 100 particles",
+        "DEBUG [2025-08-05T14:33:08.627Z]: Updated 100 particles",
+        "DEBUG [2025-08-05T14:33:08.677Z]: Updated 100 particles",
+        "DEBUG [2025-08-05T14:33:08.727Z]: Updated 100 particles",
+        "DEBUG [2025-08-05T14:33:08.777Z]: Updated 100 particles",
+        "DEBUG [2025-08-05T14:33:08.828Z]: Updated 100 particles"
+    ]
+}

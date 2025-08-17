@@ -1,0 +1,31 @@
+graph LR
+    Materials[Bridge Components]
+    Composition[Material Composition]
+    Structure[Structural Design]
+    Processing[Manufacturing Methods]
+    Properties[Bridge Properties]
+    MechanicalProperties[Bridge Mechanical Properties]
+    Strength[Load-Bearing Capacity]
+    Elasticity[Flexibility]
+    Toughness[Impact Resistance]
+    Metals[Steel Elements]
+    Ceramics[Concrete Components]
+    Polymers[Polymer Reinforcements]
+    Composites[Advanced Composites]
+    Environment[Environmental Conditions]
+    Applications[Bridge Applications]
+    Materials -->|influences| Composition
+    Materials -->|influences| Structure
+    Materials -->|influences| Processing
+    Materials -->|determines| Properties
+    Properties -->|include| MechanicalProperties
+    MechanicalProperties -->|includes| Strength
+    MechanicalProperties -->|includes| Elasticity
+    MechanicalProperties -->|includes| Toughness
+    Materials -->|types| Metals
+    Materials -->|types| Ceramics
+    Materials -->|types| Polymers
+    Materials -->|types| Composites
+    Environment -->|affects| Properties
+    Properties -->|determine| Applications
+    Applications -->|influence| Materials

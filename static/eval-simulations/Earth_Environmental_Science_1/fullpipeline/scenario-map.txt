@@ -1,0 +1,31 @@
+graph LR
+    Lithosphere[Virtual Earth Model]
+    Asthenosphere[Simulated Mantle Layer]
+    Plates[Interactive Tectonic Plates]
+    Boundaries[Configurable Plate Interfaces]
+    Divergent[Spreading Center Creator]
+    Convergent[Collision Zone Simulator]
+    Transform[Lateral Boundary Tool]
+    Features[Generated Landforms]
+    Evidence[Historical Geology Data]
+    Lithosphere -->|divided into| Plates
+    Plates -->|glide over| Asthenosphere
+    Plates -->|move at| Rate[Adjustable Time Scale]
+    Plates -->|interact at| Boundaries
+    Boundaries -->|include| Divergent
+    Boundaries -->|include| Convergent
+    Boundaries -->|include| Transform
+    Divergent -->|create| RiftValley[Digital Rift Valleys]
+    Divergent -->|create| MidOceanRidge[Simulated Mid-Ocean Ridges]
+    Convergent -->|create| Trench[Virtual Ocean Trenches]
+    Convergent -->|create| VolcanicArc[Erupting Volcanic Arcs]
+    Convergent -->|create| Mountains[3D Mountain Ranges]
+    Transform -->|create| Fault[Animated Fault Lines]
+    Boundaries -->|form| Features
+    Plates -->|movement explains| ContinentalDrift[Continental Drift Visualization]
+    Evidence -->|supports| PlateTheory[Interactive Plate Tectonics Lesson]
+    Evidence -->|includes| ContinentFit[Continent Jigsaw Puzzle]
+    Evidence -->|includes| RockFormations[Rock Formation Database]
+    Evidence -->|includes| Fossils[Fossil Distribution Map]
+    Evidence -->|includes| Paleomagnetism[Paleomagnetism Simulator]
+    Evidence -->|includes| SeafloorAge[Seafloor Age Calculator]

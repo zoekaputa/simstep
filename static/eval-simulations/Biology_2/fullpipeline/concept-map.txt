@@ -1,0 +1,29 @@
+graph LR
+    Glucose[Glucose]
+    Pyruvate[Pyruvate]
+    AcetylCoA[Acetyl-CoA]
+    ATP[ATP]
+    NADH[NADH]
+    FADH2[FADH2]
+    CO2[Carbon Dioxide]
+    LacticAcid[Lactic Acid]
+    Cytoplasm[Cytoplasm]
+    Mitochondria[Mitochondria]
+    ETC[Electron Transport Chain]
+    ATPSynthase[ATP Synthase]
+    Glucose -->|Glycolysis| Pyruvate
+    Pyruvate -->|Conversion| AcetylCoA
+    AcetylCoA -->|Citric Acid Cycle| NADH
+    AcetylCoA -->|Citric Acid Cycle| FADH2
+    AcetylCoA -->|Citric Acid Cycle| ATP
+    NADH -->|Electron Transport| ETC
+    FADH2 -->|Electron Transport| ETC
+    ETC -->|Chemiosmosis| ATPSynthase
+    ATPSynthase -->|Synthesis| ATP
+    Glucose -->|Anaerobic Respiration| LacticAcid
+    Pyruvate -->|Fermentation| LacticAcid
+    AcetylCoA -->|Citric Acid Cycle| CO2
+    Cytoplasm -->|Contains| Glucose
+    Mitochondria -->|Contains| AcetylCoA
+    Mitochondria -->|Contains| ETC
+    Mitochondria -->|Contains| ATPSynthase

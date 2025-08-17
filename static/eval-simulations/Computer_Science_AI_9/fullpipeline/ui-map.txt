@@ -1,0 +1,41 @@
+graph LR
+    NLP[Predictive Text System]
+    Text[User Input]
+    Preprocessing[Text Preprocessing]
+    StatisticalTechniques[Prediction Algorithms]
+    LanguageModeling[Language Models]
+    WordEmbeddings[Word Representations]
+    Transformers[Neural Models]
+    Applications[Prediction Applications]
+    TextInput[Text Input Field]
+    ModelSelector[Model Selector]
+    PredictButton[Predict Button]
+    Predictions[Predictions Display]
+    AccuracyMeter[Accuracy Meter]
+    SpeedMeter[Speed Meter]
+    ContextAnalysis[Context Analysis]
+    DependencyAnalysis[Dependency Analysis]
+    RareWordAnalysis[Rare Word Analysis]
+    DomainAnalysis[Domain Analysis]
+    UserFeedback[User Feedback Form]
+    NLP -->|analyzes| Text
+    Text -->|undergoes| Preprocessing
+    NLP -->|uses| StatisticalTechniques
+    NLP -->|employs| LanguageModeling
+    NLP -->|utilizes| WordEmbeddings
+    NLP -->|relies on| Transformers
+    NLP -->|has| Applications
+    TextInput -->|provides| Text
+    ModelSelector -->|selects| NLP
+    PredictButton -->|triggers| NLP
+    NLP -->|generates| Predictions
+    NLP -->|updates| AccuracyMeter
+    NLP -->|updates| SpeedMeter
+    Predictions -->|analyzed in| ContextAnalysis
+    Predictions -->|analyzed in| DependencyAnalysis
+    Predictions -->|analyzed in| RareWordAnalysis
+    Predictions -->|analyzed in| DomainAnalysis
+    UserFeedback -->|evaluates| Predictions
+    ModelSelector -->|chooses| StatisticalTechniques
+    ModelSelector -->|chooses| WordEmbeddings
+    ModelSelector -->|chooses| Transformers

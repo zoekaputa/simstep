@@ -1,0 +1,12 @@
+{
+    "content": "Boat designers have to consider buoyancy as well as friction when deciding on the shape of a boat's hull. A boat designed for speed must have enough displacement to stay afloat, but surface area has to be minimized to decrease the effects of friction. On the other hand, an object designed to carry a heavy weight, such as a cargo ship, must be designed with greater displacement. Water tends to maintain a level surface. When you put an object into water, gravity pulls the object down and displaces some of the water, which means some of the water is pushed aside. Gravity pulls the displaced water down, and causes an upward force on the object. This upward force is equal to the weight of the water that the object displaces, and is called buoyancy. Buoyancy depends upon the volume of liquid displaced as well as the density of the liquid. Boat hulls are designed to displace a volume of water that weighs more than the boat and its cargo. If the force of displaced water pushing on the hull is greater than the force of gravity pulling the boat down, then the boat floats!",
+    "scenario": {
+        "title": "Nautical Engineering Challenge",
+        "content": "Students take on the role of marine engineers tasked with designing efficient boats for specific purposes. Using a virtual materials lab, they experiment with different hull shapes, materials, and weight distributions to create boats that can carry maximum cargo while maintaining stability. The simulation provides real-time feedback on water displacement, center of gravity, metacentric height, and other key metrics that affect buoyancy and stability. Students face increasingly challenging design constraints, from simple cargo vessels to boats that must navigate rough waters or perform specific tasks."
+    },
+    "hypothesis": {
+        "hypothesis": "Mastering Fluid Dynamics",
+        "type": "Procedural",
+        "description": "Students will design, test, and optimize boat models by manipulating variables that affect buoyancy. They will predict how changes in mass, volume, shape, and weight distribution affect a boat's ability to float and carry cargo, applying Archimedes' principle to solve practical engineering problems."
+    }
+}

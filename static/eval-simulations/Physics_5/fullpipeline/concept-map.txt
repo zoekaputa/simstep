@@ -1,0 +1,26 @@
+graph LR
+    Bicycle[Bicycle]
+    Rider[Rider]
+    Road[Road]
+    TireFriction[Tire Friction]
+    CentripetalForce[Centripetal Force]
+    CircularPath[Circular Path]
+    CentripetalAcceleration[Centripetal Acceleration]
+    Velocity[Velocity]
+    Speed[Speed]
+    BankedTrack[Banked Track]
+    LeanAngle[Lean Angle]
+    Inertia[Inertia]
+    Bicycle -->|carries| Rider
+    Bicycle -->|contacts| Road
+    Bicycle -->|generates| TireFriction
+    TireFriction -->|provides| CentripetalForce
+    CentripetalForce -->|enables| CircularPath
+    CentripetalForce -->|causes| CentripetalAcceleration
+    CentripetalAcceleration -->|changes direction of| Velocity
+    CentripetalAcceleration -->|does not change| Speed
+    Rider -->|adjusts| LeanAngle
+    LeanAngle -->|affects| CentripetalForce
+    BankedTrack -->|contributes to| CentripetalForce
+    Inertia -->|opposes| CircularPath
+    Speed -->|increases| CentripetalForce

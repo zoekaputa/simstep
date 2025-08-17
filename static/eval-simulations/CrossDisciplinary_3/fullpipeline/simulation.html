@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digital Citizenship Simulator</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cabin+Sketch:wght@400;700&family=Londrina+Sketch&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/roughjs@latest/bundled/rough.js"></script>
+    <style>
+        body {
+            font-family: 'Cabin Sketch', cursive;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        h1 {
+            font-family: 'Cabin Sketch', cursive;
+            font-weight: 700;
+            color: #3a3a3a;
+        }
+        #canvas {
+            background-color: white;
+            border: 2px solid #3a3a3a;
+            border-radius: 10px;
+        }
+        #controls {
+            margin-top: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+        }
+        button, select {
+            font-family: 'Cabin Sketch', cursive;
+            font-size: 16px;
+            padding: 10px;
+            border: 2px solid #3a3a3a;
+            border-radius: 5px;
+            background-color: #ffffff;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        button:hover, select:hover {
+            background-color: #3a3a3a;
+            color: #ffffff;
+        }
+        #feedback {
+            margin-top: 20px;
+            padding: 10px;
+            border: 2px solid #3a3a3a;
+            border-radius: 5px;
+            background-color: #ffffff;
+            max-width: 80%;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <h1>Digital Citizenship Simulator</h1>
+    <p>Welcome to the Digital Citizenship Simulator! In this interactive experience, you'll navigate various online scenarios and make decisions that impact your digital reputation. Explore the complexities of online behavior, evaluate information sources, and learn how your choices affect both individuals and communities in the digital world.</p>
+    <canvas id="canvas" width="800" height="600"></canvas>
+    <div id="controls">
+        <select id="scenarioSelect">
+            <option value="">Select a Scenario</option>
+            <option value="infoEval">Information Evaluation</option>
+            <option value="conflict">Conflict Resolution</option>
+            <option value="ethics">Ethical Decision-Making</option>
+            <option value="wellbeing">Digital Well-being</option>
+            <option value="aiEthics">AI Ethics</option>
+        </select>
+        <button id="choice1">Choice 1</button>
+        <button id="choice2">Choice 2</button>
+        <button id="choice3">Choice 3</button>
+    </div>
+    <div id="feedback"></div>
+
+    <script>
+        window.LOG_DEBUG = false;
+
+        function logDebug(message) {
+            if (window.LOG_DEBUG) {
+                console.log(`DEBUG [${new Date().toISOString()}]: ${message}`);
+            }
+        }
+
+        const canvas = document.getElementById('canvas');
+        const rc = rough.canvas(canvas);
+        const ctx = canvas.getContext('2d');
+
+        let reputation = 50;
+        let time = 0;
+        let currentScenario = null;
+
+        const avatarSVG = `
+            <svg width="100" height="100" viewBox="0 0 100 100">
+                <circle cx="50" cy="50" r="40" fill="#FFD700"/>
+                <circle cx="35" cy="40" r="5" fill="#000000"/>
+                <circle cx="65" cy="40" r="5" fill="#000000"/>
+                <path d="M 30 60 Q 50 70 70 60" stroke="#000000" stroke-width="3" fill="none"/>
+            </svg>
+        `;
+
+        const scenarios = {
+            infoEval: {
+                question: "You come across a viral social media post about a new health remedy. What do you do?",
+                choices: [
+                    "Share it immediately",
+                    "Check the source and look for scientific backing",
+                    "Ignore it"
+                ]
+            },
+            conflict: {
+                question: "A friend posts an embarrassing photo of you without permission. How do you respond?",
+                choices: [
+                    "Angrily comment on the post",
+                    "Privately message your friend to take it down",
+                    "Post an embarrassing photo of them in retaliation"
+                ]
+            },
+            ethics: {
+                question: "You find a way to access premium content for free through a website glitch. What's your next move?",
+                choices: [
+                    "Use the glitch and tell your friends",
+                    "Report the glitch to the website",
+                    "Ignore it and pay for the content"
+                ]
+            },
+            wellbeing: {
+                question: "You've been on social media for hours and it's affecting your sleep. What do you do?",
+                choices: [
+                    "Keep scrolling, you might miss something important",
+                    "Set a timer for 10 more minutes, then log off",
+                    "Log off immediately and prepare for bed"
+                ]
+            },
+            aiEthics: {
+                question: "You're using an AI chatbot and it starts sharing personal information about others. How do you react?",
+                choices: [
+                    "Continue the conversation and ask for more details",
+                    "Report the issue to the AI company",
+                    "Ignore the personal information and change the subject"
+                ]
+            }
+        };
+
+        function drawAvatar() {
+            const img = new Image();
+            img.onload = function() {
+                ctx.drawImage(img, 350, 250, 100, 100);
+                logDebug('Avatar drawn');
+            }
+            img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(avatarSVG);
+        }
+
+        function drawReputationMeter() {
+            rc.rectangle(50, 50, 200, 30, { fill: 'lightgray', stroke: 'black' });
+            rc.rectangle(50, 50, reputation * 2, 30, { fill: 'green', stroke: 'black' });
+            ctx.font = '20px "Cabin Sketch"';
+            ctx.fillStyle = 'black';
+            ctx.fillText(`Reputation: ${reputation}`, 60, 40);
+            logDebug(`Reputation meter drawn: ${reputation}`);
+        }
+
+        function drawTimeMeter() {
+            ctx.font = '20px "Cabin Sketch"';
+            ctx.fillStyle = 'black';
+            ctx.fillText(`Time: ${time} minutes`, 600, 40);
+            logDebug(`Time meter drawn: ${time}`);
+        }
+
+        function updateScenario() {
+            if (currentScenario) {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                drawAvatar();
+                drawReputationMeter();
+                drawTimeMeter();
+                
+                ctx.font = '24px "Cabin Sketch"';
+                ctx.fillStyle = 'black';
+                ctx.textAlign = 'center';
+                const lines = currentScenario.question.split('\n');
+                lines.forEach((line, index) => {
+                    ctx.fillText(line, canvas.width / 2, 150 + index * 30);
+                });
+
+                document.getElementById('choice1').textContent = currentScenario.choices[0];
+                document.getElementById('choice2').textContent = currentScenario.choices[1];
+                document.getElementById('choice3').textContent = currentScenario.choices[2];
+                logDebug(`Scenario updated: ${currentScenario.question}`);
+            }
+        }
+
+        document.getElementById('scenarioSelect').addEventListener('change', (e) => {
+            currentScenario = scenarios[e.target.value];
+            updateScenario();
+            logDebug(`Scenario selected: ${e.target.value}`);
+        });
+
+        function handleChoice(choiceIndex) {
+            if (currentScenario) {
+                let reputationChange = 0;
+                let feedback = '';
+
+                switch(currentScenario.question) {
+                    case scenarios.infoEval.question:
+                        if (choiceIndex === 1) {
+                            reputationChange = 10;
+                            feedback = "Good choice! Always verify information before sharing.";
+                        } else {
+                            reputationChange = -5;
+                            feedback = "Be careful! Sharing or ignoring unverified information can spread misinformation.";
+                        }
+                        break;
+                    case scenarios.conflict.question:
+                        if (choiceIndex === 1) {
+                            reputationChange = 10;
+                            feedback = "Great approach! Direct communication is often the best way to resolve conflicts.";
+                        } else {
+                            reputationChange = -10;
+                            feedback = "Think twice! Public confrontations or retaliation can escalate conflicts.";
+                        }
+                        break;
+                    case scenarios.ethics.question:
+                        if (choiceIndex === 1) {
+                            reputationChange = 15;
+                            feedback = "Excellent decision! Reporting glitches helps improve digital services for everyone.";
+                        } else {
+                            reputationChange = -10;
+                            feedback = "Consider the ethical implications. Exploiting glitches can be considered theft.";
+                        }
+                        break;
+                    case scenarios.wellbeing.question:
+                        if (choiceIndex === 2) {
+                            reputationChange = 10;
+                            feedback = "Perfect! Prioritizing sleep and well-being is crucial in the digital age.";
+                        } else {
+                            reputationChange = -5;
+                            feedback = "Remember, digital well-being is important. Try to set boundaries for your online time.";
+                        }
+                        break;
+                    case scenarios.aiEthics.question:
+                        if (choiceIndex === 1) {
+                            reputationChange = 15;
+                            feedback = "Excellent! Reporting AI issues helps improve the technology and protects privacy.";
+                        } else {
+                            reputationChange = -10;
+                            feedback = "Be cautious with AI. Encouraging or ignoring privacy breaches can have serious consequences.";
+                        }
+                        break;
+                }
+
+                reputation = Math.max(0, Math.min(100, reputation + reputationChange));
+                time += 15;
+                updateScenario();
+                document.getElementById('feedback').textContent = feedback;
+                logDebug(`Choice made: ${choiceIndex}, Reputation change: ${reputationChange}, New reputation: ${reputation}`);
+            }
+        }
+
+        document.getElementById('choice1').addEventListener('click', () => handleChoice(0));
+        document.getElementById('choice2').addEventListener('click', () => handleChoice(1));
+        document.getElementById('choice3').addEventListener('click', () => handleChoice(2));
+
+        document.addEventListener('DOMContentLoaded', () => {
+            if (window.LOG_DEBUG) {
+                logDebug('Simulation initialized');
+                document.querySelectorAll('svg').forEach((svg, index) => {
+                    const rect = svg.getBoundingClientRect();
+                    logDebug(`SVG #${index}: Position {x: ${rect.x}, y: ${rect.y}}, Size {w: ${rect.width}, h: ${rect.height}}`);
+                });
+                document.querySelectorAll('input, button, select').forEach((control) => {
+                    logDebug(`Control ${control.id || 'unnamed'} (${control.tagName}): Initial value: ${control.value || 'N/A'}`);
+                });
+                
+                document.querySelectorAll('button').forEach((button) => {
+                    button.addEventListener('click', () => logDebug(`Button ${button.id || 'unnamed'} clicked`));
+                });
+                document.querySelectorAll('input').forEach((input) => {
+                    input.addEventListener('change', (e) => logDebug(`Input ${input.id || 'unnamed'} changed to ${e.target.value}`));
+                });
+            }
+            
+            drawAvatar();
+            drawReputationMeter();
+            drawTimeMeter();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,39 @@
+graph LR
+    Castle[Castle Display]
+    TrainingSelector[Training Program Selector]
+    SimulationControls[Simulation Controls]
+    DefenseMetrics[Defense Metrics Display]
+    InvasionSimulator[Invasion Simulator]
+    ResultsComparison[Results Comparison Chart]
+    Vaccine[Castle Training Program]
+    Antigen[Mock Invader]
+    ImmuneSystem[Castle Defense System]
+    BCell[Archer]
+    TCell[Knight]
+    PlasmaCell[Arrow Factory]
+    Antibody[Arrows]
+    MemoryCell[Veteran Defender]
+    Pathogen[Real Invader]
+    Population[Kingdom]
+    HerdImmunity[Kingdom-wide Protection]
+    TrainingSelector -->|selects| Vaccine
+    Vaccine -->|applies to| Castle
+    SimulationControls -->|controls| InvasionSimulator
+    InvasionSimulator -->|generates| Antigen
+    InvasionSimulator -->|generates| Pathogen
+    Antigen -->|attacks| Castle
+    Pathogen -->|attacks| Castle
+    Castle -->|contains| ImmuneSystem
+    ImmuneSystem -->|activates| BCell
+    ImmuneSystem -->|activates| TCell
+    BCell -->|differentiates into| PlasmaCell
+    PlasmaCell -->|produces| Antibody
+    Antibody -->|defends against| Antigen
+    Antibody -->|defends against| Pathogen
+    BCell -->|produces| MemoryCell
+    TCell -->|produces| MemoryCell
+    MemoryCell -->|enhances| Castle
+    Castle -->|updates| DefenseMetrics
+    DefenseMetrics -->|populates| ResultsComparison
+    Castle -->|represents| Population
+    Population -->|achieves| HerdImmunity

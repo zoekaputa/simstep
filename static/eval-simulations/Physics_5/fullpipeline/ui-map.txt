@@ -1,0 +1,34 @@
+graph LR
+    TireFriction[Tire Grip]
+    CentripetalForce[Centripetal Force Vector]
+    CircularPath[Banked Turn]
+    CentripetalAcceleration[Radial Acceleration]
+    Velocity[Bike Velocity]
+    Speed[Speed Setting]
+    BankedTrack[Track Inclination]
+    LeanAngle[Avatar Lean]
+    Inertia[Avatar Mass]
+    BikeVisual[Bike and Avatar Visualization]
+    TrackVisual[Circular Track Visualization]
+    SpeedSlider[Speed Setting Slider]
+    StartButton[Start Button]
+    ResetButton[Reset Button]
+    DataTable[Data Table]
+    TireFriction -->|provides| CentripetalForce
+    CentripetalForce -->|enables| CircularPath
+    CentripetalForce -->|causes| CentripetalAcceleration
+    CentripetalAcceleration -->|changes direction of| Velocity
+    CentripetalAcceleration -->|does not change| Speed
+    LeanAngle -->|affects| CentripetalForce
+    BankedTrack -->|contributes to| CentripetalForce
+    Inertia -->|opposes| CircularPath
+    Speed -->|increases| CentripetalForce
+    BikeVisual -->|shows| LeanAngle
+    BikeVisual -->|represents| Velocity
+    TrackVisual -->|displays| BankedTrack
+    TrackVisual -->|shows| CircularPath
+    SpeedSlider -->|controls| Speed
+    StartButton -->|initiates| BikeVisual
+    ResetButton -->|resets| BikeVisual
+    ResetButton -->|clears| DataTable
+    BikeVisual -->|updates| DataTable

@@ -1,0 +1,40 @@
+graph LR
+    Fruit[Lemon]
+    Juice[Citric Acid Solution]
+    Zinc[Zinc Strip]
+    Copper[Copper Strip]
+    Electrons[Free Electrons]
+    LED[Red LED]
+    Electrolyte[Lemon Juice Electrolyte]
+    Circuit[Alligator Clip Wires]
+    HydrogenGas[Hydrogen Bubbles]
+    Voltage[1.5V Potential Difference]
+    MultipleFruits[Series of Lemons]
+    IncreasedVoltage[4.5V Output]
+    LemonVisual[Lemon Visual]
+    ElectrodeControl[Electrode Material Selector]
+    FruitControl[Fruit Type Selector]
+    VoltmeterVisual[Voltmeter Display]
+    AmpmeterVisual[Ammeter Display]
+    TimeControl[Time Slider]
+    GraphVisual[Voltage vs Time Graph]
+    SeriesControl[Number of Fruits in Series]
+    Fruit -->|contains| Juice
+    Juice -->|acts as| Electrolyte
+    Zinc -->|inserted into| Fruit
+    Copper -->|inserted into| Fruit
+    Zinc -->|oxidizes| Electrons
+    Electrons -->|flow through| Circuit
+    Circuit -->|powers| LED
+    Copper -->|reduces H+ ions| HydrogenGas
+    Fruit -->|produces| Voltage
+    MultipleFruits -->|connected in series| IncreasedVoltage
+    ElectrodeControl -->|changes| Zinc
+    ElectrodeControl -->|changes| Copper
+    FruitControl -->|selects| Fruit
+    LemonVisual -->|represents| Fruit
+    VoltmeterVisual -->|displays| Voltage
+    AmpmeterVisual -->|measures| Circuit
+    TimeControl -->|updates| GraphVisual
+    SeriesControl -->|adjusts| MultipleFruits
+    LemonVisual -->|shows| HydrogenGas

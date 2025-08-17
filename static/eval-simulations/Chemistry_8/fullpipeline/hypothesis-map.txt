@@ -1,0 +1,18 @@
+graph LR
+    E[Electrical Input] -->|Conserved| F[Energy Conservation]
+    E -->|Transforms| S[Smartphone Components]
+    S -->|Charges| B[Li-ion Battery]
+    B -->|Discharges| S
+    E -->|Converts| H[Waste Heat]
+    H -->|Increases| En[Thermal Energy]
+    En -->|Never decreases| SL[Second Law of Thermodynamics]
+    H -->|Part of| G[Battery Efficiency]
+    En -->|Part of| G
+    G -->|Determines| Sp[Charging Speed]
+    Sp -->|Affects| B
+    E -->|Converts| C[Electrochemical Energy]
+    E -->|Converts| El[Circuit Energy]
+    C -->|Stored in| B
+    El -->|Powers| S
+    FC[Rapid Charging Mode] -->|Increases| En
+    FC -->|Affects| B

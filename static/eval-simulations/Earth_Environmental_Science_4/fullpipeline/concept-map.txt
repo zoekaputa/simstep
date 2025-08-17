@@ -1,0 +1,32 @@
+graph LR
+    B[Biodiversity]
+    G[Genetic Diversity]
+    S[Species Diversity]
+    E[Ecosystem Diversity]
+    ES[Ecosystem Stability]
+    ER[Ecosystem Resilience]
+    A[Agriculture]
+    H[Human Benefits]
+    T[Threats]
+    B -->|encompasses| G
+    B -->|encompasses| S
+    B -->|encompasses| E
+    B -->|contributes to| ES
+    B -->|enhances| ER
+    B -->|supports| A
+    B -->|provides| H
+    T -->|reduces| B
+    G -->|enables| ER
+    S -->|creates| ES
+    E -->|increases| ER
+    ES -->|through| FR[Functional Redundancy]
+    ER -->|resists| D[Disturbances]
+    A -->|benefits from| PC[Pest Control]
+    A -->|utilizes| P[Polycultures]
+    H -->|includes| M[Medicines]
+    H -->|includes| CR[Crop Resilience]
+    T -->|includes| HD[Habitat Destruction]
+    T -->|includes| O[Overexploitation]
+    T -->|includes| PL[Pollution]
+    T -->|includes| IS[Invasive Species]
+    T -->|includes| CC[Climate Change]

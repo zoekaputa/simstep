@@ -1,0 +1,10 @@
+{
+    "message": "Runtime test completed.",
+    "jsErrors": [],
+    "debugLogs": [
+        "DEBUG [2025-08-05T03:12:41.569Z]: Measure button clicked",
+        "DEBUG [2025-08-05T03:12:41.569Z]: Measured: Temperature: 15\u00b0C, Pressure: 1013 hPa, Composition: 78% N2, 21% O2, 1% Other",
+        "DEBUG [2025-08-05T03:12:41.585Z]: Record button clicked",
+        "DEBUG [2025-08-05T03:12:41.595Z]: Recorded data at altitude 0 km"
+    ]
+}

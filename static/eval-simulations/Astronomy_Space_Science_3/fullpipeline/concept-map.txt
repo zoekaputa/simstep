@@ -1,0 +1,19 @@
+graph LR
+    Planet[Planet]
+    Atmosphere[Gaseous Envelope]
+    Composition[Atmospheric Composition]
+    Structure[Atmospheric Structure]
+    Dynamics[Atmospheric Dynamics]
+    Greenhouse[Greenhouse Effect]
+    Escape[Atmospheric Escape]
+    Planet -->|surrounds| Atmosphere
+    Atmosphere -->|consists of| Composition
+    Atmosphere -->|organized into| Structure
+    Atmosphere -->|experiences| Dynamics
+    Atmosphere -->|affected by| Greenhouse
+    Atmosphere -->|undergoes| Escape
+    Planet -->|determines| Composition
+    Planet -->|influences| Structure
+    Planet -->|affects| Dynamics
+    Planet -->|impacts| Greenhouse
+    Planet -->|controls| Escape

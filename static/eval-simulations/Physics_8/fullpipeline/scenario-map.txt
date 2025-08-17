@@ -1,0 +1,16 @@
+graph LR
+    Light[Sunlight]
+    Medium1[Air above pool]
+    Medium2[Pool water]
+    UnderWaterObject[Submerged rescue target]
+    Observer[Student lifeguard]
+    Light -->|bends at water surface| Medium1
+    Light -->|slows down| Medium2
+    Medium1 -->|has| RefractiveIndex1[Refractive Index of air]
+    Medium2 -->|has| RefractiveIndex2[Refractive Index of water]
+    Light -->|follows| SnellsLaw[Snell's Law in simulation]
+    UnderWaterObject -->|appears higher than actual| Observer
+    Water[Pool water] -->|has refractive index| WaterRI[1.33]
+    Air[Air] -->|has refractive index| AirRI[1.0]
+    UnderWaterObject -->|apparent depth| ApparentDepth[3/4 of actual pool depth]
+    Stick[Straight pool noodle] -->|appears| BentStick[Bent at water surface]

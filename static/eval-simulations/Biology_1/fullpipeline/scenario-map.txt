@@ -1,0 +1,27 @@
+graph LR
+    Organism[Game Character]
+    Trait[Ability]
+    Environment[Game World]
+    Population[Player's Team]
+    Gene[Code Segment]
+    Allele[Code Variant]
+    Mutation[Random Code Change]
+    Recombination[Code Mixing]
+    NaturalSelection[Resource Competition]
+    Evolution[Team Improvement]
+    Adaptation[Optimal Strategy]
+    Organism -->|possesses| Trait
+    Trait -->|influences| Survival
+    Trait -->|influences| Reproduction
+    Environment -->|affects| Survival
+    Organism -->|part of| Population
+    Gene -->|variant of| Allele
+    Mutation -->|creates| Genetic_Variation
+    Recombination -->|creates| Genetic_Variation
+    Genetic_Variation -->|provides basis for| NaturalSelection
+    NaturalSelection -->|drives| Evolution
+    Evolution -->|leads to| Adaptation
+    Adaptation -->|improves fit with| Environment
+    NaturalSelection -->|affects frequency of| Allele
+    Trait -->|can be| Heritable
+    Heritable -->|passed to| Offspring

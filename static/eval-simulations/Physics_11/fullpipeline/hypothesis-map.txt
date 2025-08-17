@@ -1,0 +1,20 @@
+graph LR
+    WaterSlide[Slide Design]
+    Water[Water Flow Rate]
+    Rider[Virtual Rider]
+    Height[Slide Height]
+    Speed[Rider Velocity]
+    Friction[Boundary Layer Effects]
+    Pressure[Fluid Pressure]
+    CrossSection[Slide Cross-Section]
+    WaterSlide -->|affects| Water
+    WaterSlide -->|determines experience of| Rider
+    Height -->|converts to| Speed
+    Speed -->|inversely affects| Pressure
+    Water -->|exerts| Friction
+    Rider -->|experiences| Friction
+    WaterSlide -->|causes| Friction
+    CrossSection -->|influences| Water
+    CrossSection -->|affects| Friction
+    Water -->|flow rate affects| Speed
+    Height -->|determines potential energy of| Rider

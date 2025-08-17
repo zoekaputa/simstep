@@ -1,0 +1,26 @@
+graph LR
+    Neuron[Neuron]
+    Soma[Cell Body]
+    Dendrites[Dendrites]
+    Axon[Axon]
+    MyelinSheath[Myelin Sheath]
+    NodesOfRanvier[Nodes of Ranvier]
+    Neurotransmitters[Neurotransmitters]
+    Receptors[Receptors]
+    IonChannels[Ion Channels]
+    ActionPotential[Action Potential]
+    Synapse[Synapse]
+    PostsynapticNeuron[Postsynaptic Neuron]
+    Neuron -->|contains| Soma
+    Neuron -->|has| Dendrites
+    Neuron -->|has| Axon
+    Axon -->|covered by| MyelinSheath
+    MyelinSheath -->|has gaps called| NodesOfRanvier
+    Dendrites -->|receive| Neurotransmitters
+    Neurotransmitters -->|bind to| Receptors
+    Receptors -->|affect| IonChannels
+    IonChannels -->|trigger| ActionPotential
+    ActionPotential -->|propagates along| Axon
+    Axon -->|releases neurotransmitters at| Synapse
+    Synapse -->|connects to| PostsynapticNeuron
+    PostsynapticNeuron -->|may generate new| ActionPotential

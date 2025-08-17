@@ -1,0 +1,12 @@
+{
+    "content": "Atomic structure forms the foundation of chemistry, determining how elements behave and interact. An atom consists of a central nucleus containing positively charged protons and neutral neutrons, surrounded by negatively charged electrons in orbital shells. The number of protons in an atom's nucleus, called the atomic number, defines which element it is\u00e2\u0080\u0094all atoms of the same element have the same number of protons. The number of neutrons can vary within atoms of the same element, creating isotopes with different mass numbers but identical chemical properties. Electrons occupy energy levels or shells around the nucleus, with specific capacity limits (first shell: 2 electrons, second: 8, third: 18, and so on). The electron configuration, particularly in the outermost shell (valence electrons), largely determines an atom's chemical behavior. Elements in the same column of the periodic table have similar chemical properties because they have the same number of valence electrons. Across a period (row) of the periodic table, atomic radius generally decreases as the increasing positive charge of the nucleus pulls electrons more tightly.",
+    "scenario": {
+        "title": "Element Identity Creator",
+        "content": "Students create digital profiles for elements by assembling protons, neutrons, and electrons in a social media-inspired interface. Each profile showcases the element's properties, interactions, and 'personality' based on its atomic structure. The simulation visualizes how adding or removing subatomic particles changes an element's identity, stability, and behavior. Students can view their elements' 'social networks'\u00e2\u0080\u0094showing potential bonds with other elements\u00e2\u0080\u0094and observe how electron configurations determine these relationships. They can toggle between different atomic models (Bohr, cloud, orbital) to understand how scientific representations have evolved."
+    },
+    "hypothesis": {
+        "hypothesis": "Atomic Architecture",
+        "type": "Explanatory",
+        "description": "Students will construct accurate atomic models by placing appropriate numbers of protons, neutrons, and electrons in their correct positions. They will explain how atomic structure determines an element's properties and predict how changes to this structure affect the element's behavior and identity."
+    }
+}

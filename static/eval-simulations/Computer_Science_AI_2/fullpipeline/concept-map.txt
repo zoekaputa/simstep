@@ -1,0 +1,35 @@
+graph LR
+    ML[Machine Learning]
+    AI[Artificial Intelligence]
+    RL[Reinforcement Learning]
+    SL[Supervised Learning]
+    UL[Unsupervised Learning]
+    A[Agent]
+    E[Environment]
+    S[States]
+    AC[Actions]
+    R[Rewards]
+    P[Policy]
+    Q[Q-learning]
+    DRL[Deep Reinforcement Learning]
+    NN[Neural Networks]
+    AI -->|subset of| ML
+    ML -->|includes| RL
+    ML -->|includes| SL
+    ML -->|includes| UL
+    RL -->|uses| A
+    RL -->|interacts with| E
+    RL -->|defines| S
+    RL -->|defines| AC
+    RL -->|provides| R
+    RL -->|learns| P
+    RL -->|uses algorithm| Q
+    RL -->|combined with| NN
+    NN -->|forms| DRL
+    A -->|takes| AC
+    A -->|receives| R
+    A -->|learns| P
+    E -->|contains| S
+    P -->|maximizes| R
+    Q -->|estimates| R
+    DRL -->|enables| ML

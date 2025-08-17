@@ -1,0 +1,43 @@
+graph LR
+    Object[Skateboarder]
+    Force[Push Force]
+    Motion[Skateboard Tricks]
+    Mass[Rider Mass]
+    Acceleration[Trick Speed]
+    Momentum[Skateboard Momentum]
+    Friction[Wheel Friction]
+    Action[Pushing off Ramp]
+    Reaction[Ramp's Push Back]
+    RampVisual[Ramp Visualization]
+    ForceMeter[Force Meter]
+    MassInput[Mass Input]
+    StartButton[Start Button]
+    TimeDisplay[Time Display]
+    DistanceDisplay[Distance Display]
+    AccelerationDisplay[Acceleration Display]
+    DataTable[Data Table]
+    Graph[Force vs. Acceleration Graph]
+    Object -->|affected by| Force
+    Object -->|has| Mass
+    Object -->|experiences| Motion
+    Force -->|causes| Acceleration
+    Mass -->|influences| Acceleration
+    Acceleration -->|changes| Motion
+    Motion -->|related to| Momentum
+    Object -->|experiences| Friction
+    Force -->|measured in| Newton
+    Action -->|results in| Reaction
+    Reaction -->|equal and opposite to| Action
+    RampVisual -->|contains| Object
+    ForceMeter -->|controls| Force
+    MassInput -->|sets| Mass
+    StartButton -->|initiates| Motion
+    TimeDisplay -->|shows| Acceleration
+    DistanceDisplay -->|shows| Motion
+    AccelerationDisplay -->|shows| Acceleration
+    DataTable -->|records| Force
+    DataTable -->|records| Acceleration
+    Graph -->|plots| Force
+    Graph -->|plots| Acceleration
+    RampVisual -->|shows| Action
+    RampVisual -->|shows| Reaction

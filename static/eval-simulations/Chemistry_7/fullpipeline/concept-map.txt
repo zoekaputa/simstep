@@ -1,0 +1,23 @@
+graph LR
+    CE[Chemical Equilibrium]
+    FR[Forward Reaction]
+    RR[Reverse Reaction]
+    RC[Reactant Concentration]
+    PC[Product Concentration]
+    LCP[Le Chatelier's Principle]
+    T[Temperature]
+    P[Pressure]
+    KEQ[Equilibrium Constant]
+    CAT[Catalyst]
+    CE -->|characterized by| FR
+    CE -->|characterized by| RR
+    FR -->|equal rate to| RR
+    CE -->|affects| RC
+    CE -->|affects| PC
+    LCP -->|governs| CE
+    RC -->|influences| CE
+    PC -->|influences| CE
+    T -->|affects| CE
+    P -->|affects| CE
+    KEQ -->|describes| CE
+    CAT -->|speeds up| CE

@@ -1,0 +1,29 @@
+graph LR
+    EM[Electromagnetic Spectrum Simulator]
+    RW[Remote Control Signals]
+    MW[Radar Systems]
+    IR[Thermal Imaging]
+    UV[UV Obstacle Detection]
+    XR[X-ray Material Analysis]
+    GR[High-Energy Particle Detection]
+    WL[Signal Wavelength]
+    FR[Transmission Frequency]
+    EN[Signal Power]
+    EM -->|encompasses| RW
+    EM -->|encompasses| MW
+    EM -->|encompasses| IR
+    EM -->|encompasses| UV
+    EM -->|encompasses| XR
+    EM -->|encompasses| GR
+    EM -->|has| WL
+    EM -->|has| FR
+    EM -->|has| EN
+    WL -->|c = fλ| FR
+    FR -->|E = hf| EN
+    RW -->|penetrates| NM[Wooden Obstacles]
+    IR -->|blocked by| OO[Opaque Barriers]
+    MW -->|blocked by| FC[Metal Enclosures]
+    MW -->|absorbed by| WM[Water Hazards]
+    UV -->|penetrates| LM[Translucent Materials]
+    XR -->|penetrates| LM
+    GR -->|penetrates| LM

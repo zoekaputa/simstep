@@ -1,0 +1,42 @@
+graph LR
+    Device[Classroom]
+    Network[School Network]
+    Packet[Message]
+    IPAddress[Room Number]
+    RoutingProtocol[Hallway Route]
+    NetworkType[School Layout]
+    TransmissionProtocol[Message Passing Rules]
+    OSIModel[Communication Layers]
+    TCPIPModel[Simplified Layers]
+    PhysicalMedia[Hallway]
+    LayoutSelector[Layout Selector]
+    SendMessageButton[Send Message Button]
+    MessageInput[Message Input]
+    SourceClassroom[Source Classroom Selector]
+    DestinationClassroom[Destination Classroom Selector]
+    SimulationVisual[Network Simulation Visual]
+    PerformanceMetrics[Performance Metrics Display]
+    Device -->|communicates through| Network
+    Network -->|operates on| OSIModel
+    Network -->|implements| TCPIPModel
+    Device -->|connects via| PhysicalMedia
+    Network -->|transmits| Packet
+    Device -->|identified by| IPAddress
+    Network -->|uses| RoutingProtocol
+    Network -->|categorized as| NetworkType
+    Network -->|employs| TransmissionProtocol
+    Packet -->|contains| IPAddress
+    RoutingProtocol -->|determines path for| Packet
+    TransmissionProtocol -->|manages| Packet
+    LayoutSelector -->|changes| NetworkType
+    LayoutSelector -->|updates| SimulationVisual
+    SendMessageButton -->|initiates| Packet
+    MessageInput -->|defines| Packet
+    SourceClassroom -->|sets source| Device
+    DestinationClassroom -->|sets destination| Device
+    SimulationVisual -->|displays| Network
+    SimulationVisual -->|shows| Device
+    SimulationVisual -->|animates| Packet
+    SimulationVisual -->|illustrates| PhysicalMedia
+    PerformanceMetrics -->|shows results for| Network
+    SendMessageButton -->|updates| PerformanceMetrics

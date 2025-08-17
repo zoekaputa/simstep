@@ -1,0 +1,29 @@
+graph LR
+    A[Cryptography]
+    B[Symmetric-key Cryptography]
+    C[Asymmetric Cryptography]
+    D[Cryptographic Hash Functions]
+    E[Key Exchange Protocols]
+    F[AES]
+    G[RSA]
+    H[SHA-256]
+    I[Diffie-Hellman]
+    J[Quantum Computing]
+    K[Quantum-resistant Algorithms]
+    A -->|includes| B
+    A -->|includes| C
+    A -->|uses| D
+    A -->|uses| E
+    B -->|example| F
+    C -->|example| G
+    D -->|example| H
+    E -->|example| I
+    A -->|based on| L[Mathematical Concepts]
+    A -->|based on| M[Computer Science Principles]
+    J -->|threatens| A
+    J -->|spurs development of| K
+    B -->|requires| N[Secure Key Exchange]
+    C -->|enables| O[Digital Signatures]
+    C -->|uses| P[Public and Private Keys]
+    D -->|supports| Q[Data Integrity Verification]
+    E -->|enables| R[Secure Key Sharing]

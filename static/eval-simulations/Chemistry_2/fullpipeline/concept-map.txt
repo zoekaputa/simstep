@@ -1,0 +1,32 @@
+graph LR
+    A[Atoms]
+    B[Chemical Bonds]
+    C[Ingredients]
+    D[Heat]
+    E[Moisture]
+    F[Proteins]
+    G[Sugars]
+    H[Maillard Reaction]
+    I[Caramelization]
+    J[Baking Soda]
+    K[Carbon Dioxide]
+    L[Cookies]
+    M[Fats]
+    N[Water]
+    O[Temperature]
+    P[Reaction Rate]
+    A -->|form| B
+    B -->|create| C
+    C -->|undergo| H
+    D -->|triggers| H
+    E -->|influences| H
+    F -->|reacts with| G
+    G -->|participates in| H
+    H -->|produces| L
+    I -->|affects| L
+    J -->|decomposes to| K
+    K -->|causes rising in| L
+    M -->|melts in| L
+    N -->|evaporates from| L
+    O -->|affects| P
+    P -->|influences| H

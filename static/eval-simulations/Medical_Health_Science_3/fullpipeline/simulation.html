@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emergency Response Trainer</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cabin+Sketch:wght@400;700&family=Londrina+Sketch&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/roughjs@latest/bundled/rough.js"></script>
+    <style>
+        body {
+            font-family: 'Cabin Sketch', cursive;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        h1 {
+            font-family: 'Cabin Sketch', cursive;
+            font-weight: 700;
+            color: #ff6b6b;
+        }
+        #canvas {
+            background-color: white;
+            border: 2px solid #333;
+            margin-bottom: 20px;
+        }
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .control-group {
+            background-color: #fff;
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        button, select {
+            font-family: 'Cabin Sketch', cursive;
+            font-size: 16px;
+            padding: 5px 10px;
+            cursor: pointer;
+            background-color: #4ecdc4;
+            border: none;
+            border-radius: 5px;
+            color: white;
+        }
+        button:hover, select:hover {
+            background-color: #45b7aa;
+        }
+        #description {
+            max-width: 800px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Emergency Response Trainer</h1>
+    <div id="description">
+        <p>Welcome to the Emergency Response Trainer! In this simulation, you'll learn how to respond to sports-related injuries and emergencies. Your goal is to assess the situation, provide appropriate care, and ensure the safety of both the victim and yourself. Remember, quick thinking and proper technique can make all the difference in an emergency situation!</p>
+    </div>
+    <canvas id="canvas" width="800" height="600"></canvas>
+    <div class="controls">
+        <div class="control-group">
+            <select id="scenarioSelector">
+                <option value="sprain">Ankle Sprain</option>
+                <option value="fracture">Arm Fracture</option>
+                <option value="burn">Minor Burn</option>
+                <option value="cardiac">Cardiac Arrest</option>
+            </select>
+            <button id="startButton">Start Simulation</button>
+        </div>
+        <div class="control-group">
+            <button id="assessButton">Perform Assessment (ABCDE)</button>
+        </div>
+        <div class="control-group">
+            <button id="cprButton">Perform CPR</button>
+            <button id="aedButton">Use AED</button>
+        </div>
+        <div class="control-group">
+            <button id="bleedingControlButton">Control Bleeding</button>
+            <button id="splintButton">Apply Splint</button>
+            <button id="burnTreatmentButton">Treat Burn</button>
+        </div>
+        <div class="control-group">
+            <button id="recoveryPositionButton">Place in Recovery Position</button>
+        </div>
+    </div>
+    <script>
+        window.LOG_DEBUG = false;
+
+        function logDebug(message) {
+            if (window.LOG_DEBUG) {
+                console.log(`DEBUG [${new Date().toISOString()}]: ${message}`);
+            }
+        }
+
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const rc = rough.canvas(canvas);
+
+        const victimSVG = `
+            <svg width="100" height="200" viewBox="0 0 100 200">
+                <ellipse cx="50" cy="30" rx="20" ry="25" fill="#ffb3ba"/>
+                <rect x="40" y="55" width="20" height="70" fill="#ffb3ba"/>
+                <rect x="30" y="125" width="15" height="60" fill="#ffb3ba"/>
+                <rect x="55" y="125" width="15" height="60" fill="#ffb3ba"/>
+                <rect x="15" y="65" width="70" height="20" fill="#ffb3ba"/>
+            </svg>
+        `;
+
+        const sceneSVG = `
+            <svg width="800" height="600" viewBox="0 0 800 600">
+                <rect x="0" y="500" width="800" height="100" fill="#7ec850"/>
+                <circle cx="700" cy="100" r="50" fill="#ffd700"/>
+            </svg>
+        `;
+
+        let currentScenario = '';
+        let victimState = 'normal';
+
+        function drawScene() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            const sceneImg = new Image();
+            sceneImg.onload = () => {
+                ctx.drawImage(sceneImg, 0, 0);
+                drawVictim();
+            };
+            sceneImg.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(sceneSVG);
+            logDebug('Scene drawn');
+        }
+
+        function drawVictim() {
+            const victimImg = new Image();
+            victimImg.onload = () => {
+                ctx.drawImage(victimImg, 350, 300);
+            };
+            victimImg.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(victimSVG);
+            logDebug('Victim drawn');
+        }
+
+        function startSimulation() {
+            currentScenario = document.getElementById('scenarioSelector').value;
+            victimState = 'injured';
+            drawScene();
+            logDebug(`Simulation started with scenario: ${currentScenario}`);
+        }
+
+        function performAssessment() {
+            rc.rectangle(10, 10, 780, 580, { stroke: '#ff6b6b', strokeWidth: 2 });
+            logDebug('Assessment performed');
+        }
+
+        function performCPR() {
+            if (currentScenario === 'cardiac') {
+                rc.circle(400, 350, 50, { fill: 'rgba(255, 0, 0, 0.5)' });
+                logDebug('CPR performed');
+            }
+        }
+
+        function useAED() {
+            if (currentScenario === 'cardiac') {
+                rc.rectangle(300, 400, 200, 100, { fill: 'yellow' });
+                logDebug('AED used');
+            }
+        }
+
+        function controlBleeding() {
+            if (currentScenario === 'fracture') {
+                rc.line(370, 330, 430, 390, { stroke: 'red', strokeWidth: 2 });
+                logDebug('Bleeding controlled');
+            }
+        }
+
+        function applySplint() {
+            if (currentScenario === 'fracture' || currentScenario === 'sprain') {
+                rc.rectangle(360, 320, 80, 150, { fill: 'brown' });
+                logDebug('Splint applied');
+            }
+        }
+
+        function treatBurn() {
+            if (currentScenario === 'burn') {
+                rc.circle(400, 350, 30, { fill: 'blue' });
+                logDebug('Burn treated');
+            }
+        }
+
+        function placeInRecoveryPosition() {
+            if (victimState === 'injured') {
+                ctx.save();
+                ctx.translate(400, 400);
+                ctx.rotate(Math.PI / 4);
+                ctx.translate(-400, -400);
+                drawVictim();
+                ctx.restore();
+                logDebug('Victim placed in recovery position');
+            }
+        }
+
+        document.getElementById('startButton').addEventListener('click', startSimulation);
+        document.getElementById('assessButton').addEventListener('click', performAssessment);
+        document.getElementById('cprButton').addEventListener('click', performCPR);
+        document.getElementById('aedButton').addEventListener('click', useAED);
+        document.getElementById('bleedingControlButton').addEventListener('click', controlBleeding);
+        document.getElementById('splintButton').addEventListener('click', applySplint);
+        document.getElementById('burnTreatmentButton').addEventListener('click', treatBurn);
+        document.getElementById('recoveryPositionButton').addEventListener('click', placeInRecoveryPosition);
+
+        document.addEventListener('DOMContentLoaded', () => {
+            if (window.LOG_DEBUG) {
+                logDebug('Simulation initialized');
+                document.querySelectorAll('svg').forEach((svg, index) => {
+                    const rect = svg.getBoundingClientRect();
+                    logDebug(`SVG #${index}: Position {x: ${rect.x}, y: ${rect.y}}, Size {w: ${rect.width}, h: ${rect.height}}`);
+                });
+                document.querySelectorAll('input, button, select').forEach((control) => {
+                    logDebug(`Control ${control.id || 'unnamed'} (${control.tagName}): Initial value: ${control.value || 'N/A'}`);
+                });
+                
+                document.querySelectorAll('button').forEach((button) => {
+                    button.addEventListener('click', () => logDebug(`Button ${button.id || 'unnamed'} clicked`));
+                });
+                document.querySelectorAll('input').forEach((input) => {
+                    input.addEventListener('change', (e) => logDebug(`Input ${input.id || 'unnamed'} changed to ${e.target.value}`));
+                });
+            }
+        });
+
+        drawScene();
+    </script>
+</body>
+</html>

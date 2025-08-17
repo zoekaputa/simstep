@@ -1,0 +1,43 @@
+graph LR
+    WaterSlide[Slide Design]
+    Water[Water Flow Rate]
+    Rider[Virtual Rider]
+    Height[Slide Height]
+    Speed[Rider Velocity]
+    Friction[Boundary Layer Effects]
+    Pressure[Fluid Pressure]
+    CrossSection[Slide Cross-Section]
+    SlideVisual[Slide Visual]
+    RiderVisual[Rider Visual]
+    HeightControl[Height Slider]
+    FlowControl[Flow Rate Slider]
+    MassControl[Rider Mass Slider]
+    DesignControl[Slide Design Controls]
+    CrossSectionControl[Cross-Section Controls]
+    SimulationButton[Run Simulation Button]
+    DataDisplay[Data Display]
+    WaterSlide -->|affects| Water
+    WaterSlide -->|determines experience of| Rider
+    Height -->|converts to| Speed
+    Speed -->|inversely affects| Pressure
+    Water -->|exerts| Friction
+    Rider -->|experiences| Friction
+    WaterSlide -->|causes| Friction
+    CrossSection -->|influences| Water
+    CrossSection -->|affects| Friction
+    Water -->|flow rate affects| Speed
+    Height -->|determines potential energy of| Rider
+    SlideVisual -->|represents| WaterSlide
+    RiderVisual -->|represents| Rider
+    HeightControl -->|adjusts| Height
+    FlowControl -->|controls| Water
+    MassControl -->|sets| Rider
+    DesignControl -->|modifies| WaterSlide
+    CrossSectionControl -->|changes| CrossSection
+    SimulationButton -->|triggers| SlideVisual
+    SimulationButton -->|triggers| RiderVisual
+    SlideVisual -->|outputs to| DataDisplay
+    RiderVisual -->|outputs to| DataDisplay
+    DataDisplay -->|shows| Speed
+    DataDisplay -->|shows| Pressure
+    DataDisplay -->|shows| Friction

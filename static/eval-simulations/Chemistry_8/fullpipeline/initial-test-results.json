@@ -1,0 +1,14 @@
+{
+    "message": "Runtime test completed.",
+    "jsErrors": [],
+    "debugLogs": [
+        "DEBUG [2025-08-05T14:24:26.908Z]: Scene updated - Battery: 2%, Temp: 26\u00b0C, Time: 0.1s",
+        "DEBUG [2025-08-05T14:24:26.908Z]: Simulation updated - Power: 20W, Rapid: false",
+        "DEBUG [2025-08-05T14:24:26.908Z]: Charging started",
+        "DEBUG [2025-08-05T14:24:26.926Z]: Scene updated - Battery: 4%, Temp: 27\u00b0C, Time: 0.2s",
+        "DEBUG [2025-08-05T14:24:26.926Z]: Simulation updated - Power: 20W, Rapid: false",
+        "DEBUG [2025-08-05T14:24:26.930Z]: Scene updated - Battery: 0%, Temp: 25\u00b0C, Time: 0s",
+        "DEBUG [2025-08-05T14:24:26.930Z]: Simulation reset",
+        "DEBUG [2025-08-05T14:24:26.948Z]: Graph displayed"
+    ]
+}

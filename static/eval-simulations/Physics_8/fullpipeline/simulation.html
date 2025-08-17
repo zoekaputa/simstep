@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pool Rescue Refraction Simulator</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cabin+Sketch:wght@400;700&family=Londrina+Sketch&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/roughjs@latest/bundled/rough.js"></script>
+    <style>
+        body {
+            font-family: 'Cabin Sketch', cursive;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #f0f8ff;
+            margin: 0;
+            padding: 20px;
+        }
+        h1 {
+            font-family: 'Cabin Sketch', cursive;
+            font-weight: 700;
+            color: #0066cc;
+        }
+        p {
+            font-family: 'Cabin Sketch', cursive;
+            font-weight: 400;
+            max-width: 800px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        #canvas {
+            border: 2px solid #0066cc;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        .controls {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        label {
+            font-weight: bold;
+        }
+        input[type="range"] {
+            width: 300px;
+        }
+        button {
+            font-family: 'Cabin Sketch', cursive;
+            font-weight: 700;
+            background-color: #0066cc;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0052a3;
+        }
+        table {
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        th, td {
+            border: 1px solid #0066cc;
+            padding: 5px 10px;
+        }
+        #graph {
+            border: 2px solid #0066cc;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Pool Rescue Refraction Simulator</h1>
+    <p>Welcome to the Pool Rescue Refraction Simulator! In this experiment, you'll learn how light behaves when it travels through different materials, like air and water. As a student lifeguard, you'll observe how objects underwater appear to be in a different position than they actually are. This effect is caused by the bending of light as it moves from air to water, a phenomenon known as refraction. By adjusting the depth of a submerged rescue target and observing its apparent position, you'll discover the relationship between actual depth and perceived depth in a swimming pool.</p>
+    <canvas id="canvas" width="800" height="400"></canvas>
+    <div class="controls">
+        <label for="depthSlider">Target Depth (cm): <span id="depthValue">50</span></label>
+        <input type="range" id="depthSlider" min="10" max="200" value="50">
+        <button id="observeButton">Observe</button>
+    </div>
+    <table id="dataTable">
+        <tr>
+            <th>Actual Depth (cm)</th>
+            <th>Apparent Depth (cm)</th>
+            <th>Ratio (Apparent/Actual)</th>
+        </tr>
+    </table>
+    <canvas id="graph" width="400" height="300"></canvas>
+
+    <script>
+        window.LOG_DEBUG = false;
+
+        function logDebug(message) {
+            if (window.LOG_DEBUG) {
+                console.log(`DEBUG [${new Date().toISOString()}]: ${message}`);
+            }
+        }
+
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const rc = rough.canvas(canvas);
+
+        const graphCanvas = document.getElementById('graph');
+        const graphCtx = graphCanvas.getContext('2d');
+        const graphRc = rough.canvas(graphCanvas);
+
+        const depthSlider = document.getElementById('depthSlider');
+        const depthValue = document.getElementById('depthValue');
+        const observeButton = document.getElementById('observeButton');
+        const dataTable = document.getElementById('dataTable');
+
+        const poolSvg = `
+            <svg width="800" height="400" viewBox="0 0 800 400">
+                <defs>
+                    <linearGradient id="waterGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                        <stop offset="0%" style="stop-color:#87CEFA;stop-opacity:0.8" />
+                        <stop offset="100%" style="stop-color:#1E90FF;stop-opacity:0.8" />
+                    </linearGradient>
+                </defs>
+                <rect x="0" y="100" width="800" height="300" fill="url(#waterGradient)" />
+                <path d="M0,100 Q400,80 800,100" stroke="#87CEFA" stroke-width="2" fill="none" />
+            </svg>
+        `;
+
+        const targetSvg = `
+            <svg width="40" height="40" viewBox="0 0 40 40">
+                <circle cx="20" cy="20" r="18" fill="#FF6347" stroke="#8B0000" stroke-width="2" />
+                <circle cx="20" cy="20" r="12" fill="#8B0000" />
+                <circle cx="20" cy="20" r="6" fill="#FF6347" />
+            </svg>
+        `;
+
+        const lifeguardSvg = `
+            <svg width="60" height="100" viewBox="0 0 60 100">
+                <ellipse cx="30" cy="20" rx="15" ry="20" fill="#FFD700" />
+                <rect x="20" y="40" width="20" height="40" fill="#FF0000" />
+                <rect x="15" y="80" width="30" height="20" fill="#0000FF" />
+            </svg>
+        `;
+
+        let targetDepth = 50;
+        const data = [];
+
+        function drawPool() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            const poolImg = new Image();
+            poolImg.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(poolSvg);
+            poolImg.onload = () => {
+                ctx.drawImage(poolImg, 0, 0);
+                drawTarget();
+                drawLifeguard();
+                drawLightRay();
+            };
+        }
+
+        function drawTarget() {
+            const targetImg = new Image();
+            targetImg.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(targetSvg);
+            targetImg.onload = () => {
+                const y = 100 + (targetDepth / 200) * 300;
+                ctx.drawImage(targetImg, 380, y);
+                logDebug(`Target drawn at y: ${y}`);
+            };
+        }
+
+        function drawLifeguard() {
+            const lifeguardImg = new Image();
+            lifeguardImg.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(lifeguardSvg);
+            lifeguardImg.onload = () => {
+                ctx.drawImage(lifeguardImg, 700, 20);
+                logDebug('Lifeguard drawn');
+            };
+        }
+
+        function drawLightRay() {
+            const apparentDepth = targetDepth * 0.75;
+            const targetY = 100 + (targetDepth / 200) * 300;
+            const apparentY = 100 + (apparentDepth / 200) * 300;
+            
+            rc.line(400, targetY, 730, 70, { stroke: '#FFD700', strokeWidth: 2 });
+            rc.line(400, apparentY, 730, 70, { stroke: '#FF0000', strokeWidth: 2, strokeDashArray: [5, 5] });
+            
+            logDebug(`Light ray drawn from (400, ${targetY}) to (730, 70)`);
+            logDebug(`Apparent light ray drawn from (400, ${apparentY}) to (730, 70)`);
+        }
+
+        function updateDepthValue() {
+            targetDepth = parseInt(depthSlider.value);
+            depthValue.textContent = targetDepth;
+            drawPool();
+            logDebug(`Depth updated to ${targetDepth}`);
+        }
+
+        function observe() {
+            const apparentDepth = targetDepth * 0.75;
+            const ratio = apparentDepth / targetDepth;
+            data.push({ actual: targetDepth, apparent: apparentDepth, ratio: ratio });
+            
+            const row = dataTable.insertRow(-1);
+            row.insertCell(0).textContent = targetDepth.toFixed(2);
+            row.insertCell(1).textContent = apparentDepth.toFixed(2);
+            row.insertCell(2).textContent = ratio.toFixed(4);
+            
+            updateGraph();
+            logDebug(`Observation added: Actual ${targetDepth}, Apparent ${apparentDepth}, Ratio ${ratio}`);
+        }
+
+        function updateGraph() {
+            graphCtx.clearRect(0, 0, graphCanvas.width, graphCanvas.height);
+            
+            graphRc.line(50, 250, 350, 250, { stroke: '#000000' }); // x-axis
+            graphRc.line(50, 250, 50, 50, { stroke: '#000000' }); // y-axis
+            
+            graphCtx.font = '14px Cabin Sketch';
+            graphCtx.fillStyle = '#000000';
+            graphCtx.fillText('Actual Depth (cm)', 150, 280);
+            graphCtx.save();
+            graphCtx.translate(20, 150);
+            graphCtx.rotate(-Math.PI / 2);
+            graphCtx.fillText('Apparent/Actual Ratio', 0, 0);
+            graphCtx.restore();
+            
+            const maxDepth = Math.max(...data.map(d => d.actual));
+            data.forEach(point => {
+                const x = 50 + (point.actual / maxDepth) * 300;
+                const y = 250 - point.ratio * 200;
+                graphRc.circle(x, y, 5, { fill: '#0066cc' });
+                logDebug(`Graph point drawn at (${x}, ${y})`);
+            });
+        }
+
+        depthSlider.addEventListener('input', updateDepthValue);
+        observeButton.addEventListener('click', observe);
+
+        document.addEventListener('DOMContentLoaded', () => {
+            drawPool();
+            if (window.LOG_DEBUG) {
+                logDebug('Simulation initialized');
+                document.querySelectorAll('svg').forEach((svg, index) => {
+                    const rect = svg.getBoundingClientRect();
+                    logDebug(`SVG #${index}: Position {x: ${rect.x}, y: ${rect.y}}, Size {w: ${rect.width}, h: ${rect.height}}`);
+                });
+                document.querySelectorAll('input, button, select').forEach((control) => {
+                    logDebug(`Control ${control.id || 'unnamed'} (${control.tagName}): Initial value: ${control.value || 'N/A'}`);
+                });
+                document.querySelectorAll('button').forEach((button) => {
+                    button.addEventListener('click', () => logDebug(`Button ${button.id || 'unnamed'} clicked`));
+                });
+                document.querySelectorAll('input').forEach((input) => {
+                    input.addEventListener('change', (e) => logDebug(`Input ${input.id || 'unnamed'} changed to ${e.target.value}`));
+                });
+            }
+        });
+    </script>
+</body>
+</html>

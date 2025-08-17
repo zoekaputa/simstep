@@ -1,0 +1,19 @@
+graph LR
+    ParentMaterial[Rock and Sediment Selection]
+    Soil[Virtual Soil Profile]
+    Organisms[Simulated Microbes and Plants]
+    Climate[Climate Variable Controls]
+    Topography[Terrain Adjustment Tools]
+    Time[Time-lapse Slider]
+    Weathering[Mineral Breakdown Visualization]
+    OrganicMatter[Decomposition Simulator]
+    SoilHorizons[Layer Development Display]
+    ParentMaterial -->|Undergoes| Weathering
+    Weathering -->|Contributes to| Soil
+    Organisms -->|Contribute| OrganicMatter
+    OrganicMatter -->|Improves| Soil
+    Climate -->|Influences| Weathering
+    Climate -->|Affects| Soil
+    Topography -->|Influences| Soil
+    Time -->|Allows development of| Soil
+    Soil -->|Develops| SoilHorizons

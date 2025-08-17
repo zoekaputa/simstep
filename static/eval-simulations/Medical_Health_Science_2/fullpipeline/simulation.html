@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Therapeutic Transport Network Simulation</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cabin+Sketch:wght@400;700&family=Londrina+Sketch&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/roughjs@latest/bundled/rough.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: 'Cabin Sketch', cursive;
+            margin: 0;
+            padding: 20px;
+            background-color: #f0f0f0;
+        }
+        h1, h2 {
+            font-family: 'Cabin Sketch', cursive;
+            font-weight: 700;
+        }
+        #simulationContainer {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+        }
+        #visualDisplay {
+            width: 600px;
+            height: 400px;
+            background-color: white;
+            border: 2px solid #333;
+            margin-bottom: 20px;
+        }
+        #controls {
+            width: 100%;
+            max-width: 600px;
+            background-color: #e0e0e0;
+            padding: 20px;
+            border-radius: 10px;
+        }
+        .control-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        select, input[type="range"], button {
+            width: 100%;
+            padding: 5px;
+            margin-bottom: 10px;
+        }
+        #concentrationGraph {
+            width: 100%;
+            max-width: 600px;
+            height: 300px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Therapeutic Transport Network Simulation</h1>
+    <p>Welcome to the Therapeutic Transport Network Simulation! In this experiment, you'll explore how drugs move through the human body and how different factors affect their distribution and effectiveness. You'll learn about pharmacokinetics, which is the study of how drugs are absorbed, distributed, metabolized, and eliminated by the body.</p>
+    <p>Use the controls below to adjust various properties of the drug and its delivery method. Observe how these changes affect the drug's movement and concentration in different parts of the body. Your goal is to develop strategies that maximize the drug's effectiveness while minimizing potential side effects.</p>
+    
+    <div id="simulationContainer">
+        <canvas id="visualDisplay"></canvas>
+        <div id="controls">
+            <div class="control-group">
+                <label for="drugProperties">Drug Properties:</label>
+                <select id="drugProperties">
+                    <option value="small">Small Molecule</option>
+                    <option value="large">Large Molecule</option>
+                    <option value="nanoparticle">Nanoparticle</option>
+                </select>
+            </div>
+            <div class="control-group">
+                <label for="adminSite">Administration Site:</label>
+                <select id="adminSite">
+                    <option value="oral">Oral</option>
+                    <option value="intravenous">Intravenous</option>
+                    <option value="topical">Topical</option>
+                </select>
+            </div>
+            <div class="control-group">
+                <label for="releaseRate">Controlled Release Rate (hours):</label>
+                <input type="range" id="releaseRate" min="1" max="24" value="12">
+                <span id="releaseRateValue">12</span>
+            </div>
+            <div class="control-group">
+                <label for="targetOrgan">Target Organ:</label>
+                <select id="targetOrgan">
+                    <option value="brain">Brain</option>
+                    <option value="heart">Heart</option>
+                    <option value="liver">Liver</option>
+                    <option value="kidney">Kidney</option>
+                </select>
+            </div>
+            <button id="releaseButton">Release Drug</button>
+            <div class="control-group">
+                <label for="timeInterval">Time Interval:</label>
+                <input type="range" id="timeInterval" min="0" max="24" value="0">
+                <span id="timeIntervalValue">0</span> hours
+            </div>
+        </div>
+        <canvas id="concentrationGraph"></canvas>
+    </div>
+
+    <script>
+        window.LOG_DEBUG = false;
+
+        function logDebug(message) {
+            if (window.LOG_DEBUG) {
+                console.log(`DEBUG [${new Date().toISOString()}]: ${message}`);
+            }
+        }
+
+        const canvas = document.getElementById('visualDisplay');
+        const ctx = canvas.getContext('2d');
+        const rc = rough.canvas(canvas);
+
+        const bodyParts = {
+            brain: { x: 300, y: 50, w: 100, h: 80 },
+            heart: { x: 280, y: 150, w: 80, h: 80 },
+            liver: { x: 380, y: 220, w: 100, h: 60 },
+            kidney: { x: 200, y: 250, w: 60, h: 80 },
+            stomach: { x: 290, y: 250, w: 80, h: 60 },
+            intestine: { x: 250, y: 320, w: 200, h: 40 },
+        };
+
+        const adminSites = {
+            oral: { x: 320, y: 380 },
+            intravenous: { x: 100, y: 200 },
+            topical: { x: 500, y: 200 },
+        };
+
+        let drugParticles = [];
+        let targetOrgan = 'brain';
+        let releaseRate = 12;
+        let adminSite = 'oral';
+        let timeInterval = 0;
+
+        function drawBody() {
+            rc.rectangle(150, 20, 300, 360, { roughness: 1.5, fill: 'lightyellow' });
+            Object.entries(bodyParts).forEach(([part, dims]) => {
+                rc.rectangle(dims.x, dims.y, dims.w, dims.h, { roughness: 1, fill: part === targetOrgan ? 'lightgreen' : 'pink' });
+                ctx.fillStyle = 'black';
+                ctx.font = '16px Cabin Sketch';
+                ctx.fillText(part, dims.x + dims.w / 2 - 20, dims.y + dims.h / 2);
+            });
+        }
+
+        function drawAdminSites() {
+            Object.entries(adminSites).forEach(([site, pos]) => {
+                rc.circle(pos.x, pos.y, 20, { roughness: 1, fill: site === adminSite ? 'lightblue' : 'white' });
+                ctx.fillStyle = 'black';
+                ctx.font = '14px Cabin Sketch';
+                ctx.fillText(site, pos.x - 30, pos.y + 30);
+            });
+        }
+
+        function updateSimulation() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            drawBody();
+            drawAdminSites();
+            moveDrugParticles();
+            requestAnimationFrame(updateSimulation);
+        }
+
+        function moveDrugParticles() {
+            drugParticles.forEach((particle, index) => {
+                const targetPart = bodyParts[targetOrgan];
+                const dx = targetPart.x + targetPart.w / 2 - particle.x;
+                const dy = targetPart.y + targetPart.h / 2 - particle.y;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+                
+                if (distance > 5) {
+                    particle.x += dx / distance * 2;
+                    particle.y += dy / distance * 2;
+                } else {
+                    drugParticles.splice(index, 1);
+                }
+                
+                rc.circle(particle.x, particle.y, 5, { roughness: 1, fill: 'blue' });
+            });
+        }
+
+        function releaseDrug() {
+            const startPos = adminSites[adminSite];
+            for (let i = 0; i < 10; i++) {
+                drugParticles.push({
+                    x: startPos.x + Math.random() * 20 - 10,
+                    y: startPos.y + Math.random() * 20 - 10
+                });
+            }
+        }
+
+        document.getElementById('releaseButton').addEventListener('click', releaseDrug);
+
+        document.getElementById('drugProperties').addEventListener('change', (e) => {
+            logDebug(`Drug properties changed to ${e.target.value}`);
+        });
+
+        document.getElementById('adminSite').addEventListener('change', (e) => {
+            adminSite = e.target.value;
+            logDebug(`Administration site changed to ${adminSite}`);
+        });
+
+        document.getElementById('releaseRate').addEventListener('input', (e) => {
+            releaseRate = parseInt(e.target.value);
+            document.getElementById('releaseRateValue').textContent = releaseRate;
+            logDebug(`Release rate changed to ${releaseRate} hours`);
+        });
+
+        document.getElementById('targetOrgan').addEventListener('change', (e) => {
+            targetOrgan = e.target.value;
+            logDebug(`Target organ changed to ${targetOrgan}`);
+        });
+
+        document.getElementById('timeInterval').addEventListener('input', (e) => {
+            timeInterval = parseInt(e.target.value);
+            document.getElementById('timeIntervalValue').textContent = timeInterval;
+            logDebug(`Time interval changed to ${timeInterval} hours`);
+            updateConcentrationGraph();
+        });
+
+        const concentrationGraph = new Chart(document.getElementById('concentrationGraph').getContext('2d'), {
+            type: 'line',
+            data: {
+                labels: Array.from({length: 25}, (_, i) => i),
+                datasets: [{
+                    label: 'Drug Concentration',
+                    data: Array(25).fill(0),
+                    borderColor: 'rgb(75, 192, 192)',
+                    tension: 0.1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Concentration'
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Time (hours)'
+                        }
+                    }
+                }
+            }
+        });
+
+        function updateConcentrationGraph() {
+            const data = concentrationGraph.data.datasets[0].data;
+            for (let i = 0; i < data.length; i++) {
+                if (i <= timeInterval) {
+                    data[i] = Math.sin((i / releaseRate) * Math.PI) * 100;
+                } else {
+                    data[i] = 0;
+                }
+            }
+            concentrationGraph.update();
+            logDebug(`Updated concentration graph for time interval ${timeInterval}`);
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            if (window.LOG_DEBUG) {
+                logDebug('Simulation initialized');
+                document.querySelectorAll('svg').forEach((svg, index) => {
+                    const rect = svg.getBoundingClientRect();
+                    logDebug(`SVG #${index}: Position {x: ${rect.x}, y: ${rect.y}}, Size {w: ${rect.width}, h: ${rect.height}}`);
+                });
+                document.querySelectorAll('input, button, select').forEach((control) => {
+                    logDebug(`Control ${control.id || 'unnamed'} (${control.tagName}): Initial value: ${control.value || 'N/A'}`);
+                });
+                
+                document.querySelectorAll('button').forEach((button) => {
+                    button.addEventListener('click', () => logDebug(`Button ${button.id || 'unnamed'} clicked`));
+                });
+                document.querySelectorAll('input').forEach((input) => {
+                    input.addEventListener('change', (e) => logDebug(`Input ${input.id || 'unnamed'} changed to ${e.target.value}`));
+                });
+            }
+            updateSimulation();
+        });
+    </script>
+</body>
+</html>

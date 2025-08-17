@@ -1,0 +1,35 @@
+graph LR
+    ML[Virtual Pet Simulation]
+    AI[AI-Powered Pet Behavior]
+    RL[Pet Training System]
+    SL[Predefined Trick Templates]
+    UL[Pet Personality Development]
+    A[Virtual Pet]
+    E[Training Environment]
+    S[Pet States]
+    AC[Pet Actions]
+    R[Treats and Rewards]
+    P[Training Strategy]
+    Q[Trick Proficiency Estimation]
+    DRL[Advanced Pet Learning System]
+    NN[Pet Neural Network]
+    AI -->|subset of| ML
+    ML -->|includes| RL
+    ML -->|includes| SL
+    ML -->|includes| UL
+    RL -->|uses| A
+    RL -->|interacts with| E
+    RL -->|defines| S
+    RL -->|defines| AC
+    RL -->|provides| R
+    RL -->|learns| P
+    RL -->|uses algorithm| Q
+    RL -->|combined with| NN
+    NN -->|forms| DRL
+    A -->|takes| AC
+    A -->|receives| R
+    A -->|learns| P
+    E -->|contains| S
+    P -->|maximizes| R
+    Q -->|estimates| R
+    DRL -->|enables| ML

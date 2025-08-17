@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ice Cream Science: States of Matter</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cabin+Sketch:wght@400;700&family=Londrina+Sketch&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/roughjs@latest/bundled/rough.js"></script>
+    <style>
+        body {
+            font-family: 'Cabin Sketch', cursive;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #f0f8ff;
+            margin: 0;
+            padding: 20px;
+        }
+        h1 {
+            font-family: 'Cabin Sketch', cursive;
+            font-weight: 700;
+            color: #4a4a4a;
+        }
+        p {
+            font-family: 'Cabin Sketch', cursive;
+            font-weight: 400;
+            color: #666;
+            max-width: 800px;
+            text-align: center;
+        }
+        #canvas-container {
+            position: relative;
+            width: 800px;
+            height: 400px;
+            margin-bottom: 20px;
+        }
+        canvas {
+            border: 2px solid #4a4a4a;
+            border-radius: 10px;
+        }
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        label {
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input[type="range"] {
+            width: 200px;
+        }
+        .display {
+            font-size: 18px;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Ice Cream Science: States of Matter</h1>
+    <p>Welcome to the Ice Cream Lab! In this experiment, we'll explore how temperature affects the states of matter in ice cream. Watch closely as we change the temperature and observe how it impacts the ice crystals, cream, and air bubbles in our delicious treat. Can you predict what will happen to the ice cream's firmness and melting rate as we adjust the conditions?</p>
+    <div id="canvas-container">
+        <canvas id="iceCreamCanvas" width="800" height="400"></canvas>
+    </div>
+    <div class="controls">
+        <div class="control-group">
+            <label for="tempControl">Freezer Temperature (°C)</label>
+            <input type="range" id="tempControl" min="-20" max="20" value="0" step="1">
+            <div id="tempDisplay" class="display">0°C</div>
+        </div>
+        <div class="control-group">
+            <label for="timeControl">Time (minutes)</label>
+            <input type="range" id="timeControl" min="0" max="60" value="0" step="1">
+            <div id="timeDisplay" class="display">0 min</div>
+        </div>
+    </div>
+    <div class="displays">
+        <div id="firmnessDisplay" class="display">Firmness: Soft</div>
+        <div id="meltingDisplay" class="display">Melting Rate: Moderate</div>
+        <div id="volumeDisplay" class="display">Liquid Volume: 0%</div>
+    </div>
+
+    <script>
+        window.LOG_DEBUG = false;
+
+        function logDebug(message) {
+            if (window.LOG_DEBUG) {
+                console.log(`DEBUG [${new Date().toISOString()}]: ${message}`);
+            }
+        }
+
+        const canvas = document.getElementById('iceCreamCanvas');
+        const ctx = canvas.getContext('2d');
+        const rc = rough.canvas(canvas);
+
+        const iceCreamSVG = `
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+                <defs>
+                    <linearGradient id="iceCreamGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                        <stop offset="0%" style="stop-color:#FFE5B4;stop-opacity:1" />
+                        <stop offset="100%" style="stop-color:#FFD700;stop-opacity:1" />
+                    </linearGradient>
+                </defs>
+                <path d="M10,40 Q50,0 90,40 L90,90 Q50,100 10,90 Z" fill="url(#iceCreamGradient)" />
+                <ellipse cx="50" cy="40" rx="40" ry="10" fill="#FFE5B4" />
+            </svg>
+        `;
+
+        const crystalSVG = `
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50">
+                <polygon points="25,5 35,20 25,35 15,20" fill="#ADD8E6" stroke="#87CEEB" stroke-width="2" />
+            </svg>
+        `;
+
+        const bubbleSVG = `
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50">
+                <circle cx="25" cy="25" r="20" fill="#FFFFFF" fill-opacity="0.7" stroke="#DDDDDD" stroke-width="2" />
+            </svg>
+        `;
+
+        let temperature = 0;
+        let time = 0;
+        let firmness = 50;
+        let meltingRate = 50;
+        let liquidVolume = 0;
+
+        function drawIceCream() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Draw ice cream
+            const iceCreamImg = new Image();
+            iceCreamImg.onload = () => {
+                ctx.drawImage(iceCreamImg, 300, 100, 200, 200);
+                drawCrystalsAndBubbles();
+            };
+            iceCreamImg.src = 'data:image/svg+xml;base64,' + btoa(iceCreamSVG);
+
+            logDebug(`Ice cream drawn at (300, 100) with size 200x200`);
+        }
+
+        function drawCrystalsAndBubbles() {
+            const crystalImg = new Image();
+            const bubbleImg = new Image();
+
+            crystalImg.onload = () => {
+                for (let i = 0; i < 10; i++) {
+                    const x = 320 + Math.random() * 160;
+                    const y = 120 + Math.random() * 160;
+                    ctx.drawImage(crystalImg, x, y, 20, 20);
+                    logDebug(`Crystal drawn at (${x}, ${y}) with size 20x20`);
+                }
+            };
+
+            bubbleImg.onload = () => {
+                for (let i = 0; i < 15; i++) {
+                    const x = 320 + Math.random() * 160;
+                    const y = 120 + Math.random() * 160;
+                    ctx.drawImage(bubbleImg, x, y, 15, 15);
+                    logDebug(`Bubble drawn at (${x}, ${y}) with size 15x15`);
+                }
+            };
+
+            crystalImg.src = 'data:image/svg+xml;base64,' + btoa(crystalSVG);
+            bubbleImg.src = 'data:image/svg+xml;base64,' + btoa(bubbleSVG);
+        }
+
+        function updateSimulation() {
+            firmness = 100 - (temperature + 20) * 2.5;
+            meltingRate = (temperature + 20) * 2.5;
+            liquidVolume = Math.max(0, Math.min(100, (temperature + 20) * 2.5 + time));
+
+            document.getElementById('firmnessDisplay').textContent = `Firmness: ${firmness.toFixed(0)}%`;
+            document.getElementById('meltingDisplay').textContent = `Melting Rate: ${meltingRate.toFixed(0)}%`;
+            document.getElementById('volumeDisplay').textContent = `Liquid Volume: ${liquidVolume.toFixed(0)}%`;
+
+            drawIceCream();
+
+            logDebug(`Updated simulation: Firmness=${firmness}, MeltingRate=${meltingRate}, LiquidVolume=${liquidVolume}`);
+        }
+
+        document.getElementById('tempControl').addEventListener('input', (e) => {
+            temperature = parseInt(e.target.value);
+            document.getElementById('tempDisplay').textContent = `${temperature}°C`;
+            updateSimulation();
+            logDebug(`Temperature changed to ${temperature}°C`);
+        });
+
+        document.getElementById('timeControl').addEventListener('input', (e) => {
+            time = parseInt(e.target.value);
+            document.getElementById('timeDisplay').textContent = `${time} min`;
+            updateSimulation();
+            logDebug(`Time changed to ${time} minutes`);
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            if (window.LOG_DEBUG) {
+                logDebug('Simulation initialized');
+                document.querySelectorAll('svg').forEach((svg, index) => {
+                    const rect = svg.getBoundingClientRect();
+                    logDebug(`SVG #${index}: Position {x: ${rect.x}, y: ${rect.y}}, Size {w: ${rect.width}, h: ${rect.height}}`);
+                });
+                document.querySelectorAll('input, button, select').forEach((control) => {
+                    logDebug(`Control ${control.id || 'unnamed'} (${control.tagName}): Initial value: ${control.value || 'N/A'}`);
+                });
+                
+                document.querySelectorAll('button').forEach((button) => {
+                    button.addEventListener('click', () => logDebug(`Button ${button.id || 'unnamed'} clicked`));
+                });
+                document.querySelectorAll('input').forEach((input) => {
+                    input.addEventListener('change', (e) => logDebug(`Input ${input.id || 'unnamed'} changed to ${e.target.value}`));
+                });
+            }
+            updateSimulation();
+        });
+    </script>
+</body>
+</html>

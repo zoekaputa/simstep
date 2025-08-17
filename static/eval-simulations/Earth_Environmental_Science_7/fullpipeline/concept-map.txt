@@ -1,0 +1,25 @@
+graph TD
+    Atmosphere[Atmosphere]
+    Troposphere[Troposphere: 0-15km, 75% mass, weather]
+    Stratosphere[Stratosphere: 15-50km, temperature inversion]
+    Mesosphere[Mesosphere: 50-85km, coldest layer]
+    Thermosphere[Thermosphere: 85-600km, highest temperatures]
+    Exosphere[Exosphere: 600km+, transition to space]
+    Surface[Earth's surface]
+    Ozone[Ozone layer]
+    Aircraft[Commercial aircraft]
+    Meteors[Meteors]
+    Atmosphere -->|contains| Troposphere
+    Atmosphere -->|contains| Stratosphere
+    Atmosphere -->|contains| Mesosphere
+    Atmosphere -->|contains| Thermosphere
+    Atmosphere -->|contains| Exosphere
+    Troposphere -->|decreases temperature with height| Surface
+    Troposphere -->|drives| Weather[Weather patterns]
+    Stratosphere -->|contains| Ozone
+    Ozone -->|absorbs UV radiation| Stratosphere
+    Stratosphere -->|preferred flying zone| Aircraft
+    Mesosphere -->|burns up| Meteors
+    Thermosphere -->|absorbs solar radiation| Molecules[O2 and N2 molecules]
+    Exosphere -->|transitions to| Space[Space vacuum]
+    Surface -->|exponential pressure decrease| Atmosphere

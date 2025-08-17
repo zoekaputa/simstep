@@ -1,0 +1,12 @@
+{
+    "content": "When a bicycle rider makes a turn, the rider and bicycle undergo circular motion. Centripetal forces provided by the friction between the tires and the road keep the bicycle moving in a circular path rather than in a straight-line path. If a bicycle rider leans too much or too little when turning, the bicycle rider can lose balance and fall. Circular motion requires centripetal force directed toward the center of the circle. The centripetal force causes centripetal acceleration which changes the direction of velocity but not the speed. The faster an object moves in a circle, the greater the centripetal force needed to keep it in the circle. When riding a bike on a curved wall or in a velodrome, cyclists use the banking of the track and their own lean angle to generate the necessary centripetal force. Without sufficient centripetal force, a cyclist would slide up and off the track due to inertia. This is why steeper banking is necessary for higher speeds.",
+    "scenario": {
+        "title": "Extreme Cycling Physics",
+        "content": "Students design and navigate a virtual bike park featuring banked turns, vertical loops, and half-pipes. They can adjust bike speed, rider mass, track inclination, surface friction, and curve radius to explore the dynamics of circular motion. The simulation displays force vectors in real-time, allowing students to visualize how centripetal force, gravity, and normal force interact to create stable circular paths. Students must calculate and apply the correct speed and lean angle to successfully navigate increasingly complex track features, demonstrating how centripetal force keeps objects moving in circular paths."
+    },
+    "hypothesis": {
+        "hypothesis": "Understanding Circular Dynamics",
+        "type": "Descriptive",
+        "description": "Students will explain how centripetal force creates circular motion and calculate the relationships between speed, radius, and force in circular paths. They will predict the conditions necessary for successful circular motion in various contexts and identify the sources of centripetal force in different scenarios."
+    }
+}

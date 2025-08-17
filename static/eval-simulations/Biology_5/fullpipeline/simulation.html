@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Circulatory System Simulator</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cabin+Sketch:wght@400;700&family=Londrina+Sketch&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/roughjs@latest/bundled/rough.js"></script>
+    <style>
+        body {
+            font-family: 'Cabin Sketch', cursive;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 20px;
+        }
+        h1 {
+            font-family: 'Cabin Sketch', cursive;
+            font-weight: 700;
+            color: #333;
+        }
+        #description {
+            font-family: 'Cabin Sketch', cursive;
+            font-weight: 400;
+            max-width: 800px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        #simulationContainer {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        #controls {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        button, input[type="range"] {
+            font-family: 'Cabin Sketch', cursive;
+            font-weight: 700;
+            font-size: 16px;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        input[type="range"] {
+            width: 200px;
+        }
+        #scoreDisplay {
+            font-family: 'Cabin Sketch', cursive;
+            font-weight: 700;
+            font-size: 24px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Circulatory System Simulator</h1>
+    <div id="description">
+        Welcome to the Circulatory System Simulator! Here, you'll explore how blood flows through your body, delivering oxygen and nutrients to tissues while removing waste. You'll see how the heart, blood vessels, and lungs work together to keep your body functioning. Pay attention to how the blood moves in one direction and try to understand why this is important for your body's efficiency.
+    </div>
+    <div id="simulationContainer">
+        <canvas id="canvas" width="800" height="600"></canvas>
+        <div id="controls">
+            <button id="valveToggle">Toggle Valves</button>
+            <input type="range" id="flowControl" min="1" max="10" value="5">
+            <button id="testButton">Take Test</button>
+        </div>
+        <div id="scoreDisplay"></div>
+    </div>
+
+    <script>
+        window.LOG_DEBUG = false;
+
+        function logDebug(message) {
+            if (window.LOG_DEBUG) {
+                console.log(`DEBUG [${new Date().toISOString()}]: ${message}`);
+            }
+        }
+
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const rc = rough.canvas(canvas);
+
+        const heartSVG = `
+            <svg viewBox="0 0 100 100">
+                <path d="M50 30 L40 20 Q30 10 20 20 T10 40 Q10 60 50 90 Q90 60 90 40 T80 20 Q70 10 60 20 Z" fill="red"/>
+            </svg>
+        `;
+
+        const lungsSVG = `
+            <svg viewBox="0 0 100 100">
+                <path d="M30 20 Q10 50 30 80 L70 80 Q90 50 70 20 Z" fill="#FFA07A"/>
+                <path d="M40 30 Q30 50 40 70 L60 70 Q70 50 60 30 Z" fill="#FF6347"/>
+            </svg>
+        `;
+
+        const tissueSVG = `
+            <svg viewBox="0 0 100 100">
+                <circle cx="50" cy="50" r="40" fill="#FFB6C1"/>
+                <circle cx="30" cy="30" r="10" fill="#FF69B4"/>
+                <circle cx="70" cy="70" r="15" fill="#FF69B4"/>
+            </svg>
+        `;
+
+        let valvesVisible = true;
+        let flowRate = 5;
+        let bloodParticles = [];
+
+        function drawCirculatorySystem() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Draw heart
+            rc.path('M400 300 L380 280 Q360 260 340 280 T320 320 Q320 360 400 420 Q480 360 480 320 T460 280 Q440 260 420 280 Z', {
+                fill: 'red',
+                fillStyle: 'solid',
+                roughness: 1
+            });
+
+            // Draw lungs
+            rc.path('M200 200 Q150 300 200 400 L600 400 Q650 300 600 200 Z', {
+                fill: '#FFA07A',
+                fillStyle: 'solid',
+                roughness: 1
+            });
+
+            // Draw blood vessels
+            rc.path('M400 300 C300 200, 200 300, 200 400', { stroke: 'blue', roughness: 1 });
+            rc.path('M400 300 C500 200, 600 300, 600 400', { stroke: 'red', roughness: 1 });
+            rc.path('M200 400 C300 500, 500 500, 600 400', { stroke: 'blue', roughness: 1 });
+
+            // Draw tissues
+            rc.circle(700, 300, 50, { fill: '#FFB6C1', fillStyle: 'solid', roughness: 1 });
+            rc.circle(100, 300, 50, { fill: '#FFB6C1', fillStyle: 'solid', roughness: 1 });
+
+            if (valvesVisible) {
+                // Draw valves
+                rc.line(380, 290, 420, 310, { stroke: 'green', roughness: 0 });
+                rc.line(380, 310, 420, 290, { stroke: 'green', roughness: 0 });
+            }
+
+            // Draw blood particles
+            ctx.fillStyle = 'red';
+            bloodParticles.forEach(particle => {
+                ctx.beginPath();
+                ctx.arc(particle.x, particle.y, 3, 0, Math.PI * 2);
+                ctx.fill();
+            });
+
+            logDebug('Circulatory system drawn');
+        }
+
+        function updateBloodFlow() {
+            bloodParticles = bloodParticles.map(particle => {
+                particle.x += (Math.random() - 0.5) * flowRate;
+                particle.y += (Math.random() - 0.5) * flowRate;
+                if (particle.x < 0 || particle.x > canvas.width || particle.y < 0 || particle.y > canvas.height) {
+                    return {
+                        x: Math.random() * canvas.width,
+                        y: Math.random() * canvas.height
+                    };
+                }
+                return particle;
+            });
+
+            logDebug(`Blood flow updated with rate: ${flowRate}`);
+        }
+
+        function animate() {
+            updateBloodFlow();
+            drawCirculatorySystem();
+            requestAnimationFrame(animate);
+        }
+
+        document.getElementById('valveToggle').addEventListener('click', () => {
+            valvesVisible = !valvesVisible;
+            logDebug(`Valves toggled: ${valvesVisible}`);
+        });
+
+        document.getElementById('flowControl').addEventListener('input', (e) => {
+            flowRate = parseInt(e.target.value);
+            logDebug(`Flow rate changed to: ${flowRate}`);
+        });
+
+        document.getElementById('testButton').addEventListener('click', () => {
+            const score = Math.floor(Math.random() * 101);
+            document.getElementById('scoreDisplay').textContent = `Test Score: ${score}%`;
+            logDebug(`Test taken, score: ${score}`);
+        });
+
+        // Initialize blood particles
+        for (let i = 0; i < 100; i++) {
+            bloodParticles.push({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height
+            });
+        }
+
+        animate();
+
+        document.addEventListener('DOMContentLoaded', () => {
+            if (window.LOG_DEBUG) {
+                logDebug('Simulation initialized');
+                // Log all SVG elements
+                document.querySelectorAll('svg').forEach((svg, index) => {
+                    const rect = svg.getBoundingClientRect();
+                    logDebug(`SVG #${index}: Position {x: ${rect.x}, y: ${rect.y}}, Size {w: ${rect.width}, h: ${rect.height}}`);
+                });
+                // Log UI controls
+                document.querySelectorAll('input, button, select').forEach((control) => {
+                    logDebug(`Control ${control.id || 'unnamed'} (${control.tagName}): Initial value: ${control.value || 'N/A'}`);
+                });
+                
+                // Add event listeners for logging interactions
+                document.querySelectorAll('button').forEach((button) => {
+                    button.addEventListener('click', () => logDebug(`Button ${button.id || 'unnamed'} clicked`));
+                });
+                document.querySelectorAll('input').forEach((input) => {
+                    input.addEventListener('change', (e) => logDebug(`Input ${input.id || 'unnamed'} changed to ${e.target.value}`));
+                });
+            }
+        });
+    </script>
+</body>
+</html>

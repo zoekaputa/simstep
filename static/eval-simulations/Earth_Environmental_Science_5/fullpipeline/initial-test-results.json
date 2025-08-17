@@ -1,0 +1,11 @@
+{
+    "message": "Runtime test completed.",
+    "jsErrors": [],
+    "debugLogs": [
+        "DEBUG [2025-08-05T15:16:10.076Z]: Simulation updated: depth=0, organicMatter=5, weatheringRate=3",
+        "DEBUG [2025-08-05T15:16:10.076Z]: Background drawn with slope: 0%, slopeHeight: 0px",
+        "DEBUG [2025-08-05T15:16:10.076Z]: Soil profile drawn with depth: 0px",
+        "DEBUG [2025-08-05T15:16:10.076Z]: Simulation drawn",
+        "DEBUG [2025-08-05T15:16:10.076Z]: Simulation run button clicked"
+    ]
+}

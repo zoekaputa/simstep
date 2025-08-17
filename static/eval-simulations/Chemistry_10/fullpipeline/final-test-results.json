@@ -1,0 +1,9 @@
+{
+    "message": "Runtime test completed.",
+    "jsErrors": [],
+    "debugLogs": [
+        "DEBUG [2025-08-07T14:40:02.762Z]: Animation started",
+        "DEBUG [2025-08-07T14:40:02.784Z]: Dominoes setup: 13 regular, 2 golden",
+        "DEBUG [2025-08-07T14:40:02.785Z]: Simulation reset"
+    ]
+}

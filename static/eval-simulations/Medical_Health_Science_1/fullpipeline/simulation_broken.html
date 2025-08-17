@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Castle Defense: Understanding Immunity</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cabin+Sketch:wght@400;700&family=Londrina+Sketch&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/roughjs@latest/bundled/rough.js"></script>
+    <style>
+        /* ... (styles remain unchanged) ... */
+    </style>
+</head>
+<body>
+    <!-- ... (HTML structure remains unchanged) ... -->
+
+    <script>
+        window.LOG_DEBUG = false;
+
+        function logDebug(message) {
+            if (window.LOG_DEBUG) {
+                console.log(`DEBUG [${new Date().toISOString()}]: ${message}`);
+            }
+        }
+
+        // ... (SVG definitions remain unchanged) ...
+
+        let castle, archers = [], knights = [], arrows = [], invaders = [];
+        let archerCount = 0, knightCount = 0, arrowCount = 0, veteranCount = 0;
+
+        const canvas = document.getElementById('castle-display');
+        const ctx = canvas.getContext('2d');
+        const rc = rough.canvas(canvas);
+
+        function drawCastle() {
+            const castleWidth = 200;
+            const castleHeight = 150;
+            const x = (canvas.width - castleWidth) / 2;
+            const y = canvas.height - castleHeight - 20;
+            castle = rc.path(castleSvg, {x: x, y: y, width: castleWidth, height: castleHeight});
+            logDebug(`Castle drawn at {x: ${x}, y: ${y}}, size {w: ${castleWidth}, h: ${castleHeight}}`);
+        }
+
+        function createArcher() {
+            const x = Math.random() * (canvas.width - 50);
+            const y = canvas.height - 70;
+            const archer = rc.path(archerSvg, {x: x, y: y, width: 50, height: 50});
+            archers.push(archer);
+            archerCount++;
+            updateDefenseMetrics();
+            logDebug(`Archer created at {x: ${x}, y: ${y}}`);
+        }
+
+        function createKnight() {
+            const x = Math.random() * (canvas.width - 50);
+            const y = canvas.height - 70;
+            const knight = rc.path(knightSvg, {x: x, y: y, width: 50, height: 50});
+            knights.push(knight);
+            knightCount++;
+            updateDefenseMetrics();
+            logDebug(`Knight created at {x: ${x}, y: ${y}}`);
+        }
+
+        function createArrow() {
+            const x = Math.random() * (canvas.width - 50);
+            const y = canvas.height - 100;
+            const arrow = rc.path(arrowSvg, {x: x, y: y, width: 50, height: 10});
+            arrows.push(arrow);
+            arrowCount++;
+            updateDefenseMetrics();
+            logDebug(`Arrow created at {x: ${x}, y: ${y}}`);
+        }
+
+        function createInvader() {
+            const x = Math.random() * (canvas.width - 50);
+            const y = 0;
+            const invader = rc.path(invaderSvg, {x: x, y: y, width: 50, height: 50});
+            invaders.push({element: invader, y: y});
+            logDebug(`Invader created at {x: ${x}, y: ${y}}`);
+        }
+
+        function updateDefenseMetrics() {
+            document.getElementById('archer-count').textContent = archerCount;
+            document.getElementById('knight-count').textContent = knightCount;
+            document.getElementById('arrow-count').textContent = arrowCount;
+            document.getElementById('veteran-count').textContent = veteranCount;
+            logDebug(`Defense metrics updated: Archers: ${archerCount}, Knights: ${knightCount}, Arrows: ${arrowCount}, Veterans: ${veteranCount}`);
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            drawCastle();
+            archers.forEach(archer => rc.draw(archer));
+            knights.forEach(knight => rc.draw(knight));
+            arrows.forEach(arrow => rc.draw(arrow));
+            invaders.forEach(invader => {
+                invader.y += 1;
+                rc.path(invaderSvg, {x: invader.element.options.x, y: invader.y, width: 50, height: 50});
+                logDebug(`Invader moved to {x: ${invader.element.options.x}, y: ${invader.y}}`);
+            });
+            requestAnimationFrame(animate);
+        }
+
+        document.getElementById('start-simulation').addEventListener('click', () => {
+            logDebug('Simulation started');
+            const trainingProgram = document.getElementById('training-program').value;
+            const invaderType = document.getElementById('invader-type').value;
+
+            if (trainingProgram === 'basic' || trainingProgram === 'advanced') {
+                createArcher();
+                createKnight();
+                if (trainingProgram === 'advanced') {
+                    createArrow();
+                    veteranCount++;
+                    updateDefenseMetrics();
+                }
+            }
+
+            createInvader();
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            logDebug('Simulation initialized');
+            canvas.width = 800;
+            canvas.height = 400;
+            drawCastle();
+            animate();
+
+            if (window.LOG_DEBUG) {
+                document.querySelectorAll('svg').forEach((svg, index) => {
+                    const rect = svg.getBoundingClientRect();
+                    logDebug(`SVG #${index}: Position {x: ${rect.x}, y: ${rect.y}}, Size {w: ${rect.width}, h: ${rect.height}}`);
+                });
+
+                document.querySelectorAll('input, button, select').forEach((control) => {
+                    logDebug(`Control ${control.id || 'unnamed'} (${control.tagName}): Initial value: ${control.value || 'N/A'}`);
+                });
+
+                document.querySelectorAll('button').forEach((button) => {
+                    button.addEventListener('click', () => logDebug(`Button ${button.id || 'unnamed'} clicked`));
+                });
+
+                document.querySelectorAll('input, select').forEach((input) => {
+                    input.addEventListener('change', (e) => logDebug(`Input ${input.id || 'unnamed'} changed to ${e.target.value}`));
+                });
+            }
+        });
+    </script>
+</body>
+</html>

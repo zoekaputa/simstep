@@ -1,0 +1,43 @@
+graph LR
+    Circuit[Dance Party Lighting System]
+    Current[Electricity Flow]
+    Series[String Light Chain]
+    Parallel[Spotlight Array]
+    Voltage[Electrical Potential]
+    Resistance[Light Bulb Resistance]
+    OhmsLaw[Brightness Calculation: I = V/R]
+    SeriesResistance[Chain Resistance: Rtotal = R1 + R2 + R3 + ...]
+    ParallelResistance[Array Resistance: 1/Rtotal = 1/R1 + 1/R2 + 1/R3 + ...]
+    CircuitType[Circuit Type Selector]
+    PowerSource[Power Source Control]
+    Ammeter[Ammeter Display]
+    Voltmeter[Voltmeter Display]
+    BulbControls[Bulb Controls]
+    DataTable[Data Table]
+    CircuitDiagram[Circuit Diagram]
+    Circuit -->|can be| Series
+    Circuit -->|can be| Parallel
+    Circuit -->|enables| Current
+    Series -->|single path for| Current
+    Series -->|splits| Voltage
+    Series -->|follows| SeriesResistance
+    Parallel -->|multiple paths for| Current
+    Parallel -->|maintains| Voltage
+    Parallel -->|follows| ParallelResistance
+    Current -->|determined by| OhmsLaw
+    Voltage -->|used in| OhmsLaw
+    Resistance -->|used in| OhmsLaw
+    CircuitType -->|selects| Circuit
+    PowerSource -->|adjusts| Voltage
+    Ammeter -->|measures| Current
+    Voltmeter -->|measures| Voltage
+    BulbControls -->|modifies| Resistance
+    CircuitDiagram -->|visualizes| Circuit
+    CircuitDiagram -->|shows| Current
+    CircuitDiagram -->|shows| Voltage
+    CircuitDiagram -->|shows| Resistance
+    DataTable -->|records| Ammeter
+    DataTable -->|records| Voltmeter
+    DataTable -->|calculates| OhmsLaw
+    DataTable -->|calculates| SeriesResistance
+    DataTable -->|calculates| ParallelResistance

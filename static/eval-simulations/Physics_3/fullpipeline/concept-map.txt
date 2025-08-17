@@ -1,0 +1,27 @@
+graph LR
+    Wave[Wave]
+    Wavelength[Wavelength (λ)]
+    Frequency[Frequency (f)]
+    Speed[Speed (v)]
+    Guitar[Guitar]
+    String[Guitar String]
+    Pick[Pick]
+    Fingers[Fingers]
+    Air[Air]
+    PressureWave[Pressure Wave]
+    Harmonics[Harmonics]
+    Wave -->|has| Wavelength
+    Wave -->|has| Frequency
+    Wave -->|has| Speed
+    Wavelength -->|related by v = fλ| Frequency
+    Frequency -->|related by v = fλ| Speed
+    Guitar -->|has| String
+    String -->|vibrates at| Harmonics
+    Pick -->|plucks| String
+    Fingers -->|pluck| String
+    String -->|vibrates| Air
+    Air -->|forms| PressureWave
+    PressureWave -->|transmits| Sound[Sound]
+    String -->|tension affects| Frequency
+    String -->|thickness affects| Frequency
+    String -->|length affects| Frequency

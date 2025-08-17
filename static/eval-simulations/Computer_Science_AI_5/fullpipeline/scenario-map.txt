@@ -1,0 +1,30 @@
+graph LR
+    NN[Club Decision Simulator]
+    AN[Club Member]
+    IL[Information Gathering]
+    HL[Discussion Rounds]
+    OL[Final Decision]
+    AF[Decision-Making Style]
+    LF[Decision Quality Metric]
+    BP[Feedback and Improvement]
+    CNN[Pattern Recognition Committee]
+    RNN[Time-Series Analysis Group]
+    TR[Language Processing Team]
+    NN -->|consists of| AN
+    NN -->|has| IL
+    NN -->|has| HL
+    NN -->|has| OL
+    AN -->|uses| AF
+    NN -->|uses| LF
+    NN -->|uses| BP
+    NN -->|type| CNN
+    NN -->|type| RNN
+    NN -->|type| TR
+    AF -->|examples| SIG[Cautious Approach]
+    AF -->|examples| RELU[Decisive Action]
+    AF -->|examples| TANH[Balanced Consideration]
+    LF -->|examples| MSE[Deviation from Consensus]
+    LF -->|examples| CE[Decision Accuracy]
+    CNN -->|excels at| IP[Visual Data Analysis]
+    RNN -->|handles| SD[Trend Forecasting]
+    TR -->|processes| NLP[Text-Based Decision Making]

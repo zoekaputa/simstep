@@ -1,0 +1,37 @@
+graph LR
+    Catalyst[Golden Dominoes]
+    Reactants[Regular Dominoes]
+    Products[Fallen Dominoes]
+    ActivationEnergy[Domino Spacing]
+    Intermediates[Temporary Bridges]
+    DominoSetup[Domino Setup Visual]
+    SpacingControl[Spacing Control Slider]
+    StartButton[Start Button]
+    Timer[Timer Display]
+    FallenCountDisplay[Fallen Domino Count]
+    ResetButton[Reset Button]
+    DataTable[Data Table]
+    Catalyst -->|reduces| ActivationEnergy
+    Reactants -->|transform into| Products
+    Catalyst -->|creates| Intermediates
+    Intermediates -->|enable| Products
+    Catalyst -->|connects with| Reactants
+    Catalyst -->|initiates fall of| Reactants
+    Catalyst -->|separates from| Products
+    Catalyst -->|reusable after| Products
+    DominoSetup -->|displays| Catalyst
+    DominoSetup -->|displays| Reactants
+    DominoSetup -->|displays| Products
+    DominoSetup -->|displays| Intermediates
+    SpacingControl -->|adjusts| ActivationEnergy
+    SpacingControl -->|modifies| DominoSetup
+    StartButton -->|initiates| DominoSetup
+    StartButton -->|triggers| Timer
+    Timer -->|records time for| Products
+    FallenCountDisplay -->|shows count of| Products
+    ResetButton -->|resets| DominoSetup
+    ResetButton -->|clears| Timer
+    ResetButton -->|clears| FallenCountDisplay
+    DataTable -->|records| ActivationEnergy
+    DataTable -->|records| Timer
+    DataTable -->|records| FallenCountDisplay

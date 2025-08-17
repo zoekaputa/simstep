@@ -1,0 +1,15 @@
+graph LR
+    A[Atom] -->|contains| B[Nucleus]
+    A -->|surrounded by| C[Electrons]
+    B -->|contains| D[Protons]
+    B -->|contains| E[Neutrons]
+    A -->|determined by| F[Atomic Number]
+    F -->|defines| G[Element]
+    A -->|can have| H[Isotopes]
+    C -->|occupy| I[Energy Levels]
+    I -->|have| J[Capacity Limits]
+    C -->|outermost are| K[Valence Electrons]
+    K -->|determine| L[Chemical Behavior]
+    M[Periodic Table] -->|organizes| G
+    M -->|columns have similar| L
+    M -->|rows show decreasing| N[Atomic Radius]

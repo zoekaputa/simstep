@@ -1,0 +1,23 @@
+graph LR
+    Water[Water]
+    Wind[Wind]
+    Ice[Ice]
+    Gravity[Gravity]
+    Soil[Soil]
+    Landforms[Landforms]
+    Climate[Climate]
+    Vegetation[Vegetation]
+    HumanActivity[Human Activity]
+    Water -->|causes| Erosion[Erosion]
+    Wind -->|causes| Erosion
+    Ice -->|causes| Erosion
+    Gravity -->|causes| Erosion
+    Erosion -->|shapes| Landforms
+    Erosion -->|affects| Soil
+    Climate -->|influences| Erosion
+    Vegetation -->|affects| Erosion
+    HumanActivity -->|accelerates| Erosion
+    Water -->|creates| Channels[Channels]
+    Wind -->|creates| Dunes[Dunes]
+    Ice -->|creates| Valleys[Valleys]
+    Gravity -->|causes| MassWasting[Mass Wasting]

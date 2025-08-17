@@ -1,0 +1,32 @@
+graph LR
+    ImmuneSystem[Immune System]
+    Barriers[Physical and Chemical Barriers]
+    InnateResponse[Innate Immune Response]
+    AdaptiveResponse[Adaptive Immune Response]
+    Pathogens[Pathogens]
+    Skin[Skin]
+    MucousMembranes[Mucous Membranes]
+    PhagocyticCells[Phagocytic Cells]
+    ComplementSystem[Complement System]
+    Inflammation[Inflammation]
+    BCells[B Cells]
+    TCells[T Cells]
+    Antibodies[Antibodies]
+    Memory[Immunological Memory]
+    Tolerance[Self-Tolerance]
+    ImmuneSystem -->|consists of| Barriers
+    ImmuneSystem -->|consists of| InnateResponse
+    ImmuneSystem -->|consists of| AdaptiveResponse
+    ImmuneSystem -->|defends against| Pathogens
+    Barriers -->|includes| Skin
+    Barriers -->|includes| MucousMembranes
+    InnateResponse -->|involves| PhagocyticCells
+    InnateResponse -->|involves| ComplementSystem
+    InnateResponse -->|triggers| Inflammation
+    AdaptiveResponse -->|utilizes| BCells
+    AdaptiveResponse -->|utilizes| TCells
+    BCells -->|produce| Antibodies
+    AdaptiveResponse -->|establishes| Memory
+    ImmuneSystem -->|maintains| Tolerance
+    Pathogens -->|trigger| InnateResponse
+    Pathogens -->|trigger| AdaptiveResponse

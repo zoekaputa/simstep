@@ -1,0 +1,12 @@
+{
+    "content": "Electrical circuits provide pathways for electric current to flow from a source, through components, and back to the source. In series circuits, components are connected end-to-end in a single loop, so current has only one path to follow. If one component fails in a series circuit, the entire circuit stops working. In contrast, parallel circuits provide multiple pathways for current to flow. In parallel circuits, each component receives the same voltage, while in series circuits, the voltage is divided among the components based on their resistance. According to Ohm's Law, current (I) equals voltage (V) divided by resistance (R): I = V/R. In series circuits, the total resistance equals the sum of individual resistances: Rtotal = R\u00e2\u0082\u0081 + R\u00e2\u0082\u0082 + R\u00e2\u0082\u0083 + ... In parallel circuits, the reciprocal of the total resistance equals the sum of the reciprocals of individual resistances: 1/Rtotal = 1/R\u00e2\u0082\u0081 + 1/R\u00e2\u0082\u0082 + 1/R\u00e2\u0082\u0083 + ... These principles explain why adding more lights to a series string dims all of them, while adding more parallel branches maintains brightness but increases power consumption.",
+    "scenario": {
+        "title": "Dance Party Circuits",
+        "content": "Students design lighting for a school dance by creating and manipulating virtual electrical circuits. They can place different types of lights (LEDs, string lights, spotlights) in series or parallel configurations and observe how current, voltage, and resistance interact in each setup. The simulation demonstrates the impact of circuit design on light brightness, power consumption, and failure resilience. Students face challenges like creating specific lighting effects within power constraints or designing systems that won't fail completely if single components burn out. The simulation provides multimeter tools for measuring electrical properties at any point in the circuit and includes switchable circuit diagrams that overlay the visual representation."
+    },
+    "hypothesis": {
+        "hypothesis": "Electricity Fundamentals",
+        "type": "Explanatory",
+        "description": "Students will compare and contrast series and parallel circuits by analyzing current flow, voltage distribution, and resistance relationships. They will predict circuit behavior based on configuration and component properties, and design circuits that meet specific criteria for performance, efficiency, and reliability."
+    }
+}

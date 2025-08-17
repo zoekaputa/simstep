@@ -1,0 +1,17 @@
+graph LR
+    GravField[Earth's Gravity: 9.8 m/s²]
+    Basketball[Basketball]
+    Player[Student Player]
+    Hoop[Basketball Hoop]
+    Trajectory[Free Throw Arc]
+    LaunchAngle[Shot Angle Adjustment]
+    LaunchVelocity[Shot Force Slider]
+    GravField -->|affects| Basketball
+    Player -->|shoots| Basketball
+    Basketball -->|follows| Trajectory
+    Trajectory -->|aims for| Hoop
+    Player -->|determines| LaunchAngle
+    Player -->|determines| LaunchVelocity
+    LaunchAngle -->|influences| Trajectory
+    LaunchVelocity -->|influences| Trajectory
+    GravField -->|shapes| Trajectory

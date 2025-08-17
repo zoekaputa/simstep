@@ -1,0 +1,23 @@
+graph LR
+    Lithosphere[Virtual Earth Model]
+    Asthenosphere[Simulated Mantle Layer]
+    Plates[Interactive Tectonic Plates]
+    Boundaries[Configurable Plate Interfaces]
+    Divergent[Spreading Center Creator]
+    Convergent[Collision Zone Simulator]
+    Transform[Lateral Boundary Tool]
+    Features[Generated Landforms]
+    Lithosphere -->|divided into| Plates
+    Plates -->|glide over| Asthenosphere
+    Plates -->|move at| Rate[Adjustable Time Scale]
+    Plates -->|interact at| Boundaries
+    Boundaries -->|include| Divergent
+    Boundaries -->|include| Convergent
+    Boundaries -->|include| Transform
+    Divergent -->|create| RiftValley[Digital Rift Valleys]
+    Divergent -->|create| MidOceanRidge[Simulated Mid-Ocean Ridges]
+    Convergent -->|create| Trench[Virtual Ocean Trenches]
+    Convergent -->|create| VolcanicArc[Erupting Volcanic Arcs]
+    Convergent -->|create| Mountains[3D Mountain Ranges]
+    Transform -->|create| Fault[Animated Fault Lines]
+    Boundaries -->|form| Features

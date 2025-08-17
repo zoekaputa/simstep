@@ -1,0 +1,31 @@
+graph LR
+    A[Student Choices]
+    B[Product Options]
+    C[Environmental Indicators]
+    D[Manufacturing]
+    E[Distribution]
+    F[Product Usage]
+    G[End-of-Life]
+    H[Global Ecosystems]
+    I[Global Communities]
+    J[Future Generations]
+    K[Sustainability Education]
+    A -->|affects| H
+    A -->|evaluated through| B
+    B -->|includes| D
+    B -->|includes| E
+    B -->|includes| F
+    B -->|includes| G
+    B -->|analyzed by| C
+    C -->|categories| L[Carbon Footprint]
+    C -->|categories| M[Resource Consumption]
+    C -->|categories| N[Virtual Water]
+    C -->|categories| O[Land Use Change]
+    C -->|categories| P[Pollution Burden]
+    D -->|contributes to| C
+    E -->|contributes to| C
+    F -->|contributes to| C
+    G -->|contributes to| C
+    C -->|affects| I
+    C -->|affects| J
+    K -->|addresses| C

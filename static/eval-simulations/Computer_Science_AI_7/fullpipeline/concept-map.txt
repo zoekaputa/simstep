@@ -1,0 +1,25 @@
+graph LR
+    Device[Device]
+    Network[Network]
+    Packet[Packet]
+    IPAddress[IP Address]
+    RoutingProtocol[Routing Protocol]
+    NetworkType[Network Type]
+    TransmissionProtocol[Transmission Protocol]
+    SecurityMechanism[Security Mechanism]
+    OSIModel[OSI Model]
+    TCPIPModel[TCP/IP Model]
+    PhysicalMedia[Physical Media]
+    Device -->|communicates through| Network
+    Network -->|operates on| OSIModel
+    Network -->|implements| TCPIPModel
+    Device -->|connects via| PhysicalMedia
+    Network -->|transmits| Packet
+    Device -->|identified by| IPAddress
+    Network -->|uses| RoutingProtocol
+    Network -->|categorized as| NetworkType
+    Network -->|employs| TransmissionProtocol
+    Network -->|protected by| SecurityMechanism
+    Packet -->|contains| IPAddress
+    RoutingProtocol -->|determines path for| Packet
+    TransmissionProtocol -->|manages| Packet

@@ -1,0 +1,31 @@
+graph LR
+    Light[Light Energy]
+    CO2[Carbon Dioxide]
+    H2O[Water]
+    Glucose[Glucose]
+    O2[Oxygen]
+    ATP[ATP]
+    NADPH[NADPH]
+    Chloroplast[Chloroplast]
+    Thylakoid[Thylakoid Membrane]
+    Stroma[Stroma]
+    RuBisCO[RuBisCO Enzyme]
+    Environment[Environmental Factors]
+    Light -->|powers| Photosynthesis
+    CO2 -->|input| Photosynthesis
+    H2O -->|input| Photosynthesis
+    Photosynthesis -->|produces| Glucose
+    Photosynthesis -->|releases| O2
+    Photosynthesis -->|occurs in| Chloroplast
+    Chloroplast -->|contains| Thylakoid
+    Chloroplast -->|contains| Stroma
+    Thylakoid -->|site of| LightReactions[Light-dependent Reactions]
+    Stroma -->|site of| CalvinCycle[Calvin Cycle]
+    LightReactions -->|produces| ATP
+    LightReactions -->|produces| NADPH
+    LightReactions -->|splits| H2O
+    CalvinCycle -->|uses| ATP
+    CalvinCycle -->|uses| NADPH
+    CalvinCycle -->|fixes| CO2
+    RuBisCO -->|catalyzes| CalvinCycle
+    Environment -->|affects| Photosynthesis

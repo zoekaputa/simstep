@@ -1,0 +1,71 @@
+graph LR
+    A[Virtual Personal Diary]
+    C[Sensitive Information]
+    D[Diary Security System]
+    E[Simulated Attackers]
+    F[Security Configurations]
+    G[Authentication System]
+    H[Access Control]
+    I[Encryption Mechanism]
+    J[Network Protection]
+    K[Security Management]
+    L[Security Principles]
+    M[Data Privacy]
+    N[Data Integrity]
+    O[Diary Availability]
+    P[Simulated Malware]
+    Q[Social Engineering Attempts]
+    R[DDoS Simulation]
+    S[Password System]
+    T[Virtual Security Tokens]
+    U[Simulated Biometrics]
+    V[Minimal Access Rights]
+    W[Symmetric Encryption]
+    X[Asymmetric Encryption]
+    Y[Virtual Firewalls]
+    Z[Simulated IDS]
+    AA[Virtual VPNs]
+    AB[Security Audits]
+    AC[Student Penetration Testing]
+    AD[Update Management]
+    AE[Incident Response Simulation]
+    UI1[Security Configuration Panel]
+    UI2[Attack Simulation Controls]
+    UI3[Results Dashboard]
+    UI4[Diary Interface]
+    A -->|protected by| D
+    C -->|protected by| D
+    D -->|guided by| L
+    L -->|includes| M
+    L -->|includes| N
+    L -->|includes| O
+    D -->|defends against| E
+    E -->|includes| P
+    E -->|includes| Q
+    E -->|includes| R
+    D -->|implements| F
+    F -->|includes| G
+    F -->|includes| H
+    F -->|includes| I
+    F -->|includes| J
+    F -->|includes| K
+    G -->|uses| S
+    G -->|uses| T
+    G -->|uses| U
+    H -->|applies| V
+    I -->|uses| W
+    I -->|uses| X
+    J -->|uses| Y
+    J -->|uses| Z
+    J -->|uses| AA
+    K -->|performs| AB
+    K -->|performs| AC
+    K -->|performs| AD
+    K -->|implements| AE
+    UI1 -->|configures| F
+    UI2 -->|triggers| E
+    UI3 -->|displays| M
+    UI3 -->|displays| N
+    UI3 -->|displays| O
+    UI4 -->|represents| A
+    UI4 -->|contains| C

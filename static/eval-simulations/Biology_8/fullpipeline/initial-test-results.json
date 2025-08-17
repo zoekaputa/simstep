@@ -1,0 +1,15 @@
+{
+    "message": "Runtime test completed.",
+    "jsErrors": [],
+    "debugLogs": [
+        "DEBUG [2025-08-05T13:48:05.650Z]: Simulation started",
+        "DEBUG [2025-08-05T13:48:05.654Z]: Scene redrawn",
+        "DEBUG [2025-08-05T13:48:05.699Z]: Energy measured",
+        "DEBUG [2025-08-05T13:48:05.790Z]: Efficiency calculated",
+        "DEBUG [2025-08-05T13:48:05.812Z]: Experiment repeated",
+        "DEBUG [2025-08-05T13:48:05.812Z]: Scene redrawn",
+        "DEBUG [2025-08-05T13:48:05.951Z]: Simulation reset",
+        "DEBUG [2025-08-05T13:48:05.951Z]: Experiment repeated",
+        "DEBUG [2025-08-05T13:48:05.951Z]: Scene redrawn"
+    ]
+}

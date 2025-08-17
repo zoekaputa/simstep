@@ -1,0 +1,8 @@
+{
+    "message": "Runtime test completed.",
+    "jsErrors": [],
+    "debugLogs": [
+        "DEBUG [2025-08-05T03:05:03.902Z]: Graph point drawn at (350, 100)",
+        "DEBUG [2025-08-05T03:05:03.903Z]: Observation added: Actual 50, Apparent 37.5, Ratio 0.75"
+    ]
+}

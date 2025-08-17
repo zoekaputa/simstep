@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Earth's Dynamic System Simulator</title>
+            <link rel="preconnect" href="https://fonts.googleapis.com">
+            <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+            <link href="https://fonts.googleapis.com/css2?family=Cabin+Sketch:wght@400;700&family=Londrina+Sketch&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+            <script src="https://unpkg.com/roughjs@latest/bundled/rough.js"></script>
+            <style>
+                body {
+                    font-family: 'Cabin Sketch', cursive;
+                    background-color: #f0f0f0;
+                    margin: 0;
+                    padding: 20px;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                }
+                h1 {
+                    font-family: 'Cabin Sketch', cursive;
+                    font-weight: 700;
+                    color: #333;
+                }
+                #description {
+                    font-family: 'Cabin Sketch', cursive;
+                    font-weight: 400;
+                    max-width: 800px;
+                    text-align: center;
+                    margin-bottom: 20px;
+                }
+                #canvas-container {
+                    position: relative;
+                    width: 800px;
+                    height: 600px;
+                    background-color: #fff;
+                    border: 2px solid #333;
+                    border-radius: 10px;
+                    overflow: hidden;
+                }
+                #controls {
+                    margin-top: 20px;
+                    display: flex;
+                    flex-wrap: wrap;
+                    justify-content: center;
+                    gap: 10px;
+                }
+                .control-group {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                }
+                label {
+                    font-weight: bold;
+                    margin-bottom: 5px;
+                }
+                input, select, button {
+                    font-family: 'Cabin Sketch', cursive;
+                    font-size: 16px;
+                    padding: 5px;
+                    border: 2px solid #333;
+                    border-radius: 5px;
+                }
+                button {
+                    background-color: #4CAF50;
+                    color: white;
+                    cursor: pointer;
+                    transition: background-color 0.3s;
+                }
+                button:hover {
+                    background-color: #45a049;
+                }
+                #data-table {
+                    margin-top: 20px;
+                    border-collapse: collapse;
+                }
+                #data-table th, #data-table td {
+                    border: 1px solid #333;
+                    padding: 5px;
+                    text-align: center;
+                }
+                #analysis-panel, #prediction-tool {
+                    margin-top: 20px;
+                    padding: 10px;
+                    border: 2px solid #333;
+                    border-radius: 5px;
+                    background-color: #fff;
+                }
+            </style>
+        </head>
+        <body>
+            <h1>Earth's Dynamic System Simulator</h1>
+            <div id="description">
+                Welcome to the Earth's Dynamic System Simulator! This interactive tool allows you to explore how tectonic plates interact and shape our planet's surface. Experiment with different plate boundaries, movement rates, and observe the formation of various geological features over time. Use the controls below to configure your simulation and analyze the results.
+            </div>
+            <div id="canvas-container">
+                <canvas id="simulation-canvas"></canvas>
+            </div>
+            <div id="controls">
+                <div class="control-group">
+                    <label for="boundary-type">Boundary Type:</label>
+                    <select id="boundary-type">
+                        <option value="divergent">Divergent</option>
+                        <option value="convergent">Convergent</option>
+                        <option value="transform">Transform</option>
+                    </select>
+                </div>
+                <div class="control-group">
+                    <label for="movement-rate">Movement Rate (cm/year):</label>
+                    <input type="number" id="movement-rate" min="1" max="10" value="5">
+                </div>
+                <div class="control-group">
+                    <label for="simulation-time">Simulation Time (million years):</label>
+                    <input type="number" id="simulation-time" min="1" max="100" value="10">
+                </div>
+                <button id="start-simulation">Start Simulation</button>
+                <button id="record-features">Record Features</button>
+                <button id="measure-tool">Measure Tool</button>
+            </div>
+            <table id="data-table">
+                <thead>
+                    <tr>
+                        <th>Feature</th>
+                        <th>Type</th>
+                        <th>Size (km)</th>
+                        <th>Formation Time (million years)</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+            <div id="analysis-panel">
+                <h3>Data Analysis</h3>
+                <p id="analysis-result"></p>
+            </div>
+            <div id="prediction-tool">
+                <h3>Feature Prediction</h3>
+                <label for="predict-boundary">Boundary Type:</label>
+                <select id="predict-boundary">
+                    <option value="divergent">Divergent</option>
+                    <option value="convergent">Convergent</option>
+                    <option value="transform">Transform</option>
+                </select>
+                <label for="predict-time">Time (million years):</label>
+                <input type="number" id="predict-time" min="1" max="100" value="20">
+                <button id="make-prediction">Predict Features</button>
+                <p id="prediction-result"></p>
+            </div>
+            <script>
+                // Debug logging system
+                window.LOG_DEBUG = false;
+                function logDebug(message) {
+                    if (window.LOG_DEBUG) {
+                        console.log(`DEBUG [${new Date().toISOString()}]: ${message}`);
+                    }
+                }
+
+                // SVG definitions
+                const earthSVG = `
+                    <svg width="800" height="600" viewBox="0 0 800 600">
+                        <defs>
+                            <radialGradient id="earthGradient">
+                                <stop offset="0%" stop-color="#4b7bec"/>
+                                <stop offset="30%" stop-color="#45aaf2"/>
+                                <stop offset="70%" stop-color="#2ecc71"/>
+                                <stop offset="100%" stop-color="#26de81"/>
+                            </radialGradient>
+                        </defs>
+                        <circle cx="400" cy="300" r="290" fill="url(#earthGradient)"/>
+                    </svg>
+                `;
+
+                const plateSVG = `
+                    <svg width="400" height="300" viewBox="0 0 400 300">
+                        <path d="M0,150 Q100,50 200,150 T400,150" fill="none" stroke="#333" stroke-width="5"/>
+                    </svg>
+                `;
+
+                const mountainSVG = `
+                    <svg width="100" height="80" viewBox="0 0 100 80">
+                        <polygon points="10,70 50,10 90,70" fill="#a5b1c2"/>
+                    </svg>
+                `;
+
+                const volcanicArcSVG = `
+                    <svg width="120" height="100" viewBox="0 0 120 100">
+                        <polygon points="60,10 20,90 100,90" fill="#e66767"/>
+                        <rect x="55" y="0" width="10" height="20" fill="#ff5252"/>
+                    </svg>
+                `;
+
+                const oceanTrenchSVG = `
+                    <svg width="150" height="100" viewBox="0 0 150 100">
+                        <path d="M0,0 Q75,100 150,0" fill="none" stroke="#3742fa" stroke-width="5"/>
+                    </svg>
+                `;
+
+                const riftValleySVG = `
+                    <svg width="150" height="100" viewBox="0 0 150 100">
+                        <path d="M0,50 Q75,100 150,50" fill="none" stroke="#ff5252" stroke-width="5"/>
+                    </svg>
+                `;
+
+                const midOceanRidgeSVG = `
+                    <svg width="150" height="100" viewBox="0 0 150 100">
+                        <path d="M0,50 Q37.5,0 75,50 T150,50" fill="none" stroke="#ff5252" stroke-width="5"/>
+                    </svg>
+                `;
+
+                const faultLineSVG = `
+                    <svg width="150" height="20" viewBox="0 0 150 20">
+                        <line x1="0" y1="10" x2="150" y2="10" stroke="#ff5252" stroke-width="5" stroke-dasharray="10,5"/>
+                    </svg>
+                `;
+
+                // Initialize simulation
+                let canvas, rc;
+                let plates = [];
+                let features = [];
+                let simulationRunning = false;
+                let currentTime = 0;
+                const maxTime = 100; // million years
+
+                document.addEventListener('DOMContentLoaded', () => {
+                    canvas = document.getElementById('simulation-canvas');
+                    rc = rough.canvas(canvas);
+                    canvas.width = 800;
+                    canvas.height = 600;
+
+                    // Initialize plates
+                    plates = [
+                        { x: 200, y: 300, width: 400, height: 300, direction: 1 },
+                        { x: 600, y: 300, width: 400, height: 300, direction: -1 }
+                    ];
+
+                    drawSimulation();
+
+                    // Event listeners
+                    document.getElementById('start-simulation').addEventListener('click', startSimulation);
+                    document.getElementById('record-features').addEventListener('click', recordFeatures);
+                    document.getElementById('measure-tool').addEventListener('click', activateMeasureTool);
+                    document.getElementById('make-prediction').addEventListener('click', makePrediction);
+
+                    if (window.LOG_DEBUG) {
+                        logDebug('Simulation initialized');
+                        logDebug(`Canvas size: ${canvas.width}x${canvas.height}`);
+                        logDebug(`Initial plates: ${JSON.stringify(plates)}`);
+                    }
+                });
+
+                function drawSimulation() {
+                    rc.svg(earthSVG, 0, 0);
+                    plates.forEach(plate => {
+                        rc.svg(plateSVG, plate.x, plate.y);
+                    });
+                    features.forEach(feature => {
+                        switch (feature.type) {
+                            case 'mountain':
+                                rc.svg(mountainSVG, feature.x, feature.y);
+                                break;
+                            case 'volcanicArc':
+                                rc.svg(volcanicArcSVG, feature.x, feature.y);
+                                break;
+                            case 'oceanTrench':
+                                rc.svg(oceanTrenchSVG, feature.x, feature.y);
+                                break;
+                            case 'riftValley':
+                                rc.svg(riftValleySVG, feature.x, feature.y);
+                                break;
+                            case 'midOceanRidge':
+                                rc.svg(midOceanRidgeSVG, feature.x, feature.y);
+                                break;
+                            case 'faultLine':
+                                rc.svg(faultLineSVG, feature.x, feature.y);
+                                break;
+                        }
+                    });
+                }
+
+                function startSimulation() {
+                    if (simulationRunning) return;
+                    simulationRunning = true;
+                    currentTime = 0;
+                    features = [];
+                    const boundaryType = document.getElementById('boundary-type').value;
+                    const movementRate = parseFloat(document.getElementById('movement-rate').value);
+                    const simulationTime = parseInt(document.getElementById('simulation-time').value);
+
+                    logDebug(`Starting simulation: ${boundaryType} boundary, ${movementRate} cm/year, ${simulationTime} million years`);
+
+                    function animate() {
+                        if (currentTime >= simulationTime || !simulationRunning) {
+                            simulationRunning = false;
+                            logDebug('Simulation ended');
+                            return;
+                        }
+
+                        currentTime++;
+                        updatePlates(boundaryType, movementRate);
+                        createFeatures(boundaryType);
+                        drawSimulation();
+
+                        logDebug(`Simulation time: ${currentTime} million years`);
+                        requestAnimationFrame(animate);
+                    }
+
+                    animate();
+                }
+
+                function updatePlates(boundaryType, movementRate) {
+                    const movement = movementRate / 10; // Scale down for animation
+                    plates.forEach(plate => {
+                        plate.x += plate.direction * movement;
+                    });
+
+                    logDebug(`Plates updated: ${JSON.stringify(plates)}`);
+                }
+
+                function createFeatures(boundaryType) {
+                    const centerX = canvas.width / 2;
+                    const centerY = canvas.height / 2;
+
+                    if (currentTime % 10 === 0) { // Create features every 10 million years
+                        switch (boundaryType) {
+                            case 'divergent':
+                                features.push({ type: 'riftValley', x: centerX - 75, y: centerY - 50 });
+                                features.push({ type: 'midOceanRidge', x: centerX - 75, y: centerY + 50 });
+                                break;
+                            case 'convergent':
+                                features.push({ type: 'mountain', x: centerX - 50, y: centerY - 40 });
+                                features.push({ type: 'volcanicArc', x: centerX - 60, y: centerY + 20 });
+                                features.push({ type: 'oceanTrench', x: centerX - 75, y: centerY + 100 });
+                                break;
+                            case 'transform':
+                                features.push({ type: 'faultLine', x: centerX - 75, y: centerY - 10 });
+                                break;
+                        }
+                    }
+
+                    logDebug(`Features created: ${JSON.stringify(features)}`);
+                }
+
+                function recordFeatures() {
+                    const table = document.getElementById('data-table').getElementsByTagName('tbody')[0];
+                    table.innerHTML = '';
+                    features.forEach(feature => {
+                        const row = table.insertRow();
+                        row.insertCell(0).textContent = feature.type;
+                        row.insertCell(1).textContent = document.getElementById('boundary-type').value;
+                        row.insertCell(2).textContent = Math.floor(Math.random() * 100) + 1; // Random size
+                        row.insertCell(3).textContent = currentTime;
+                    });
+
+                    logDebug('Features recorded in data table');
+                }
+
+                function activateMeasureTool() {
+                    alert('Measurement tool activated. Click on features to measure them.');
+                    // Implement measurement logic here
+                    log

@@ -1,0 +1,17 @@
+graph LR
+    Gene[Pet Gene]
+    Allele[Pet Trait Variant]
+    Trait[Pet Trait]
+    Parent[Parent Pet]
+    Offspring[Offspring Pet]
+    Gamete[Pet Gamete]
+    PunnettSquare[Digital Punnett Square]
+    Gene -->|contains| Allele
+    Gene -->|determines| Trait
+    Parent -->|passes| Gene
+    Parent -->|produces| Gamete
+    Gamete -->|contains| Allele
+    Gamete -->|forms| Offspring
+    Offspring -->|inherits| Trait
+    PunnettSquare -->|predicts| Trait
+    Allele -->|can be dominant or recessive| Trait

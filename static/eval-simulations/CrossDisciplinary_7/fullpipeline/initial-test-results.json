@@ -1,0 +1,9 @@
+{
+    "message": "Runtime test completed.",
+    "jsErrors": [],
+    "debugLogs": [
+        "DEBUG [2025-08-05T14:36:11.016Z]: Decision submitted: ",
+        "DEBUG [2025-08-05T14:36:11.016Z]: Rationale: ",
+        "DEBUG [2025-08-05T14:36:11.016Z]: Framework: utilitarian"
+    ]
+}

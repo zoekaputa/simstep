@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pandemic Ethics Simulator</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cabin+Sketch:wght@400;700&family=Londrina+Sketch&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/roughjs@latest/bundled/rough.js"></script>
+    <style>
+        body {
+            font-family: 'Cabin Sketch', cursive;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        h1 {
+            font-family: 'Cabin Sketch', cursive;
+            font-weight: 700;
+            color: #2c3e50;
+        }
+        #canvas {
+            background-color: white;
+            border: 2px solid #2c3e50;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        #controls {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            width: 80%;
+            max-width: 600px;
+        }
+        label, select, input, button {
+            font-family: 'Cabin Sketch', cursive;
+            font-size: 16px;
+        }
+        select, input, button {
+            padding: 5px;
+            border: 1px solid #2c3e50;
+            border-radius: 5px;
+        }
+        button {
+            background-color: #3498db;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        #results {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #2c3e50;
+            border-radius: 5px;
+            background-color: white;
+            width: 80%;
+            max-width: 600px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Pandemic Ethics Simulator</h1>
+    <p>Welcome to the Pandemic Ethics Simulator! In this experiment, you'll explore the complex world of bioethics during a global health crisis. You'll be presented with challenging scenarios where you must make difficult decisions about allocating limited medical resources. Consider the principles of individual rights, community wellbeing, harm prevention, and equitable access as you navigate these ethical dilemmas.</p>
+    <canvas id="canvas" width="600" height="400"></canvas>
+    <div id="controls">
+        <label for="framework">Select Ethical Framework:</label>
+        <select id="framework">
+            <option value="utilitarian">Lives Saved Maximization</option>
+            <option value="egalitarian">Equal Treatment</option>
+            <option value="prioritarian">Vulnerable Group Prioritization</option>
+        </select>
+        <label for="decision">Your Decision:</label>
+        <input type="text" id="decision" placeholder="Enter your decision">
+        <label for="rationale">Rationale:</label>
+        <input type="text" id="rationale" placeholder="Explain your reasoning">
+        <button id="submit">Submit Decision</button>
+    </div>
+    <div id="results"></div>
+    <script>
+        window.LOG_DEBUG = false;
+
+        function logDebug(message) {
+            if (window.LOG_DEBUG) {
+                console.log(`DEBUG [${new Date().toISOString()}]: ${message}`);
+            }
+        }
+
+        const canvas = document.getElementById('canvas');
+        const rc = rough.canvas(canvas);
+        const ctx = canvas.getContext('2d');
+
+        const hospitalSVG = `
+            <svg width="100" height="100" viewBox="0 0 100 100">
+                <rect x="10" y="30" width="80" height="60" fill="#e74c3c" />
+                <rect x="30" y="10" width="40" height="20" fill="#e74c3c" />
+                <rect x="45" y="50" width="10" height="40" fill="white" />
+                <rect x="30" y="65" width="40" height="10" fill="white" />
+            </svg>
+        `;
+
+        const personSVG = `
+            <svg width="50" height="50" viewBox="0 0 50 50">
+                <circle cx="25" cy="10" r="8" fill="#3498db" />
+                <path d="M25 20 L25 40 M15 30 L35 30" stroke="#3498db" stroke-width="4" />
+            </svg>
+        `;
+
+        function drawScene() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            rc.rectangle(50, 50, 500, 300, { roughness: 2, fill: '#ecf0f1' });
+            
+            const img = new Image();
+            img.onload = () => {
+                ctx.drawImage(img, 250, 150, 100, 100);
+                logDebug('Hospital SVG drawn');
+            };
+            img.src = 'data:image/svg+xml,' + encodeURIComponent(hospitalSVG);
+
+            for (let i = 0; i < 5; i++) {
+                const personImg = new Image();
+                personImg.onload = () => {
+                    ctx.drawImage(personImg, 100 + i * 80, 300, 50, 50);
+                    logDebug(`Person ${i + 1} SVG drawn`);
+                };
+                personImg.src = 'data:image/svg+xml,' + encodeURIComponent(personSVG);
+            }
+
+            rc.line(50, 200, 550, 200, { roughness: 2, stroke: '#2c3e50' });
+            logDebug('Scene drawn');
+        }
+
+        function updateScene() {
+            const framework = document.getElementById('framework').value;
+            logDebug(`Framework selected: ${framework}`);
+
+            switch (framework) {
+                case 'utilitarian':
+                    rc.circle(300, 100, 50, { fill: 'rgba(46, 204, 113, 0.5)', fillStyle: 'solid' });
+                    break;
+                case 'egalitarian':
+                    rc.rectangle(275, 75, 50, 50, { fill: 'rgba(52, 152, 219, 0.5)', fillStyle: 'solid' });
+                    break;
+                case 'prioritarian':
+                    rc.polygon([[300, 75], [275, 125], [325, 125]], { fill: 'rgba(155, 89, 182, 0.5)', fillStyle: 'solid' });
+                    break;
+            }
+            logDebug('Scene updated based on framework');
+        }
+
+        document.getElementById('framework').addEventListener('change', updateScene);
+
+        document.getElementById('submit').addEventListener('click', () => {
+            const decision = document.getElementById('decision').value;
+            const rationale = document.getElementById('rationale').value;
+            const framework = document.getElementById('framework').value;
+
+            logDebug(`Decision submitted: ${decision}`);
+            logDebug(`Rationale: ${rationale}`);
+            logDebug(`Framework: ${framework}`);
+
+            const results = document.getElementById('results');
+            results.innerHTML = `
+                <h3>Decision Analysis</h3>
+                <p>Your decision: ${decision}</p>
+                <p>Your rationale: ${rationale}</p>
+                <p>Chosen framework: ${framework}</p>
+                <p>This decision aligns with the ${framework} approach to resource allocation during a pandemic.</p>
+            `;
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            drawScene();
+            updateScene();
+            
+            if (window.LOG_DEBUG) {
+                logDebug('Simulation initialized');
+                document.querySelectorAll('svg').forEach((svg, index) => {
+                    const rect = svg.getBoundingClientRect();
+                    logDebug(`SVG #${index}: Position {x: ${rect.x}, y: ${rect.y}}, Size {w: ${rect.width}, h: ${rect.height}}`);
+                });
+                document.querySelectorAll('input, button, select').forEach((control) => {
+                    logDebug(`Control ${control.id || 'unnamed'} (${control.tagName}): Initial value: ${control.value || 'N/A'}`);
+                });
+                
+                document.querySelectorAll('button').forEach((button) => {
+                    button.addEventListener('click', () => logDebug(`Button ${button.id || 'unnamed'} clicked`));
+                });
+                document.querySelectorAll('input').forEach((input) => {
+                    input.addEventListener('change', (e) => logDebug(`Input ${input.id || 'unnamed'} changed to ${e.target.value}`));
+                });
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,21 @@
+graph LR
+    Object[Object]
+    Force[Force]
+    Motion[Motion]
+    Mass[Mass]
+    Acceleration[Acceleration]
+    Momentum[Momentum]
+    Friction[Friction]
+    Action[Action]
+    Reaction[Reaction]
+    Object -->|affected by| Force
+    Object -->|has| Mass
+    Object -->|experiences| Motion
+    Force -->|causes| Acceleration
+    Mass -->|influences| Acceleration
+    Acceleration -->|changes| Motion
+    Motion -->|related to| Momentum
+    Object -->|experiences| Friction
+    Force -->|measured in| Newton
+    Action -->|results in| Reaction
+    Reaction -->|equal and opposite to| Action

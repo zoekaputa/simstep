@@ -1,0 +1,32 @@
+graph LR
+    B[Garden Biodiversity]
+    G[Plant Genetic Diversity]
+    S[Plant and Animal Species Diversity]
+    E[Garden Ecosystem Diversity]
+    ES[Garden Stability]
+    ER[Garden Resilience]
+    A[Food Production]
+    H[Community Benefits]
+    T[Garden Threats]
+    B -->|encompasses| G
+    B -->|encompasses| S
+    B -->|encompasses| E
+    B -->|contributes to| ES
+    B -->|enhances| ER
+    B -->|supports| A
+    B -->|provides| H
+    T -->|reduces| B
+    G -->|enables| ER
+    S -->|creates| ES
+    E -->|increases| ER
+    ES -->|through| FR[Functional Redundancy of Species]
+    ER -->|resists| D[Garden Disturbances]
+    A -->|benefits from| PC[Natural Pest Control]
+    A -->|utilizes| P[Polyculture Planting]
+    H -->|includes| M[Medicinal Plants]
+    H -->|includes| CR[Crop Variety Resilience]
+    T -->|includes| HD[Garden Habitat Disruption]
+    T -->|includes| O[Overuse of Resources]
+    T -->|includes| PL[Garden Pollution]
+    T -->|includes| IS[Invasive Garden Species]
+    T -->|includes| CC[Local Climate Changes]

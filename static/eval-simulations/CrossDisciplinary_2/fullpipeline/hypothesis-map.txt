@@ -1,0 +1,21 @@
+graph LR
+    Environment[City Environment]
+    Economy[City Economy]
+    Society[City Society]
+    Resources[City Resources]
+    Future[Future City Generations]
+    Systems[City Systems]
+    Environment -->|Balanced with| Economy
+    Economy -->|Balanced with| Society
+    Society -->|Balanced with| Environment
+    Resources -->|Managed sustainably| Environment
+    Economy -->|Considers| Externalities[Environmental Costs]
+    Economy -->|Uses| DiscountRates[Long-term Investment Rates]
+    Society -->|Considers| IntergenerationalEquity[Future Resident Wellbeing]
+    Environment -->|Impacts| Future
+    Economy -->|Impacts| Future
+    Society -->|Impacts| Future
+    Systems -->|Require| HolisticApproach[Integrated Urban Planning]
+    Environment -->|Part of| Systems
+    Economy -->|Part of| Systems
+    Society -->|Part of| Systems

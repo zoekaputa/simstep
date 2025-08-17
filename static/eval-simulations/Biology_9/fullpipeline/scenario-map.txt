@@ -1,0 +1,26 @@
+graph TD
+    Hormones[Environmental Variables: Temperature, Humidity, Light]
+    EndocrineGlands[Smart Devices: Thermostat, Humidifier, Lights]
+    Bloodstream[Home Network: Data Transport]
+    TargetCells[Room Sensors: Environmental Detectors]
+    Receptors[Sensor Interfaces: Data Input Points]
+    FeedbackLoops[Control Algorithms: Adjustment Mechanisms]
+    Hypothalamus[Central Control Unit: Main Processor]
+    PituitaryGland[Primary Control Module: Coordination Hub]
+    OtherEndocrineGlands[Secondary Control Modules]
+    Homeostasis[Optimal Home Environment: Comfort Zone]
+    CircadianRhythms[Daily Schedules: Programmed Patterns]
+    PhysiologicalResponses[Device Actions: Environmental Adjustments]
+
+    EndocrineGlands -->|adjust| Hormones
+    Hormones -->|monitored through| Bloodstream
+    Bloodstream -->|transmits to| TargetCells
+    TargetCells -->|equipped with| Receptors
+    Hormones -->|detected by| Receptors
+    Receptors -->|trigger| PhysiologicalResponses
+    FeedbackLoops -->|fine-tune| EndocrineGlands
+    Hypothalamus -->|directs| PituitaryGland
+    PituitaryGland -->|activates| OtherEndocrineGlands
+    EndocrineGlands -->|maintain| Homeostasis
+    CircadianRhythms -->|program| Hormones
+    Homeostasis -->|achieved through| FeedbackLoops

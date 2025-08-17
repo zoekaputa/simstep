@@ -1,0 +1,31 @@
+graph LR
+    AI[AI Decision-Making]
+    RBS[Rule-Based Systems]
+    SM[Statistical Methods]
+    UBA[Utility-Based Approaches]
+    LBS[Learning-Based Systems]
+    PA[Planning Algorithms]
+    DT[Decision Trees]
+    MDP[Markov Decision Processes]
+    RL[Reinforcement Learning]
+    BN[Bayesian Networks]
+    MAS[Multi-Agent Systems]
+    NN[Neural Networks]
+    EM[Ensemble Methods]
+    HS[Hierarchical Systems]
+    AI -->|uses| RBS
+    AI -->|uses| SM
+    AI -->|uses| UBA
+    AI -->|uses| LBS
+    AI -->|uses| PA
+    AI -->|uses| DT
+    AI -->|uses| MDP
+    AI -->|uses| RL
+    AI -->|uses| BN
+    AI -->|uses| MAS
+    PA -->|includes| AS[A* Search]
+    PA -->|includes| MCTS[Monte Carlo Tree Search]
+    RL -->|can use| NN
+    AI -->|combines with| EM
+    AI -->|uses| HS
+    MAS -->|applies| GT[Game Theory]

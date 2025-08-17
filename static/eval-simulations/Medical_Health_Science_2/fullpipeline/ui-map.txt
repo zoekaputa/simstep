@@ -1,0 +1,36 @@
+graph LR
+    DDS[Therapeutic Transport Network]
+    Drug[Drug Packages]
+    Body[Simulated Human Body]
+    ADME[Pharmacokinetic Processes]
+    Routes[Administration Sites]
+    Target[Organ Targeting Mechanisms]
+    Release[Controlled-Release Formulations]
+    BodyVisual[Body Visualization]
+    DrugProperties[Drug Properties Controls]
+    AdminSite[Administration Site Selector]
+    ReleaseButton[Release Drug Button]
+    TimeControls[Time Interval Controls]
+    ConcentrationGraph[Concentration Graph]
+    OptimizationPanel[Strategy Optimization Panel]
+    DDS -->|manages| Drug
+    DDS -->|simulates delivery in| Body
+    ADME -->|governs| Drug
+    Body -->|contains| Routes
+    Routes -->|enables| ADME
+    DDS -->|incorporates| Target
+    DDS -->|incorporates| Release
+    BodyVisual -->|displays| Body
+    BodyVisual -->|shows| Routes
+    BodyVisual -->|highlights| Target
+    DrugProperties -->|modifies| Drug
+    AdminSite -->|selects from| Routes
+    ReleaseButton -->|initiates| Release
+    TimeControls -->|affects| ADME
+    ConcentrationGraph -->|displays results of| ADME
+    OptimizationPanel -->|compares| ConcentrationGraph
+    DrugProperties -->|updates| BodyVisual
+    AdminSite -->|updates| BodyVisual
+    ReleaseButton -->|updates| BodyVisual
+    TimeControls -->|updates| BodyVisual
+    TimeControls -->|updates| ConcentrationGraph

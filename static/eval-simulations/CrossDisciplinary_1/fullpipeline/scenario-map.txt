@@ -1,0 +1,25 @@
+graph LR
+    Skateboarder[Virtual Rider]
+    Skateboard[Simulated Skateboard]
+    Ramp[Customizable Ramp]
+    Surface[Adjustable Surface]
+    Energy[Energy Calculations]
+    Force[Force Analysis]
+    Motion[Motion Tracking]
+    Rotation[Rotation Simulation]
+    Impact[Impact Visualization]
+    Materials[Material Selection]
+    Ergonomics[Biomechanical Analysis]
+    Skateboarder -->|rides| Skateboard
+    Skateboarder -->|performs on| Ramp
+    Skateboard -->|contacts| Surface
+    Skateboarder -->|converts| Energy
+    Force -->|affects| Motion
+    Skateboarder -->|controls| Rotation
+    Skateboarder -->|experiences| Impact
+    Materials -->|influence| Skateboard
+    Ergonomics -->|guide| Skateboard
+    Force -->|determines| Impact
+    Energy -->|enables| Motion
+    Rotation -->|depends on| Energy
+    Surface -->|affects| Motion

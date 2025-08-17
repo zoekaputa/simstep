@@ -1,0 +1,17 @@
+graph LR
+    Fruit[Lemon]
+    Juice[Citric Acid Solution]
+    Zinc[Zinc Strip]
+    Copper[Copper Strip]
+    Electrons[Free Electrons]
+    LED[Red LED]
+    Fruit -->|contains| Juice
+    Juice -->|acts as| Electrolyte[Lemon Juice Electrolyte]
+    Zinc -->|inserted into| Fruit
+    Copper -->|inserted into| Fruit
+    Zinc -->|oxidizes| Electrons
+    Electrons -->|flow through| Circuit[Alligator Clip Wires]
+    Circuit -->|powers| LED
+    Copper -->|reduces H+ ions| HydrogenGas[Hydrogen Bubbles]
+    Fruit -->|produces| Voltage[1.5V Potential Difference]
+    MultipleFruits[Series of Lemons] -->|connected in series| IncreasedVoltage[4.5V Output]

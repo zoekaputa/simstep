@@ -1,0 +1,20 @@
+graph LR
+    AI[Adventure Decision Navigator]
+    RBS[Character Dialogue Rules]
+    SM[Narrative Branch Probabilities]
+    PA[Story Path Planning]
+    DT[Dialogue Choice Trees]
+    MDP[Narrative State Transitions]
+    RL[Experience-Based Learning]
+    BN[Event Probability Networks]
+    EM[Multi-Approach Decision Engine]
+    AI -->|uses| RBS
+    AI -->|uses| SM
+    AI -->|uses| PA
+    AI -->|uses| DT
+    AI -->|uses| MDP
+    AI -->|uses| RL
+    AI -->|uses| BN
+    PA -->|includes| AS[Optimal Path Finding]
+    PA -->|includes| MCTS[Narrative Outcome Simulation]
+    AI -->|combines with| EM

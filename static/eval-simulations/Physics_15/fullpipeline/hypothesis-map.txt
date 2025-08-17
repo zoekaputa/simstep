@@ -1,0 +1,11 @@
+graph LR
+    G[Gravity]
+    P[Shot Trajectory]
+    T[Basket]
+    V[Initial Shot Velocity]
+    A[Air Resistance]
+    G -->|affects| P
+    P -->|has initial| V
+    P -->|aims for| T
+    A -->|affects| P
+    V -->|determines| P

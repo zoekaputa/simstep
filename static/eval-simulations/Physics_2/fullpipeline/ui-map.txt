@@ -1,0 +1,30 @@
+graph LR
+    BoatHull[Hull Design]
+    Water[Simulated Water]
+    Buoyancy[Buoyancy Force]
+    Displacement[Water Displacement]
+    Cargo[Cargo Capacity]
+    DesignInterface[Hull Design Interface]
+    WaterControls[Water Property Controls]
+    CargoControls[Cargo Weight Controls]
+    SimulationView[Simulation View]
+    DataGraph[Displacement vs Cargo Graph]
+    IterationCounter[Iteration Counter]
+    OptimizeButton[Optimize Hull Button]
+    BoatHull -->|influences| Displacement
+    Water -->|generates| Buoyancy
+    Buoyancy -->|counteracts| BoatHull
+    Displacement -->|determines| Buoyancy
+    Cargo -->|impacts| Displacement
+    BoatHull -->|optimized for| Cargo
+    DesignInterface -->|modifies| BoatHull
+    WaterControls -->|adjusts| Water
+    CargoControls -->|sets| Cargo
+    SimulationView -->|displays| BoatHull
+    SimulationView -->|shows| Water
+    SimulationView -->|visualizes| Displacement
+    SimulationView -->|illustrates| Buoyancy
+    DataGraph -->|plots| Displacement
+    DataGraph -->|plots| Cargo
+    IterationCounter -->|tracks| DesignInterface
+    OptimizeButton -->|triggers optimization of| BoatHull

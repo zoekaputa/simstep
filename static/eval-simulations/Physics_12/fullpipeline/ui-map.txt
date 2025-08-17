@@ -1,0 +1,28 @@
+graph LR
+    Material[Roasting Stick]
+    Heat[Campfire Heat]
+    Electrons[Free Electrons in Metal Sticks]
+    Metals[Metal Roasting Sticks]
+    Insulators[Wooden Roasting Sticks]
+    ThermalConductivity[Stick's Thermal Conductivity]
+    FouriersLaw[Heat Transfer Rate]
+    StickVisual[Stick Visual]
+    TempSensors[Temperature Sensors]
+    TempGraph[Temperature Graph]
+    MaterialSelector[Material Selector]
+    StartButton[Start Experiment]
+    Timer[Timer]
+    Material -->|conducts| Heat
+    Material -->|characterized by| ThermalConductivity
+    ThermalConductivity -->|measured by| FouriersLaw
+    Metals -->|have| Electrons
+    Electrons -->|efficiently transport| Heat
+    Metals -->|high| ThermalConductivity
+    Insulators -->|low| ThermalConductivity
+    StickVisual -->|represents| Material
+    TempSensors -->|attached to| StickVisual
+    TempSensors -->|data displayed in| TempGraph
+    MaterialSelector -->|changes| StickVisual
+    StartButton -->|initiates| Heat
+    StartButton -->|activates| Timer
+    Timer -->|controls| TempGraph

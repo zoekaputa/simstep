@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cookie Chemistry</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cabin+Sketch:wght@400;700&family=Londrina+Sketch&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/roughjs@latest/bundled/rough.js"></script>
+    <style>
+        body {
+            font-family: 'Cabin Sketch', cursive;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        h1 {
+            font-family: 'Cabin Sketch', cursive;
+            font-weight: 700;
+            color: #4a4a4a;
+        }
+        #experiment-description {
+            font-family: 'Cabin Sketch', cursive;
+            font-weight: 400;
+            max-width: 800px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        #canvas-container {
+            position: relative;
+            width: 800px;
+            height: 600px;
+            background-color: #ffffff;
+            border: 2px solid #4a4a4a;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        #controls {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .control {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        label {
+            font-family: 'Cabin Sketch', cursive;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+        button, select, input[type="range"] {
+            font-family: 'Cabin Sketch', cursive;
+            font-weight: 400;
+            padding: 5px 10px;
+            border: 2px solid #4a4a4a;
+            border-radius: 5px;
+            background-color: #ffffff;
+            cursor: pointer;
+        }
+        button:hover, select:hover {
+            background-color: #f0f0f0;
+        }
+        #data-table {
+            margin-top: 20px;
+            border-collapse: collapse;
+        }
+        #data-table th, #data-table td {
+            border: 1px solid #4a4a4a;
+            padding: 5px 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Cookie Chemistry</h1>
+    <div id="experiment-description">
+        Welcome to the Cookie Chemistry lab! In this experiment, you'll explore how different ingredients and baking conditions affect the final product. You'll mix ingredients, shape the dough, and bake cookies while observing chemical reactions in action. Pay attention to how changes in temperature and ingredients influence the browning process and texture of the cookies.
+    </div>
+    <div id="canvas-container">
+        <canvas id="rough-canvas"></canvas>
+    </div>
+    <div id="controls">
+        <div class="control">
+            <label for="ingredient-selector">Select Ingredient:</label>
+            <select id="ingredient-selector">
+                <option value="flour">Flour</option>
+                <option value="sugar">Sugar</option>
+                <option value="egg">Egg</option>
+                <option value="butter">Butter</option>
+                <option value="baking-powder">Baking Powder</option>
+            </select>
+        </div>
+        <div class="control">
+            <button id="mix-button">Mix Ingredients</button>
+        </div>
+        <div class="control">
+            <button id="shape-button">Shape Dough</button>
+        </div>
+        <div class="control">
+            <label for="temperature-slider">Oven Temperature (°C):</label>
+            <input type="range" id="temperature-slider" min="150" max="250" value="180">
+        </div>
+        <div class="control">
+            <button id="start-stop-button">Start Baking</button>
+        </div>
+    </div>
+    <table id="data-table">
+        <tr>
+            <th>Temperature (°C)</th>
+            <th>Baking Time (s)</th>
+            <th>Browning Level</th>
+            <th>Texture</th>
+        </tr>
+    </table>
+
+    <script>
+        window.LOG_DEBUG = false;
+
+        function logDebug(message) {
+            if (window.LOG_DEBUG) {
+                console.log(`DEBUG [${new Date().toISOString()}]: ${message}`);
+            }
+        }
+
+        const canvas = document.getElementById('rough-canvas');
+        const ctx = canvas.getContext('2d');
+        const rc = rough.canvas(canvas);
+
+        const kitchenSvg = `
+            <svg width="800" height="600" viewBox="0 0 800 600" xmlns="http://www.w3.org/2000/svg">
+                <rect x="0" y="0" width="800" height="600" fill="#f0f0f0"/>
+                <rect x="50" y="100" width="700" height="400" fill="#d9d9d9" stroke="#4a4a4a" stroke-width="2"/>
+                <rect x="100" y="150" width="300" height="200" fill="#ffffff" stroke="#4a4a4a" stroke-width="2"/>
+                <rect x="450" y="150" width="250" height="300" fill="#c0c0c0" stroke="#4a4a4a" stroke-width="2"/>
+                <circle cx="575" cy="250" r="50" fill="#f0f0f0" stroke="#4a4a4a" stroke-width="2"/>
+                <rect x="500" y="350" width="150" height="50" fill="#4a4a4a"/>
+            </svg>
+        `;
+
+        const bowlSvg = `
+            <svg width="200" height="100" viewBox="0 0 200 100" xmlns="http://www.w3.org/2000/svg">
+                <ellipse cx="100" cy="50" rx="90" ry="45" fill="#ffffff" stroke="#4a4a4a" stroke-width="2"/>
+                <path d="M 20 50 Q 100 120 180 50" fill="none" stroke="#4a4a4a" stroke-width="2"/>
+            </svg>
+        `;
+
+        const cookieSvg = `
+            <svg width="100" height="100" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="50" cy="50" r="45" fill="#d2691e" stroke="#8b4513" stroke-width="2"/>
+                <circle cx="30" cy="30" r="5" fill="#8b4513"/>
+                <circle cx="70" cy="40" r="5" fill="#8b4513"/>
+                <circle cx="50" cy="70" r="5" fill="#8b4513"/>
+            </svg>
+        `;
+
+        let ingredients = [];
+        let doughMixed = false;
+        let doughShaped = false;
+        let baking = false;
+        let bakingTime = 0;
+        let browningLevel = 0;
+
+        function drawKitchen() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            const img = new Image();
+            img.onload = () => {
+                ctx.drawImage(img, 0, 0);
+                logDebug('Kitchen background drawn');
+            };
+            img.src = 'data:image/svg+xml;base64,' + btoa(kitchenSvg);
+        }
+
+        function drawBowl() {
+            const img = new Image();
+            img.onload = () => {
+                ctx.drawImage(img, 150, 200);
+                logDebug('Mixing bowl drawn');
+            };
+            img.src = 'data:image/svg+xml;base64,' + btoa(bowlSvg);
+        }
+
+        function drawIngredients() {
+            ingredients.forEach((ingredient, index) => {
+                rc.circle(200 + index * 30, 250, 20, {
+                    fill: ingredient.color,
+                    stroke: '#4a4a4a',
+                    strokeWidth: 2
+                });
+            });
+            logDebug(`Ingredients drawn: ${ingredients.map(i => i.name).join(', ')}`);
+        }
+
+        function drawDough() {
+            if (doughMixed) {
+                rc.circle(250, 250, 40, {
+                    fill: '#f4e6c8',
+                    stroke: '#4a4a4a',
+                    strokeWidth: 2
+                });
+                logDebug('Dough drawn');
+            }
+        }
+
+        function drawCookie() {
+            if (doughShaped) {
+                const img = new Image();
+                img.onload = () => {
+                    ctx.drawImage(img, 500, 200);
+                    logDebug('Cookie drawn');
+                };
+                img.src = 'data:image/svg+xml;base64,' + btoa(cookieSvg);
+            }
+        }
+
+        function updateOvenDisplay() {
+            const temperature = document.getElementById('temperature-slider').value;
+            ctx.font = '20px "Cabin Sketch"';
+            ctx.fillStyle = '#4a4a4a';
+            ctx.fillText(`${temperature}°C`, 550, 245);
+            logDebug(`Oven temperature updated: ${temperature}°C`);
+        }
+
+        function updateTimerDisplay() {
+            ctx.font = '20px "Cabin Sketch"';
+            ctx.fillStyle = '#4a4a4a';
+            ctx.fillText(`${bakingTime}s`, 550, 395);
+            logDebug(`Timer updated: ${bakingTime}s`);
+        }
+
+        function draw() {
+            drawKitchen();
+            drawBowl();
+            drawIngredients();
+            drawDough();
+            drawCookie();
+            updateOvenDisplay();
+            updateTimerDisplay();
+        }
+
+        function addIngredient() {
+            const ingredient = document.getElementById('ingredient-selector').value;
+            const ingredientColors = {
+                'flour': '#ffffff',
+                'sugar': '#f0f0f0',
+                'egg': '#ffff00',
+                'butter': '#ffff99',
+                'baking-powder': '#f0f0f0'
+            };
+            ingredients.push({ name: ingredient, color: ingredientColors[ingredient] });
+            logDebug(`Ingredient added: ${ingredient}`);
+            draw();
+        }
+
+        function mixIngredients() {
+            if (ingredients.length > 0) {
+                doughMixed = true;
+                logDebug('Ingredients mixed');
+                draw();
+            }
+        }
+
+        function shapeDough() {
+            if (doughMixed) {
+                doughShaped = true;
+                logDebug('Dough shaped');
+                draw();
+            }
+        }
+
+        function startBaking() {
+            if (doughShaped && !baking) {
+                baking = true;
+                bakingTime = 0;
+                browningLevel = 0;
+                document.getElementById('start-stop-button').textContent = 'Stop Baking';
+                logDebug('Baking started');
+                bakingInterval = setInterval(updateBaking, 1000);
+            } else if (baking) {
+                stopBaking();
+            }
+        }
+
+        function stopBaking() {
+            baking = false;
+            clearInterval(bakingInterval);
+            document.getElementById('start-stop-button').textContent = 'Start Baking';
+            updateDataTable();
+            logDebug('Baking stopped');
+        }
+
+        function updateBaking() {
+            bakingTime++;
+            const temperature = parseInt(document.getElementById('temperature-slider').value);
+            browningLevel += (temperature - 150) / 1000;
+            logDebug(`Baking update: Time=${bakingTime}s, Temperature=${temperature}°C, Browning=${browningLevel.toFixed(2)}`);
+            draw();
+            
+            if (browningLevel >= 1) {
+                stopBaking();
+            }
+        }
+
+        function updateDataTable() {
+            const table = document.getElementById('data-table');
+            const row = table.insertRow(-1);
+            const temperature = document.getElementById('temperature-slider').value;
+            row.insertCell(0).textContent = temperature;
+            row.insertCell(1).textContent = bakingTime;
+            row.insertCell(2).textContent = browningLevel.toFixed(2);
+            row.insertCell(3).textContent = bakingTime < 30 ? 'Soft' : bakingTime < 60 ? 'Chewy' : 'Crispy';
+            logDebug(`Data table updated: Temperature=${temperature}°C, Time=${bakingTime}s, Browning=${browningLevel.toFixed(2)}`);
+        }
+
+        document.getElementById('ingredient-selector').addEventListener('change', addIngredient);
+        document.getElementById('mix-button').addEventListener('click', mixIngredients);
+        document.getElementById('shape-button').addEventListener('click', shapeDough);
+        document.getElementById('temperature-slider').addEventListener('input', draw);
+        document.getElementById('start-stop-button').addEventListener('click', startBaking);
+
+        document.addEventListener('DOMContentLoaded', () => {
+            canvas.width = 800;
+            canvas.height = 600;
+            draw();
+
+            if (window.LOG_DEBUG) {
+                logDebug('Simulation initialized');
+                document.querySelectorAll('svg').forEach((svg, index) => {
+                    const rect = svg.getBoundingClientRect();
+                    logDebug(`SVG #${index}: Position {x: ${rect.x}, y: ${rect.y}}, Size {w: ${rect.width}, h: ${rect.height}}`);
+                });
+                document.querySelectorAll('input, button, select').forEach((control) => {
+                    logDebug(`Control ${control.id || 'unnamed'} (${control.tagName}): Initial value: ${control.value || 'N/A'}`);
+                });
+                
+                document.querySelectorAll('button').forEach((button) => {
+                    button.addEventListener('click', () => logDebug(`Button ${button.id || 'unnamed'} clicked`));
+                });
+                document.querySelectorAll('input').forEach((input) => {
+                    input.addEventListener('change', (e) => logDebug(`Input ${input.id || 'unnamed'} changed to ${e.target.value}`));
+                });
+            }
+        });
+    </script>
+</body>
+</html>

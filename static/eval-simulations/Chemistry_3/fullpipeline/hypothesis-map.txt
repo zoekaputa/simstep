@@ -1,0 +1,12 @@
+graph LR
+    pH[Soil pH Meter]
+    H[Soil Acidity Level]
+    Soil[Virtual Garden Soil]
+    Plants[Garden Plants]
+    Nutrients[Soil Amendments]
+    pH -->|measures| H
+    pH -->|affects| Soil
+    Soil -->|influences| Plants
+    pH -->|influences availability of| Nutrients
+    Plants -->|adapted to different| pH
+    Nutrients -->|essential for| Plants

@@ -1,0 +1,29 @@
+graph LR
+    DataStructure[School Storage System]
+    Array[Numbered Locker Rows]
+    LinkedList[Chained Lockers]
+    Stack[Last In First Out Storage]
+    Queue[First In First Out Storage]
+    Tree[Club Storage Hierarchy]
+    HashTable[Student ID Based Assignments]
+    Graph[Item Borrowing Network]
+    Heap[Priority-Based Storage]
+    DataStructure -->|Includes| Array
+    DataStructure -->|Includes| LinkedList
+    DataStructure -->|Includes| Stack
+    DataStructure -->|Includes| Queue
+    DataStructure -->|Includes| Tree
+    DataStructure -->|Includes| HashTable
+    DataStructure -->|Includes| Graph
+    DataStructure -->|Includes| Heap
+    Array -->|Has| ContiguousMemory[Sequential Locker Numbers]
+    LinkedList -->|Contains| Node[Individual Locker]
+    Node -->|Has| Data[Student Items]
+    Node -->|Has| Reference[Next Locker Direction]
+    Stack -->|Implements| LIFO[Last Added Item First]
+    Queue -->|Implements| FIFO[First Added Item First]
+    Tree -->|Has| ParentChildRelationship[Club and Subclub Relation]
+    HashTable -->|Uses| HashFunction[Student ID Assignment Algorithm]
+    Graph -->|Contains| Vertex[Student]
+    Graph -->|Contains| Edge[Borrowed Item]
+    Heap -->|Maintains| PartialOrdering[Item Priority Order]

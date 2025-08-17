@@ -1,0 +1,20 @@
+graph LR
+    Earth[Earth]
+    Sun[Sun]
+    Neptune[Neptune]
+    KuiperBelt[Kuiper Belt]
+    OortCloud[Oort Cloud]
+    ProximaCentauri[Proxima Centauri]
+    MilkyWay[Milky Way Galaxy]
+    Andromeda[Andromeda Galaxy]
+    Universe[Observable Universe]
+    Earth -->|1 AU| Sun
+    Neptune -->|~40 AU| Sun
+    KuiperBelt -->|~50 AU| Sun
+    OortCloud -->|~100,000 AU| Sun
+    ProximaCentauri -->|4.24 light-years| Sun
+    MilkyWay -->|100,000 light-years diameter| Sun
+    Andromeda -->|2.5 million light-years| MilkyWay
+    Universe -->|46.5 billion light-years radius| MilkyWay
+    MilkyWay -->|Contains| Sun
+    MilkyWay -->|Contains 100-400 billion| Stars[Stars]

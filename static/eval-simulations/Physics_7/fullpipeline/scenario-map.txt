@@ -1,0 +1,22 @@
+graph LR
+    BC1[Virtual Car 1]
+    BC2[Virtual Car 2]
+    M[Momentum Vector]
+    V[Initial Velocity]
+    Mass[Car Mass]
+    KE[Pre-collision Energy]
+    OE[Post-collision Energy]
+    BC1 -->|collides with| BC2
+    BC1 -->|has| M
+    BC2 -->|has| M
+    M -->|product of| Mass
+    M -->|product of| V
+    BC1 -->|has| Mass
+    BC2 -->|has| Mass
+    BC1 -->|has| V
+    BC2 -->|has| V
+    BC1 -->|has| KE
+    BC2 -->|has| KE
+    KE -->|converts to| OE
+    M -->|conserved in| BC1
+    M -->|conserved in| BC2

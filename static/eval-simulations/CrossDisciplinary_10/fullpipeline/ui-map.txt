@@ -1,0 +1,47 @@
+graph LR
+    CI[Knowledge Synthesis]
+    ID[Interdisciplinary Puzzles]
+    DP[Multi-Subject Insights]
+    EM[Cross-Domain Problem-Solving]
+    PT[Perspective Shifting]
+    CG[Conceptual Bridges]
+    I[Knowledge Integration]
+    IS[Integration Techniques]
+    CF[Cross-Subject Frameworks]
+    MA[Interdisciplinary Analogies]
+    CV[Knowledge Mapping Tools]
+    BO[Multi-Domain Puzzles]
+    CS[Synthesis Skills]
+    SS[Collaboration Skills]
+    EC[Team Problem-Solving]
+    A[Performance Evaluation]
+    CI -->|core of| ID
+    ID -->|requires| DP
+    ID -->|requires| EM
+    PT -->|leads to| CG
+    CG -->|leads to| I
+    IS -->|includes| CF
+    IS -->|includes| MA
+    IS -->|includes| CV
+    IS -->|includes| BO
+    CS -->|needed for| EC
+    SS -->|needed for| EC
+    A -->|challenges| ID
+    PS[Problem Scenario]
+    TF[Team Formation]
+    TR[Team Resources]
+    TS[Timer and Steps]
+    OT[Observation Tool]
+    SP[Solution Presentation]
+    EE[Expert Evaluation]
+    SQ[Student Questionnaire]
+    DA[Data Analysis]
+    PS -->|informs| ID
+    TF -->|creates| EC
+    TR -->|supports| IS
+    TS -->|guides| EC
+    OT -->|records| EC
+    SP -->|showcases| I
+    EE -->|assesses| A
+    SQ -->|provides| A
+    DA -->|concludes| A

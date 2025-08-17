@@ -1,0 +1,22 @@
+graph LR
+    Catalyst[Golden Dominoes]
+    Reactants[Regular Dominoes]
+    Products[Fallen Dominoes]
+    ActivationEnergy[Domino Spacing]
+    Intermediates[Temporary Bridges]
+    HomogeneousCatalysis[Same-Size Golden Dominoes]
+    HeterogeneousCatalysis[Different-Size Golden Dominoes]
+    Biocatalysis[Enzyme-Shaped Golden Dominoes]
+    Enzymes[Protein-Folded Golden Dominoes]
+    Catalyst -->|reduces| ActivationEnergy
+    Reactants -->|transform into| Products
+    Catalyst -->|creates| Intermediates
+    Intermediates -->|enable| Products
+    Catalyst -->|categorized into| HomogeneousCatalysis
+    Catalyst -->|categorized into| HeterogeneousCatalysis
+    Catalyst -->|categorized into| Biocatalysis
+    Biocatalysis -->|uses| Enzymes
+    Catalyst -->|connects with| Reactants
+    Catalyst -->|initiates fall of| Reactants
+    Catalyst -->|separates from| Products
+    Catalyst -->|reusable after| Products

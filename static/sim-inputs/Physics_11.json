@@ -1,0 +1,12 @@
+{
+    "content": "Fluid dynamics studies how liquids and gases flow and the forces they exert. In water slide design, principles like Bernoulli's equation, conservation of energy, and fluid friction determine rider experience and safety. Bernoulli's principle states that as fluid velocity increases, pressure decreases. This explains why water moves faster in narrower sections of slides and why proper banking is needed on curves to counteract centrifugal forces. Conservation of energy governs the conversion between potential energy (height), kinetic energy (speed), and energy lost to friction. A rider starting from a higher point has more potential energy to convert to speed. The shape of a slide's cross-section affects water flow - U-shaped channels keep water centered but may allow higher speeds, while flat-bottomed slides with raised edges provide more friction and control. Friction between water, rider, and slide surface creates drag that reduces speed. Water flow rate also impacts rider speed - more water generally means less friction between rider and slide surface.",
+    "scenario": {
+        "title": "Waterpark Engineering",
+        "content": "Students become water park designers, creating slides that provide exciting yet safe experiences. They manipulate slide height, curvature, banking angle, cross-sectional shape, and water flow rate, then test their designs with virtual riders of different masses. The simulation visualizes fluid pressure, velocity, and forces acting on riders throughout the slide. Real-time data shows how design elements affect rider speed, acceleration, and safety factors. Students must balance thrill factors with safety constraints and water consumption efficiency. Advanced features allow examination of boundary layer effects and turbulence at different flow velocities."
+    },
+    "hypothesis": {
+        "hypothesis": "Fluid Flow Fundamentals",
+        "type": "Procedural",
+        "description": "Students will analyze how fluid principles determine water and rider movement by designing, testing, and iterating slide designs. They will predict how changes in slide geometry, water flow, and rider properties affect the system's dynamics, and optimize designs to balance competing requirements."
+    }
+}

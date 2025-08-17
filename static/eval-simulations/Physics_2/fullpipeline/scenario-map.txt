@@ -1,0 +1,19 @@
+graph LR
+    BoatHull[Hull Design]
+    Water[Simulated Water]
+    Gravity[Virtual Gravity]
+    Buoyancy[Buoyancy Force]
+    Friction[Hull Resistance]
+    Displacement[Water Displacement]
+    Cargo[Cargo Capacity]
+    BoatHull -->|influences| Displacement
+    BoatHull -->|experiences| Friction
+    Water -->|generates| Buoyancy
+    Gravity -->|acts on| BoatHull
+    Gravity -->|affects| Water
+    Buoyancy -->|counteracts| BoatHull
+    Displacement -->|determines| Buoyancy
+    Cargo -->|impacts| Displacement
+    BoatHull -->|optimized for| Cargo
+    Friction -->|reduces| BoatSpeed[Vessel Speed]
+    Displacement -->|affects| BoatSpeed

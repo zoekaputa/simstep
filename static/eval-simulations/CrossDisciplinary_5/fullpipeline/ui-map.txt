@@ -1,0 +1,20 @@
+graph LR
+    W[Desert Water Supply] -->|Analyzed by| WF[Desert Water Footprint]
+    W -->|Conserved by| IC[Personal Water Rationing]
+    W -->|Conserved by| AC[Drip Irrigation]
+    W -->|Conserved by| INC[Water Recycling in Industry]
+    W -->|Conserved by| UP[Desert City Planning]
+    W -->|Protected by| WQP[Desert Water Quality Protection]
+    W -->|Managed by| IWM[Desert Water Resource Management]
+    W -->|Analyzed by| CE[Water Scarcity Economics]
+    CE -->|Studies| PR[Tiered Water Pricing]
+    SimEnv[Simulated Desert Environment] -->|Contains| W
+    MeasureBtn[Measure Button] -->|Triggers| InitialMeasure[Initial Measurement]
+    InitialMeasure -->|Updates| W
+    ConserveMeasures[Conservation Measures Dropdown] -->|Applies| W
+    RecordBtn[Record Button] -->|Captures| Metrics[Water Metrics]
+    Metrics -->|Updates| W
+    WQPBtn[Water Quality Protection Button] -->|Activates| WQP
+    IWMBtn[Integrated Management Button] -->|Activates| IWM
+    CompareBtn[Compare Button] -->|Analyzes| Results[Final Results]
+    Results -->|Informs| OptimizationPlan[Water Management Plan]

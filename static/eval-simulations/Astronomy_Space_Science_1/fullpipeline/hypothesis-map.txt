@@ -1,0 +1,23 @@
+graph LR
+    Nebula[Fuel Gathering: Wood and Kindling]
+    Star[Steady Burning Campfire]
+    RedGiant[Large Bonfire]
+    WhiteDwarf[Smoldering Embers]
+    NeutronStar[Dense Charcoal Remnant]
+    BlackHole[Fire Pit Void]
+    PlanetaryNebula[Smoke and Ash Cloud]
+    Supernova[Explosive Flare-up]
+    ISM[Scattered Ashes and Debris]
+    Nebula -->|Ignition| Star
+    Star -->|Fuel depletion| RedGiant
+    RedGiant -->|Small fire| PlanetaryNebula
+    PlanetaryNebula -->|Cooling down| WhiteDwarf
+    RedGiant -->|Medium fire| Supernova
+    Supernova -->|Compressed remains| NeutronStar
+    RedGiant -->|Large fire| Supernova
+    Supernova -->|Complete collapse| BlackHole
+    PlanetaryNebula -->|Dispersal| ISM
+    Supernova -->|Scattering| ISM
+    ISM -->|Regathering| Nebula
+    Star -->|Heat balance| Star
+    Star -->|Energy release| Star

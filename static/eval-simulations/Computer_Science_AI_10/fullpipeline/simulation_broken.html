@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Virtual Personal Diary Security Simulator</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cabin+Sketch:wght@400;700&family=Londrina+Sketch&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/roughjs@latest/bundled/rough.js"></script>
+    <style>
+        /* ... (styles remain unchanged) ... */
+    </style>
+</head>
+<body>
+    <h1>Virtual Personal Diary Security Simulator</h1>
+    <p>Welcome to the Virtual Personal Diary Security Simulator! In this experiment, you'll learn about cybersecurity by protecting a digital diary. Your task is to implement various security measures to defend against different types of cyber attacks. Explore how different security configurations affect the diary's protection and discover the balance between security and usability.</p>
+    <canvas id="canvas" width="800" height="600"></canvas>
+    <div class="controls">
+        <!-- ... (controls remain unchanged) ... -->
+    </div>
+    <div id="results">
+        <h2>Results Dashboard</h2>
+        <p id="data-privacy">Data Privacy: Secure</p>
+        <p id="data-integrity">Data Integrity: Maintained</p>
+        <p id="availability">Diary Availability: 100%</p>
+    </div>
+    <script>
+        window.LOG_DEBUG = false;
+        function logDebug(message) {
+            if (window.LOG_DEBUG) {
+                console.log(`DEBUG [${new Date().toISOString()}]: ${message}`);
+            }
+        }
+
+        const canvas = document.getElementById('canvas');
+        const rc = rough.canvas(canvas);
+        const ctx = canvas.getContext('2d');
+
+        const diaryIcon = `
+            <svg width="100" height="100" viewBox="0 0 100 100">
+                <rect x="10" y="10" width="80" height="80" fill="#FFD700" stroke="#000" stroke-width="2"/>
+                <rect x="20" y="20" width="60" height="60" fill="#FFF" stroke="#000" stroke-width="2"/>
+                <line x1="30" y1="40" x2="70" y2="40" stroke="#000" stroke-width="2"/>
+                <line x1="30" y1="50" x2="70" y2="50" stroke="#000" stroke-width="2"/>
+                <line x1="30" y1="60" x2="70" y2="60" stroke="#000" stroke-width="2"/>
+            </svg>
+        `;
+        const lockIcon = `
+            <svg width="50" height="50" viewBox="0 0 50 50">
+                <rect x="10" y="20" width="30" height="25" fill="#808080" stroke="#000" stroke-width="2"/>
+                <path d="M15 20 V10 Q25 0 35 10 V20" fill="none" stroke="#000" stroke-width="2"/>
+                <circle cx="25" cy="32" r="5" fill="#000"/>
+            </svg>
+        `;
+
+        function drawSVG(svg, x, y, width, height) {
+            const img = new Image();
+            img.onload = function() {
+                ctx.drawImage(this, x, y, width, height);
+            }
+            img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
+        }
+
+        function drawDiary() {
+            drawSVG(diaryIcon, 350, 250, 100, 100);
+            drawSVG(lockIcon, 400, 300, 50, 50);
+        }
+
+        function simulateAttack(type) {
+            logDebug(`Simulating ${type} attack`);
+            const x = Math.random() * 700 + 50;
+            const y = Math.random() * 500 + 50;
+            rc.circle(x, y, 20, { fill: 'red', fillStyle: 'solid' });
+            setTimeout(() => {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                drawDiary();
+            }, 1000);
+        }
+
+        function updateResults() {
+            document.getElementById('data-privacy').textContent = `Data Privacy: ${Math.random() > 0.5 ? 'Secure' : 'Compromised'}`;
+            document.getElementById('data-integrity').textContent = `Data Integrity: ${Math.random() > 0.5 ? 'Maintained' : 'Corrupted'}`;
+            document.getElementById('availability').textContent = `Diary Availability: ${Math.floor(Math.random() * 100)}%`;
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            drawDiary();
+
+            document.getElementById('malware').addEventListener('click', () => simulateAttack('malware'));
+            document.getElementById('social').addEventListener('click', () => simulateAttack('social engineering'));
+            document.getElementById('ddos').addEventListener('click', () => simulateAttack('DDoS'));
+
+            document.getElementById('audit').addEventListener('click', updateResults);
+            document.getElementById('pentest').addEventListener('click', updateResults);
+            document.getElementById('update').addEventListener('click', updateResults);
+
+            if (window.LOG_DEBUG) {
+                logDebug('Simulation initialized');
+                document.querySelectorAll('svg').forEach((svg, index) => {
+                    const rect = svg.getBoundingClientRect();
+                    logDebug(`SVG #${index}: Position {x: ${rect.x}, y: ${rect.y}}, Size {w: ${rect.width}, h: ${rect.height}}`);
+                });
+                document.querySelectorAll('input, button, select').forEach((control) => {
+                    logDebug(`Control ${control.id || 'unnamed'} (${control.tagName}): Initial value: ${control.value || 'N/A'}`);
+                });
+                
+                document.querySelectorAll('button').forEach((button) => {
+                    button.addEventListener('click', () => logDebug(`Button ${button.id || 'unnamed'} clicked`));
+                });
+                document.querySelectorAll('input, select').forEach((input) => {
+                    input.addEventListener('change', (e) => logDebug(`Input ${input.id || 'unnamed'} changed to ${e.target.value}`));
+                });
+            }
+        });
+    </script>
+</body>
+</html>

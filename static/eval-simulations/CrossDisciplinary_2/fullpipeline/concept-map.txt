@@ -1,0 +1,30 @@
+graph LR
+    Environment[Environmental Considerations]
+    Economy[Economic Considerations]
+    Society[Social Considerations]
+    Resources[Natural Resources]
+    Energy[Energy]
+    Carbon[Carbon]
+    Nitrogen[Nitrogen]
+    Water[Water]
+    Future[Future Generations]
+    Systems[Complex Systems]
+    Environment -->|Balanced with| Economy
+    Economy -->|Balanced with| Society
+    Society -->|Balanced with| Environment
+    Resources -->|Managed sustainably| Environment
+    Energy -->|Governed by| Thermodynamics[Thermodynamic Laws]
+    Carbon -->|Cycles through| Atmosphere[Atmosphere]
+    Nitrogen -->|Cycles through| Ecosystem[Ecosystem]
+    Water -->|Follows| HydrologicalCycle[Hydrological Cycle]
+    Economy -->|Considers| Externalities[Externalities]
+    Economy -->|Uses| DiscountRates[Discount Rates]
+    Society -->|Builds| SocialCapital[Social Capital]
+    Society -->|Considers| IntergenerationalEquity[Intergenerational Equity]
+    Environment -->|Impacts| Future
+    Economy -->|Impacts| Future
+    Society -->|Impacts| Future
+    Systems -->|Require| HolisticApproach[Holistic Approach]
+    Environment -->|Part of| Systems
+    Economy -->|Part of| Systems
+    Society -->|Part of| Systems

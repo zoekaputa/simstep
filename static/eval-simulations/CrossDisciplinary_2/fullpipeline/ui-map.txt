@@ -1,0 +1,43 @@
+graph LR
+    Environment[City Environment]
+    Economy[City Economy]
+    Society[City Society]
+    Resources[City Resources]
+    Future[Future City Generations]
+    Systems[City Systems]
+    Externalities[Environmental Costs]
+    DiscountRates[Long-term Investment Rates]
+    IntergenerationalEquity[Future Resident Wellbeing]
+    HolisticApproach[Integrated Urban Planning]
+    CityA[City A: Short-term Focus]
+    CityB[City B: Balanced Approach]
+    CityC[City C: Long-term Focus]
+    Timeline[Timeline Slider]
+    ShockEvent[Shock Event Button]
+    DataDisplay[Data Display Panel]
+    ComparisonTool[City Comparison Tool]
+    Environment -->|Balanced with| Economy
+    Economy -->|Balanced with| Society
+    Society -->|Balanced with| Environment
+    Resources -->|Managed sustainably| Environment
+    Economy -->|Considers| Externalities
+    Economy -->|Uses| DiscountRates
+    Society -->|Considers| IntergenerationalEquity
+    Environment -->|Impacts| Future
+    Economy -->|Impacts| Future
+    Society -->|Impacts| Future
+    Systems -->|Require| HolisticApproach
+    Environment -->|Part of| Systems
+    Economy -->|Part of| Systems
+    Society -->|Part of| Systems
+    Timeline -->|Controls simulation time| CityA
+    Timeline -->|Controls simulation time| CityB
+    Timeline -->|Controls simulation time| CityC
+    ShockEvent -->|Triggers random events| CityA
+    ShockEvent -->|Triggers random events| CityB
+    ShockEvent -->|Triggers random events| CityC
+    CityA -->|Provides data| DataDisplay
+    CityB -->|Provides data| DataDisplay
+    CityC -->|Provides data| DataDisplay
+    DataDisplay -->|Inputs for| ComparisonTool
+    ComparisonTool -->|Analyzes| Systems

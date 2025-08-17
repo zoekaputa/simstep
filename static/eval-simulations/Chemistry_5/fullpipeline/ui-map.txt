@@ -1,0 +1,22 @@
+graph LR
+    A[Element Avatar] -->|Share or transfer| E[Valence Electrons]
+    A -->|Has| EN[Personality Profile]
+    E -->|Achieve| S[Stable Molecule]
+    EN -->|Determines| B[Interaction Type]
+    B -->|Types| C[Shared Electron Cloud]
+    B -->|Types| I[Electron Transfer]
+    C -->|Subtypes| NP[Equal Sharing]
+    C -->|Subtypes| PC[Unequal Sharing]
+    EN -->|Influences| BS[Bond Strength Meter]
+    EO[Electron Cloud Overlap] -->|Influences| BS
+    ElementSelector[Element Selector] -->|Selects| A
+    PairButton[Pair Elements Button] -->|Triggers| B
+    BondTypeDisplay[Bond Type Display] -->|Shows| B
+    ElectronCloudVisual[Electron Cloud Visual] -->|Represents| C
+    BondStrengthDisplay[Bond Strength Display] -->|Shows| BS
+    DataTable[Data Table] -->|Records| EN
+    DataTable -->|Records| B
+    DataTable -->|Records| C
+    DataTable -->|Records| BS
+    PredictionInput[Prediction Input] -->|Allows| StudentPrediction[Student Prediction]
+    SimulationButton[Run Simulation Button] -->|Validates| StudentPrediction

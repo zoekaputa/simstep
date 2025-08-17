@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Virtual Garden pH Simulation</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cabin+Sketch:wght@400;700&family=Londrina+Sketch&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/roughjs@latest/bundled/rough.js"></script>
+    <style>
+        body {
+            font-family: 'Cabin Sketch', cursive;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 20px;
+        }
+        h1 {
+            font-family: 'Cabin Sketch', cursive;
+            font-weight: 700;
+            color: #2c3e50;
+        }
+        p {
+            font-family: 'Cabin Sketch', cursive;
+            font-weight: 400;
+            color: #34495e;
+            max-width: 800px;
+            text-align: center;
+        }
+        #simulation-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        #canvas-container {
+            position: relative;
+            width: 800px;
+            height: 600px;
+        }
+        canvas {
+            border: 2px solid #3498db;
+            border-radius: 5px;
+        }
+        #controls {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        .control-group {
+            margin: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        label {
+            margin-bottom: 5px;
+            color: #2c3e50;
+        }
+        input[type="range"], select, button {
+            width: 200px;
+            padding: 5px;
+            border: 1px solid #3498db;
+            border-radius: 5px;
+            font-family: 'Cabin Sketch', cursive;
+        }
+        button {
+            background-color: #3498db;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        #data-display {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #ecf0f1;
+            border-radius: 5px;
+            width: 100%;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <h1>Virtual Garden pH Simulation</h1>
+    <p>Welcome to the Virtual Garden pH Simulation! In this experiment, you'll explore how soil acidity affects plant growth and nutrient availability. Adjust the soil pH, choose different plants, and observe how they respond to various soil conditions over time. This simulation will help you understand the importance of soil pH in gardening and agriculture.</p>
+    
+    <div id="simulation-container">
+        <div id="canvas-container">
+            <canvas id="garden-canvas" width="800" height="600"></canvas>
+        </div>
+        <div id="controls">
+            <div class="control-group">
+                <label for="ph-slider">Soil pH (1-14):</label>
+                <input type="range" id="ph-slider" min="1" max="14" step="0.1" value="7">
+            </div>
+            <div class="control-group">
+                <label for="plot-selector">Garden Plot:</label>
+                <select id="plot-selector">
+                    <option value="clay">Clay Soil</option>
+                    <option value="loam">Loam Soil</option>
+                    <option value="sandy">Sandy Soil</option>
+                </select>
+            </div>
+            <div class="control-group">
+                <label for="plant-selector">Plant Species:</label>
+                <select id="plant-selector">
+                    <option value="tomato">Tomato</option>
+                    <option value="blueberry">Blueberry</option>
+                    <option value="carrot">Carrot</option>
+                </select>
+            </div>
+            <div class="control-group">
+                <button id="start-btn">Start Growth</button>
+                <button id="reset-btn">Reset</button>
+            </div>
+        </div>
+        <div id="data-display">
+            <p>Adjust the controls and start the simulation to see data here.</p>
+        </div>
+    </div>
+
+    <script>
+        window.LOG_DEBUG = false;
+
+        function logDebug(message) {
+            if (window.LOG_DEBUG) {
+                console.log(`DEBUG [${new Date().toISOString()}]: ${message}`);
+            }
+        }
+
+        const canvas = document.getElementById('garden-canvas');
+        const ctx = canvas.getContext('2d');
+        const rc = rough.canvas(canvas);
+
+        const phSlider = document.getElementById('ph-slider');
+        const plotSelector = document.getElementById('plot-selector');
+        const plantSelector = document.getElementById('plant-selector');
+        const startBtn = document.getElementById('start-btn');
+        const resetBtn = document.getElementById('reset-btn');
+        const dataDisplay = document.getElementById('data-display');
+
+        let currentPH = 7;
+        let currentPlot = 'loam';
+        let currentPlant = 'tomato';
+        let growthStage = 0;
+        let animationId = null;
+
+        const soilColors = {
+            clay: '#8B4513',
+            loam: '#A0522D',
+            sandy: '#DEB887'
+        };
+
+        const plantSVGs = {
+            tomato: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+                <path d="M50 10 L55 40 L45 40 Z" fill="green" />
+                <circle cx="50" cy="70" r="20" fill="red" />
+            </svg>`,
+            blueberry: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+                <path d="M50 10 L60 30 L40 30 Z" fill="green" />
+                <circle cx="45" cy="60" r="10" fill="blue" />
+                <circle cx="55" cy="70" r="10" fill="blue" />
+            </svg>`,
+            carrot: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+                <path d="M50 10 L60 30 L40 30 Z" fill="green" />
+                <path d="M50 30 L55 90 L45 90 Z" fill="orange" />
+            </svg>`
+        };
+
+        function drawBackground() {
+            ctx.fillStyle = '#87CEEB';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            ctx.fillStyle = soilColors[currentPlot];
+            ctx.fillRect(0, canvas.height / 2, canvas.width, canvas.height / 2);
+            
+            rc.rectangle(0, 0, canvas.width, canvas.height, {
+                stroke: '#000000',
+                strokeWidth: 2,
+                roughness: 0.5
+            });
+        }
+
+        function drawPlant() {
+            const plantImg = new Image();
+            plantImg.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(plantSVGs[currentPlant]);
+            plantImg.onload = () => {
+                const scaleFactor = growthStage / 5;
+                const width = 100 * scaleFactor;
+                const height = 100 * scaleFactor;
+                ctx.drawImage(plantImg, canvas.width / 2 - width / 2, canvas.height / 2 - height, width, height);
+            };
+        }
+
+        function drawpHMeter() {
+            const meterWidth = 200;
+            const meterHeight = 20;
+            const x = (canvas.width - meterWidth) / 2;
+            const y = 50;
+            
+            rc.rectangle(x, y, meterWidth, meterHeight, {
+                stroke: '#000000',
+                strokeWidth: 2,
+                roughness: 0.5
+            });
+            
+            const fillWidth = (currentPH - 1) / 13 * meterWidth;
+            ctx.fillStyle = `hsl(${(currentPH - 1) * 20}, 100%, 50%)`;
+            ctx.fillRect(x, y, fillWidth, meterHeight);
+            
+            ctx.fillStyle = '#000000';
+            ctx.font = '16px Cabin Sketch';
+            ctx.fillText(`pH: ${currentPH.toFixed(1)}`, x + meterWidth / 2 - 20, y + meterHeight + 20);
+        }
+
+        function updateSimulation() {
+            drawBackground();
+            drawPlant();
+            drawpHMeter();
+            
+            if (growthStage < 5) {
+                growthStage += 0.02;
+                animationId = requestAnimationFrame(updateSimulation);
+            } else {
+                cancelAnimationFrame(animationId);
+                displayResults();
+            }
+        }
+
+        function displayResults() {
+            const phFactor = Math.abs(currentPH - 7) / 6;
+            const growthRate = 1 - phFactor;
+            const nutrientAvailability = 1 - phFactor * 0.5;
+            
+            dataDisplay.innerHTML = `
+                <p>Growth Rate: ${(growthRate * 100).toFixed(1)}%</p>
+                <p>Nutrient Availability: ${(nutrientAvailability * 100).toFixed(1)}%</p>
+                <p>Soil Type: ${currentPlot}</p>
+            `;
+        }
+
+        function resetSimulation() {
+            cancelAnimationFrame(animationId);
+            growthStage = 0;
+            drawBackground();
+            drawpHMeter();
+            dataDisplay.innerHTML = '<p>Adjust the controls and start the simulation to see data here.</p>';
+        }
+
+        phSlider.addEventListener('input', (e) => {
+            currentPH = parseFloat(e.target.value);
+            drawBackground();
+            drawpHMeter();
+        });
+
+        plotSelector.addEventListener('change', (e) => {
+            currentPlot = e.target.value;
+            drawBackground();
+            drawpHMeter();
+        });
+
+        plantSelector.addEventListener('change', (e) => {
+            currentPlant = e.target.value;
+            resetSimulation();
+        });
+
+        startBtn.addEventListener('click', () => {
+            resetSimulation();
+            updateSimulation();
+        });
+
+        resetBtn.addEventListener('click', resetSimulation);
+
+        document.addEventListener('DOMContentLoaded', () => {
+            if (window.LOG_DEBUG) {
+                logDebug('Simulation initialized');
+                document.querySelectorAll('svg').forEach((svg, index) => {
+                    const rect = svg.getBoundingClientRect();
+                    logDebug(`SVG #${index}: Position {x: ${rect.x}, y: ${rect.y}}, Size {w: ${rect.width}, h: ${rect.height}}`);
+                });
+                document.querySelectorAll('input, button, select').forEach((control) => {
+                    logDebug(`Control ${control.id || 'unnamed'} (${control.tagName}): Initial value: ${control.value || 'N/A'}`);
+                });
+                
+                document.querySelectorAll('button').forEach((button) => {
+                    button.addEventListener('click', () => logDebug(`Button ${button.id || 'unnamed'} clicked`));
+                });
+                document.querySelectorAll('input').forEach((input) => {
+                    input.addEventListener('change', (e) => logDebug(`Input ${input.id || 'unnamed'} changed to ${e.target.value}`));
+                });
+            }
+            
+            resetSimulation();
+        });
+    </script>
+</body>
+</html>

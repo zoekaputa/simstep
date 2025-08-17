@@ -1,0 +1,30 @@
+graph LR
+    DC[Digital Citizenship]
+    OI[Online Identity]
+    PP[Privacy Protection]
+    DCN[Digital Communication Norms]
+    IL[Information Literacy]
+    CP[Cyberbullying Prevention]
+    DRR[Digital Rights and Responsibilities]
+    HW[Health and Wellness]
+    ET[Emerging Technologies]
+    DC -->|encompasses| OI
+    DC -->|encompasses| PP
+    DC -->|encompasses| DCN
+    DC -->|encompasses| IL
+    DC -->|encompasses| CP
+    DC -->|encompasses| DRR
+    DC -->|encompasses| HW
+    DC -->|addresses| ET
+    OI -->|creates| DF[Digital Footprint]
+    PP -->|requires| SM[Security Measures]
+    DCN -->|emphasizes| CC[Clear Communication]
+    IL -->|involves| CE[Critical Evaluation]
+    CP -->|addresses| OH[Online Harassment]
+    DRR -->|balances| FOE[Freedom of Expression]
+    DRR -->|balances| IP[Intellectual Property]
+    HW -->|manages| ST[Screen Time]
+    HW -->|considers| SME[Social Media Effects]
+    ET -->|includes| AI[Artificial Intelligence]
+    ET -->|includes| FR[Facial Recognition]
+    ET -->|includes| AR[Augmented Reality]

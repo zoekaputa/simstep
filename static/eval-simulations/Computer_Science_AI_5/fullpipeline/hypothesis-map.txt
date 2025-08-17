@@ -1,0 +1,18 @@
+graph LR
+    NN[Club Decision Simulator]
+    CNN[Pattern Recognition Committee]
+    RNN[Time-Series Analysis Group]
+    TR[Language Processing Team]
+    LF[Decision Quality Metric]
+    BP[Feedback and Improvement]
+    IP[Visual Data Analysis]
+    SD[Trend Forecasting]
+    NLP[Text-Based Decision Making]
+    NN -->|type| CNN
+    NN -->|type| RNN
+    NN -->|type| TR
+    NN -->|uses| LF
+    NN -->|uses| BP
+    CNN -->|excels at| IP
+    RNN -->|handles| SD
+    TR -->|processes| NLP

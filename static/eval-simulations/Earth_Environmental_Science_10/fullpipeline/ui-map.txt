@@ -1,0 +1,29 @@
+graph LR
+    R[Rock Sandwich]
+    S[Layered Sandwich]
+    I[Melted Sandwich]
+    M[Pressed Sandwich]
+    Se[Sandwich Ingredients]
+    Ma[Melted Ingredients]
+    P[Original Sandwich]
+    SV[Sandwich Viewer]
+    PC[Process Control]
+    TC[Temperature Control]
+    PrC[Pressure Control]
+    OC[Observation Console]
+    R -->|forms| S
+    R -->|forms| I
+    R -->|forms| M
+    Se -->|undergoes compaction and cementation| S
+    Ma -->|cools and solidifies| I
+    P -->|undergoes heat and pressure| M
+    SV -->|displays| R
+    PC -->|controls| SV
+    TC -->|adjusts| SV
+    PrC -->|adjusts| SV
+    OC -->|records| SV
+    PC -->|selects| R
+    TC -->|affects| I
+    TC -->|affects| M
+    PrC -->|affects| S
+    PrC -->|affects| M

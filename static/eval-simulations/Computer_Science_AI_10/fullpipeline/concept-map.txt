@@ -1,0 +1,42 @@
+graph LR
+    A[Digital Systems]
+    B[Networks]
+    C[Data]
+    D[Cybersecurity]
+    E[Threats]
+    F[Defense Strategies]
+    G[Authentication]
+    H[Authorization]
+    I[Encryption]
+    J[Network Security]
+    K[Security Operations]
+    A -->|protected by| D
+    B -->|protected by| D
+    C -->|protected by| D
+    D -->|guided by| L[Core Principles]
+    L -->|includes| M[Confidentiality]
+    L -->|includes| N[Integrity]
+    L -->|includes| O[Availability]
+    D -->|defends against| E
+    E -->|includes| P[Malware]
+    E -->|includes| Q[Phishing]
+    E -->|includes| R[Denial-of-Service]
+    D -->|implements| F
+    F -->|includes| G
+    F -->|includes| H
+    F -->|includes| I
+    F -->|includes| J
+    F -->|includes| K
+    G -->|uses| S[Passwords]
+    G -->|uses| T[Security Tokens]
+    G -->|uses| U[Biometrics]
+    H -->|applies| V[Least Privilege]
+    I -->|uses| W[Symmetric Algorithms]
+    I -->|uses| X[Asymmetric Algorithms]
+    J -->|uses| Y[Firewalls]
+    J -->|uses| Z[Intrusion Detection Systems]
+    J -->|uses| AA[VPNs]
+    K -->|performs| AB[Vulnerability Assessments]
+    K -->|performs| AC[Penetration Testing]
+    K -->|performs| AD[Patch Management]
+    K -->|implements| AE[Incident Response Plans]

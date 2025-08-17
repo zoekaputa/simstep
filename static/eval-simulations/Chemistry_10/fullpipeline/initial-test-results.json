@@ -1,0 +1,11 @@
+{
+    "message": "Runtime test completed.",
+    "jsErrors": [
+        "Cannot read properties of undefined (reading 'type')\nk (https://unpkg.com/roughjs@latest/bundled/rough.js:1:5068)",
+        "Cannot read properties of undefined (reading 'type')\nk (https://unpkg.com/roughjs@latest/bundled/rough.js:1:5068)",
+        "Cannot read properties of undefined (reading 'type')\nk (https://unpkg.com/roughjs@latest/bundled/rough.js:1:5068)"
+    ],
+    "debugLogs": [
+        "DEBUG [2025-08-05T15:02:06.229Z]: Dominoes setup: 13 regular, 2 golden"
+    ]
+}

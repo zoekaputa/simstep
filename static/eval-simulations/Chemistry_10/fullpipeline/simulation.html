@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catalytic Domino Reaction</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cabin+Sketch:wght@400;700&family=Londrina+Sketch&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/roughjs@latest/bundled/rough.js"></script>
+    <style>
+        body {
+            font-family: 'Cabin Sketch', cursive;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #f0f0f0;
+        }
+        h1 {
+            font-family: 'Cabin Sketch', cursive;
+            font-weight: 700;
+            color: #4a4a4a;
+        }
+        #description {
+            font-family: 'Cabin Sketch', cursive;
+            font-weight: 400;
+            max-width: 800px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        #simulationContainer {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        #canvas {
+            border: 2px solid #4a4a4a;
+            background-color: #ffffff;
+        }
+        #controls {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .control {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        input, button {
+            font-family: 'Cabin Sketch', cursive;
+            font-size: 16px;
+            padding: 5px 10px;
+            border: 2px solid #4a4a4a;
+            border-radius: 5px;
+            background-color: #ffffff;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #e0e0e0;
+        }
+        #dataTable {
+            margin-top: 20px;
+            border-collapse: collapse;
+        }
+        #dataTable th, #dataTable td {
+            border: 1px solid #4a4a4a;
+            padding: 5px 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Catalytic Domino Reaction</h1>
+    <div id="description">
+        Welcome to the Catalytic Domino Reaction simulation! In this experiment, we'll explore how certain elements can speed up reactions without being consumed. Imagine a line of dominoes that need to fall, but some are too far apart. What if we had special golden dominoes that could help bridge the gaps? Let's investigate how these golden dominoes affect the speed and completion of our domino reaction!
+    </div>
+    <div id="simulationContainer">
+        <canvas id="canvas" width="800" height="400"></canvas>
+        <div id="controls">
+            <div class="control">
+                <label for="spacingControl">Domino Spacing (cm):</label>
+                <input type="range" id="spacingControl" min="1" max="10" value="5" step="0.5">
+            </div>
+            <div class="control">
+                <button id="startButton">Start Reaction</button>
+            </div>
+            <div class="control">
+                <button id="resetButton">Reset</button>
+            </div>
+            <div class="control">
+                <label for="timerDisplay">Time:</label>
+                <span id="timerDisplay">0.00s</span>
+            </div>
+            <div class="control">
+                <label for="fallenCountDisplay">Fallen Dominoes:</label>
+                <span id="fallenCountDisplay">0</span>
+            </div>
+        </div>
+        <table id="dataTable">
+            <thead>
+                <tr>
+                    <th>Trial</th>
+                    <th>Spacing (cm)</th>
+                    <th>Time (s)</th>
+                    <th>Fallen Dominoes</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+    <script>
+        window.LOG_DEBUG = false;
+
+        function logDebug(message) {
+            if (window.LOG_DEBUG) {
+                console.log(`DEBUG [${new Date().toISOString()}]: ${message}`);
+            }
+        }
+
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const rc = rough.canvas(canvas);
+
+        const spacingControl = document.getElementById('spacingControl');
+        const startButton = document.getElementById('startButton');
+        const resetButton = document.getElementById('resetButton');
+        const timerDisplay = document.getElementById('timerDisplay');
+        const fallenCountDisplay = document.getElementById('fallenCountDisplay');
+        const dataTable = document.getElementById('dataTable').getElementsByTagName('tbody')[0];
+
+        let dominoes = [];
+        let goldenDominoes = [];
+        let isAnimating = false;
+        let startTime;
+        let fallenCount = 0;
+        let trialCount = 0;
+
+        function createDomino(x, y, isGolden = false) {
+            return {
+                x,
+                y,
+                width: 20,
+                height: 40,
+                angle: 0,
+                isGolden,
+                isFallen: false
+            };
+        }
+
+        function setupDominoes() {
+            const spacing = parseFloat(spacingControl.value) * 10;
+            dominoes = [];
+            goldenDominoes = [];
+            fallenCount = 0;
+
+            for (let i = 0; i < 15; i++) {
+                const x = 50 + i * spacing;
+                const y = canvas.height - 60;
+                if (i % 5 === 0 && i !== 0) {
+                    goldenDominoes.push(createDomino(x, y, true));
+                } else {
+                    dominoes.push(createDomino(x, y));
+                }
+            }
+
+            logDebug(`Dominoes setup: ${dominoes.length} regular, ${goldenDominoes.length} golden`);
+        }
+
+        function drawDomino(domino) {
+            ctx.save();
+            ctx.translate(domino.x, domino.y);
+            ctx.rotate(domino.angle);
+            ctx.beginPath();
+            ctx.rect(-domino.width / 2, -domino.height / 2, domino.width, domino.height);
+            ctx.fillStyle = domino.isGolden ? 'gold' : 'brown';
+            ctx.fill();
+            ctx.strokeStyle = 'black';
+            ctx.stroke();
+            ctx.restore();
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            dominoes.forEach(drawDomino);
+            goldenDominoes.forEach(drawDomino);
+        }
+
+        function animateDominoes() {
+            if (!isAnimating) return;
+
+            const allDominoes = [...dominoes, ...goldenDominoes];
+            let anyFallen = false;
+
+            for (let i = 0; i < allDominoes.length; i++) {
+                if (allDominoes[i].angle < Math.PI / 2 && (i === 0 || allDominoes[i - 1].angle > 0.1)) {
+                    allDominoes[i].angle += 0.1;
+                    anyFallen = true;
+                    if (allDominoes[i].angle >= Math.PI / 2 && !allDominoes[i].isFallen) {
+                        allDominoes[i].isFallen = true;
+                        fallenCount++;
+                        fallenCountDisplay.textContent = fallenCount;
+                        logDebug(`Domino ${i} fell. Total fallen: ${fallenCount}`);
+                    }
+                }
+            }
+
+            draw();
+
+            if (anyFallen) {
+                requestAnimationFrame(animateDominoes);
+            } else {
+                isAnimating = false;
+                const endTime = (Date.now() - startTime) / 1000;
+                timerDisplay.textContent = endTime.toFixed(2) + 's';
+                logDebug(`Animation ended. Time: ${endTime.toFixed(2)}s`);
+                recordData();
+            }
+        }
+
+        function recordData() {
+            trialCount++;
+            const row = dataTable.insertRow();
+            row.insertCell(0).textContent = trialCount;
+            row.insertCell(1).textContent = spacingControl.value;
+            row.insertCell(2).textContent = timerDisplay.textContent;
+            row.insertCell(3).textContent = fallenCount;
+            logDebug(`Data recorded: Trial ${trialCount}, Spacing ${spacingControl.value}, Time ${timerDisplay.textContent}, Fallen ${fallenCount}`);
+        }
+
+        function reset() {
+            isAnimating = false;
+            setupDominoes();
+            draw();
+            timerDisplay.textContent = '0.00s';
+            fallenCountDisplay.textContent = '0';
+            logDebug('Simulation reset');
+        }
+
+        spacingControl.addEventListener('input', () => {
+            logDebug(`Spacing changed to ${spacingControl.value}`);
+            reset();
+        });
+
+        startButton.addEventListener('click', () => {
+            if (!isAnimating) {
+                isAnimating = true;
+                startTime = Date.now();
+                animateDominoes();
+                logDebug('Animation started');
+            }
+        });
+
+        resetButton.addEventListener('click', reset);
+
+        document.addEventListener('DOMContentLoaded', () => {
+            logDebug('Simulation initialized');
+            reset();
+        });
+    </script>
+</body>
+</html>

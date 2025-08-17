@@ -1,0 +1,16 @@
+graph LR
+    Sun[Cafeteria Lights] -->|provides energy for| Producers[Salad Bar]
+    Producers -->|convert 1-2% of light energy| ChemicalEnergy[Nutrients in Vegetables]
+    Producers -->|feed| PrimaryConsumers[Vegetarian Students]
+    PrimaryConsumers -->|feed| SecondaryConsumers[Omnivore Students]
+    SecondaryConsumers -->|feed| TertiaryConsumers[Carnivore Students]
+    Producers -->|provide energy for| Ecosystem[EcoTray]
+    PrimaryConsumers -->|transfer ~10% energy| SecondaryConsumers
+    SecondaryConsumers -->|transfer ~10% energy| TertiaryConsumers
+    DeadOrganicMatter[Food Scraps] -->|broken down by| Decomposers[Compost Bin]
+    Decomposers -->|recycle nutrients to| Ecosystem
+    Ecosystem -->|contains| FoodWeb[Lunch Menu]
+    FoodWeb -->|represents| EnergyTransfer[Portion Sizes]
+    Ecosystem -->|measured by| Biomass[Total Food Weight]
+    EnergyTransfer -->|follows| SecondLawThermodynamics[Cafeteria Waste Heat]
+    Ecosystem -->|modeled as| EnergyPyramid[Tray Arrangement]

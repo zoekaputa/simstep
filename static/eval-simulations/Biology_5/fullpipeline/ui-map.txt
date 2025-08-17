@@ -1,0 +1,35 @@
+graph LR
+    Heart[Heart]
+    Blood[Blood]
+    Vessels[Blood Vessels]
+    Lungs[Lungs]
+    Tissues[Body Tissues]
+    Valves[Valves]
+    ModelView[Circulatory System Model View]
+    ValveToggle[Valve Toggle Switch]
+    BloodParticle[Blood Particle]
+    FlowControl[Flow Control]
+    TestButton[Take Test Button]
+    ScoreDisplay[Score Display]
+    Heart -->|Pumps| Blood
+    Blood -->|Delivers oxygen to| Tissues
+    Blood -->|Collects waste from| Tissues
+    Vessels -->|Guide| Blood
+    Heart -->|Connects to| Vessels
+    Lungs -->|Oxygenate| Blood
+    Blood -->|Releases CO2 to| Lungs
+    Valves -->|Prevent backflow in| Heart
+    Valves -->|Ensure one-way flow in| Vessels
+    Vessels -->|Connect| Heart
+    Vessels -->|Connect| Lungs
+    Vessels -->|Connect| Tissues
+    ModelView -->|Displays| Heart
+    ModelView -->|Displays| Blood
+    ModelView -->|Displays| Vessels
+    ModelView -->|Displays| Lungs
+    ModelView -->|Displays| Tissues
+    ModelView -->|Displays| Valves
+    ValveToggle -->|Controls visibility of| Valves
+    BloodParticle -->|Moves through| ModelView
+    FlowControl -->|Directs| BloodParticle
+    TestButton -->|Initiates| ScoreDisplay

@@ -1,0 +1,16 @@
+graph LR
+    Wave[Standing Wave on Guitar String]
+    Wavelength[String Vibration Pattern]
+    Frequency[Guitar Note Pitch]
+    Speed[Sound Wave Velocity]
+    String[Adjustable Guitar String]
+    Harmonics[Overtones]
+    Wave -->|has| Wavelength
+    Wave -->|has| Frequency
+    Wave -->|has| Speed
+    Wavelength -->|related by v = fλ| Frequency
+    Frequency -->|related by v = fλ| Speed
+    String -->|vibrates at| Harmonics
+    String -->|tension affects| Frequency
+    String -->|thickness affects| Frequency
+    String -->|length affects| Frequency

@@ -1,0 +1,27 @@
+graph LR
+    Task[Complex Project]
+    Subtask[Team Member Task]
+    ProcessingUnit[Team Member]
+    Memory[Shared Project Resources]
+    ParallelAlgorithm[Parallelization Strategy]
+    SimulationArea[Simulation Area]
+    TeamSizeSlider[Team Size Slider]
+    StrategySelector[Strategy Selector]
+    RunButton[Run Simulation Button]
+    ResultsDisplay[Results Display]
+    Task -->|divided into| Subtask
+    Subtask -->|executed by| ProcessingUnit
+    ProcessingUnit -->|accesses| Memory
+    Task -->|processed by| ParallelAlgorithm
+    ParallelAlgorithm -->|utilizes| ProcessingUnit
+    ProcessingUnit -->|coordinated by| ParallelAlgorithm
+    Memory -->|shared or distributed| ProcessingUnit
+    SimulationArea -->|visualizes| Task
+    SimulationArea -->|shows| ProcessingUnit
+    SimulationArea -->|displays| Memory
+    TeamSizeSlider -->|adjusts| ProcessingUnit
+    StrategySelector -->|changes| ParallelAlgorithm
+    RunButton -->|starts| SimulationArea
+    SimulationArea -->|generates| ResultsDisplay
+    ResultsDisplay -->|shows| Task
+    ResultsDisplay -->|analyzes| ParallelAlgorithm

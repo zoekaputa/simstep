@@ -1,0 +1,12 @@
+graph LR
+    BH[Simulated Black Hole]
+    EH[Visualized Event Horizon]
+    SR[Calculated Schwarzschild Radius]
+    ST[Distorted Spacetime Visualization]
+    LO[Virtual Light/Objects]
+    BH -->|Defined by| EH
+    EH -->|Located at| SR
+    SR -->|Calculated as R = 2GM/c²| BH
+    LO -->|Cannot escape| EH
+    BH -->|Distorts| ST
+    BH -->|Has properties: Mass, Charge, Spin| BH

@@ -1,0 +1,19 @@
+graph LR
+    Object1[Merry-go-round]
+    Object2[Student]
+    CentralBody[Central Pole]
+    Orbit[Circular Path]
+    GravitationalForce[Centripetal Force]
+    Velocity[Spinning Speed]
+    OrbitalEnergy[Rotational Energy]
+    Object1 -->|Attracts| Object2
+    Object1 -->|Has| Mass
+    Object2 -->|Has| Mass
+    Object1 -->|Orbits| CentralBody
+    Object2 -->|Orbits| CentralBody
+    CentralBody -->|Creates| GravitationalForce
+    GravitationalForce -->|Shapes| Orbit
+    Orbit -->|Has| Period
+    Velocity -->|Affects| Orbit
+    OrbitalEnergy -->|Consists of| KineticEnergy
+    OrbitalEnergy -->|Consists of| PotentialEnergy

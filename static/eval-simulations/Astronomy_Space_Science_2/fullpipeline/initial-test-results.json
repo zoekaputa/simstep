@@ -1,0 +1,11 @@
+{
+    "message": "Runtime test completed.",
+    "jsErrors": [
+        "rc.clear is not a function"
+    ],
+    "debugLogs": [
+        "DEBUG [2025-08-05T03:20:09.651Z]: Graph updated",
+        "DEBUG [2025-08-05T03:20:09.651Z]: Angular velocity updated to 2.23606797749979",
+        "DEBUG [2025-08-05T03:20:09.651Z]: Spinning started"
+    ]
+}

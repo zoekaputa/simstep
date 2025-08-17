@@ -1,0 +1,52 @@
+graph LR
+    EM[Electromagnetic Spectrum Simulator]
+    RW[Remote Control Signals]
+    MW[Radar Systems]
+    IR[Thermal Imaging]
+    UV[UV Obstacle Detection]
+    XR[X-ray Material Analysis]
+    GR[High-Energy Particle Detection]
+    WL[Signal Wavelength]
+    FR[Transmission Frequency]
+    EN[Signal Power]
+    NM[Wooden Obstacles]
+    OO[Opaque Barriers]
+    FC[Metal Enclosures]
+    WM[Water Hazards]
+    LM[Translucent Materials]
+    FR_SLIDER[Frequency Slider]
+    EN_SLIDER[Power Slider]
+    OBS_SELECT[Obstacle Selector]
+    WAVE_VIS[Wave Visualization]
+    DATA_TABLE[Data Table]
+    PRED_INPUT[Prediction Input]
+    COMPARE_BTN[Compare Results Button]
+    EM -->|encompasses| RW
+    EM -->|encompasses| MW
+    EM -->|encompasses| IR
+    EM -->|encompasses| UV
+    EM -->|encompasses| XR
+    EM -->|encompasses| GR
+    EM -->|has| WL
+    EM -->|has| FR
+    EM -->|has| EN
+    WL -->|c = fλ| FR
+    FR -->|E = hf| EN
+    RW -->|penetrates| NM
+    IR -->|blocked by| OO
+    MW -->|blocked by| FC
+    MW -->|absorbed by| WM
+    UV -->|penetrates| LM
+    XR -->|penetrates| LM
+    GR -->|penetrates| LM
+    FR_SLIDER -->|controls| FR
+    EN_SLIDER -->|controls| EN
+    OBS_SELECT -->|selects| NM
+    OBS_SELECT -->|selects| OO
+    OBS_SELECT -->|selects| FC
+    OBS_SELECT -->|selects| WM
+    OBS_SELECT -->|selects| LM
+    EM -->|displays| WAVE_VIS
+    WAVE_VIS -->|updates| DATA_TABLE
+    PRED_INPUT -->|compares with| DATA_TABLE
+    COMPARE_BTN -->|triggers comparison| DATA_TABLE

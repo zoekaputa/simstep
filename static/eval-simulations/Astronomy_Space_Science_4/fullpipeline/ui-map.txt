@@ -1,0 +1,38 @@
+graph LR
+    Earth[Basketball Court]
+    Sun[Campus Center]
+    Neptune[Edge of Campus]
+    KuiperBelt[Nearby Town]
+    OortCloud[Neighboring City]
+    DistanceEstimate[Distance Estimate Input]
+    CelestialObjectSelect[Celestial Object Dropdown]
+    AUConversion[AU Conversion Calculator]
+    MeasurementTechniqueInput[Measurement Technique Input]
+    SolarSystemDiagram[Solar System Diagram]
+    DistanceMeasurementExplanation[Distance Measurement Explanation]
+    Earth -->|30 meters| Sun
+    Neptune -->|1.2 km| Sun
+    KuiperBelt -->|1.5 km| Sun
+    OortCloud -->|3 km| Sun
+    DistanceEstimate -->|Updates| Earth
+    DistanceEstimate -->|Updates| Neptune
+    DistanceEstimate -->|Updates| KuiperBelt
+    DistanceEstimate -->|Updates| OortCloud
+    CelestialObjectSelect -->|Identifies| Earth
+    CelestialObjectSelect -->|Identifies| Neptune
+    CelestialObjectSelect -->|Identifies| KuiperBelt
+    CelestialObjectSelect -->|Identifies| OortCloud
+    AUConversion -->|Converts| Earth
+    AUConversion -->|Converts| Neptune
+    AUConversion -->|Converts| KuiperBelt
+    AUConversion -->|Converts| OortCloud
+    MeasurementTechniqueInput -->|Explains| Earth
+    MeasurementTechniqueInput -->|Explains| Neptune
+    MeasurementTechniqueInput -->|Explains| KuiperBelt
+    MeasurementTechniqueInput -->|Explains| OortCloud
+    SolarSystemDiagram -->|Includes| Earth
+    SolarSystemDiagram -->|Includes| Sun
+    SolarSystemDiagram -->|Includes| Neptune
+    SolarSystemDiagram -->|Includes| KuiperBelt
+    SolarSystemDiagram -->|Includes| OortCloud
+    DistanceMeasurementExplanation -->|Describes| SolarSystemDiagram
