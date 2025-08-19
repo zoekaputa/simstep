@@ -117,7 +117,7 @@
     </table>
 
     <script>
-        window.LOG_DEBUG = true;
+        window.LOG_DEBUG = false;
 
         function logDebug(message) {
             if (window.LOG_DEBUG) {
@@ -188,8 +188,8 @@
             waitingStudents = Math.max(0, waitingStudents + incomingStudents - servedStudents);
             seatedStudents = Math.min(capacity, seatedStudents + servedStudents);
 
-            const leavingStudents = Math.floor(seatedStudents * 0.1 / 60);
-            seatedStudents = Math.max(0, seatedStudents - leavingStudents);
+            const leavingStudents = Math.floor(seatedStudents * 0.1);
+            seatedStudents -= leavingStudents;
 
             logDebug(`Time: ${simulationTime}, Waiting: ${waitingStudents}, Seated: ${seatedStudents}`);
 

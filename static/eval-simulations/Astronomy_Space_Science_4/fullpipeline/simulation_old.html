@@ -146,12 +146,11 @@
 
             if (selectedObject && !isNaN(distanceEstimate)) {
                 celestialObjects[selectedObject].distance = distanceEstimate;
-                const auValue = (distanceEstimate / 149597870700).toFixed(10);
-                document.getElementById("auConversion").value = auValue;
+                document.getElementById("auConversion").value = (distanceEstimate / 149597870700).toFixed(10);
                 
                 let explanation = `The ${celestialObjects[selectedObject].name} is approximately ${distanceEstimate} meters away from the Campus Center (Sun). `;
                 explanation += `This distance can be measured using ${measurementTechnique}. `;
-                explanation += `In astronomical units (AU), this distance is about ${auValue} AU.`;
+                explanation += `In astronomical units (AU), this distance is about ${(distanceEstimate / 149597870700).toFixed(10)} AU.`;
                 
                 document.getElementById("distanceMeasurementExplanation").textContent = explanation;
                 
@@ -184,11 +183,6 @@
                 });
             }
         });
-
-        // Add event listeners for automatic updates
-        document.getElementById("distanceEstimate").addEventListener("input", updateSolarSystem);
-        document.getElementById("celestialObject").addEventListener("change", updateSolarSystem);
-        document.getElementById("measurementTechnique").addEventListener("input", updateSolarSystem);
     </script>
 </body>
 </html>

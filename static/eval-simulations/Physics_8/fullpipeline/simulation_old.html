@@ -94,7 +94,7 @@
     <canvas id="graph" width="400" height="300"></canvas>
 
     <script>
-        window.LOG_DEBUG = true;
+        window.LOG_DEBUG = false;
 
         function logDebug(message) {
             if (window.LOG_DEBUG) {
@@ -179,7 +179,7 @@
         }
 
         function drawLightRay() {
-            const apparentDepth = calculateApparentDepth(targetDepth);
+            const apparentDepth = targetDepth * 0.75;
             const targetY = 100 + (targetDepth / 200) * 300;
             const apparentY = 100 + (apparentDepth / 200) * 300;
             
@@ -190,12 +190,6 @@
             logDebug(`Apparent light ray drawn from (400, ${apparentY}) to (730, 70)`);
         }
 
-        function calculateApparentDepth(actualDepth) {
-            const n1 = 1.0; // Refractive index of air
-            const n2 = 1.33; // Refractive index of water
-            return actualDepth * (n1 / n2);
-        }
-
         function updateDepthValue() {
             targetDepth = parseInt(depthSlider.value);
             depthValue.textContent = targetDepth;
@@ -204,7 +198,7 @@
         }
 
         function observe() {
-            const apparentDepth = calculateApparentDepth(targetDepth);
+            const apparentDepth = targetDepth * 0.75;
             const ratio = apparentDepth / targetDepth;
             data.push({ actual: targetDepth, apparent: apparentDepth, ratio: ratio });
             
@@ -214,7 +208,7 @@
             row.insertCell(2).textContent = ratio.toFixed(4);
             
             updateGraph();
-            logDebug(`Observation added: Actual ${targetDepth}, Apparent ${apparentDepth.toFixed(2)}, Ratio ${ratio.toFixed(4)}`);
+            logDebug(`Observation added: Actual ${targetDepth}, Apparent ${apparentDepth}, Ratio ${ratio}`);
         }
 
         function updateGraph() {
@@ -237,7 +231,7 @@
                 const x = 50 + (point.actual / maxDepth) * 300;
                 const y = 250 - point.ratio * 200;
                 graphRc.circle(x, y, 5, { fill: '#0066cc' });
-                logDebug(`Graph point drawn at (${x.toFixed(2)}, ${y.toFixed(2)})`);
+                logDebug(`Graph point drawn at (${x}, ${y})`);
             });
         }
 
@@ -246,7 +240,22 @@
 
         document.addEventListener('DOMContentLoaded', () => {
             drawPool();
-            logDebug('Simulation initialized');
+            if (window.LOG_DEBUG) {
+                logDebug('Simulation initialized');
+                document.querySelectorAll('svg').forEach((svg, index) => {
+                    const rect = svg.getBoundingClientRect();
+                    logDebug(`SVG #${index}: Position {x: ${rect.x}, y: ${rect.y}}, Size {w: ${rect.width}, h: ${rect.height}}`);
+                });
+                document.querySelectorAll('input, button, select').forEach((control) => {
+                    logDebug(`Control ${control.id || 'unnamed'} (${control.tagName}): Initial value: ${control.value || 'N/A'}`);
+                });
+                document.querySelectorAll('button').forEach((button) => {
+                    button.addEventListener('click', () => logDebug(`Button ${button.id || 'unnamed'} clicked`));
+                });
+                document.querySelectorAll('input').forEach((input) => {
+                    input.addEventListener('change', (e) => logDebug(`Input ${input.id || 'unnamed'} changed to ${e.target.value}`));
+                });
+            }
         });
     </script>
 </body>

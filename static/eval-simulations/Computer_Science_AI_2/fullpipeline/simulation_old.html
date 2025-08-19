@@ -87,16 +87,16 @@
     <div id="controls">
         <button id="start-button">Start Training</button>
         <button id="reset-button">Reset</button>
-        <button class="action-button" id="sit-button" data-action="sit">Sit</button>
-        <button class="action-button" id="stay-button" data-action="stay">Stay</button>
-        <button class="action-button" id="fetch-button" data-action="fetch">Fetch</button>
+        <button class="action-button" data-action="sit">Sit</button>
+        <button class="action-button" data-action="stay">Stay</button>
+        <button class="action-button" data-action="fetch">Fetch</button>
         <button id="reward-button">Reward</button>
     </div>
     <div id="cycle-counter">Training Cycles: 0</div>
     <canvas id="proficiency-graph"></canvas>
 
     <script>
-        window.LOG_DEBUG = true;
+        window.LOG_DEBUG = false;
 
         function logDebug(message) {
             if (window.LOG_DEBUG) {
@@ -213,9 +213,9 @@
 
         document.getElementById('start-button').addEventListener('click', startTraining);
         document.getElementById('reset-button').addEventListener('click', resetTraining);
-        document.getElementById('sit-button').addEventListener('click', () => performAction('sit'));
-        document.getElementById('stay-button').addEventListener('click', () => performAction('stay'));
-        document.getElementById('fetch-button').addEventListener('click', () => performAction('fetch'));
+        document.querySelectorAll('.action-button').forEach(button => {
+            button.addEventListener('click', () => performAction(button.dataset.action));
+        });
         document.getElementById('reward-button').addEventListener('click', giveReward);
 
         drawPet();
