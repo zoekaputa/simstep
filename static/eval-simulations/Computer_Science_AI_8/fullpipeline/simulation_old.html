@@ -64,14 +64,6 @@
             text-align: center;
             margin-top: 20px;
         }
-        #method-explanation {
-            font-family: 'Cabin Sketch', cursive;
-            font-weight: 400;
-            font-size: 16px;
-            text-align: center;
-            margin-top: 10px;
-            max-width: 600px;
-        }
     </style>
 </head>
 <body>
@@ -109,7 +101,6 @@
             <button id="start-simulation">Start Simulation</button>
         </div>
     </div>
-    <div id="method-explanation"></div>
     <div id="results"></div>
 
     <script>
@@ -162,7 +153,6 @@
 
         let currentScenario = 'forest';
         let adventurerPosition = { x: 50, y: 450 };
-        let pathTaken = [];
 
         function drawScenario() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -179,19 +169,7 @@
                 drawSVG(caveSVG, 300, 100, 300, 300);
             }
 
-            drawPath();
             drawSVG(adventurerSVG, adventurerPosition.x, adventurerPosition.y, 50, 50);
-        }
-
-        function drawPath() {
-            ctx.beginPath();
-            ctx.moveTo(pathTaken[0].x, pathTaken[0].y);
-            for (let i = 1; i < pathTaken.length; i++) {
-                ctx.lineTo(pathTaken[i].x, pathTaken[i].y);
-            }
-            ctx.strokeStyle = 'rgba(255, 0, 0, 0.5)';
-            ctx.lineWidth = 2;
-            ctx.stroke();
         }
 
         function drawSVG(svgString, x, y, width, height) {
@@ -210,7 +188,6 @@
             logDebug(`Starting simulation with method: ${decisionMethod}, uncertainty: ${uncertaintyLevel}, scenario: ${currentScenario}`);
 
             adventurerPosition = { x: 50, y: 450 };
-            pathTaken = [{ ...adventurerPosition }];
             drawScenario();
 
             let steps = 0;
@@ -219,13 +196,7 @@
                 steps++;
                 if (steps > maxSteps) {
                     clearInterval(interval);
-                    document.getElementById('results').innerHTML = `
-                        <h3>Simulation complete!</h3>
-                        <p>The adventurer took ${steps} steps.</p>
-                        <p>Decision method: ${decisionMethod}</p>
-                        <p>Uncertainty level: ${uncertaintyLevel}</p>
-                        <p>Scenario: ${currentScenario}</p>
-                    `;
+                    document.getElementById('results').textContent = `Simulation complete! The adventurer took ${steps} steps.`;
                     return;
                 }
 
@@ -233,7 +204,6 @@
                 const dy = (Math.random() - 0.5) * 10;
                 adventurerPosition.x = Math.max(25, Math.min(775, adventurerPosition.x + dx));
                 adventurerPosition.y = Math.max(25, Math.min(475, adventurerPosition.y + dy));
-                pathTaken.push({ ...adventurerPosition });
 
                 drawScenario();
                 logDebug(`Step ${steps}: Adventurer moved to (${adventurerPosition.x}, ${adventurerPosition.y})`);
@@ -241,23 +211,6 @@
         }
 
         document.getElementById('start-simulation').addEventListener('click', startSimulation);
-
-        document.getElementById('decision-method').addEventListener('change', (e) => {
-            const method = e.target.value;
-            let explanation = '';
-            switch (method) {
-                case 'rule-based':
-                    explanation = 'Rule-based decision making follows predefined rules to make choices.';
-                    break;
-                case 'probabilistic':
-                    explanation = 'Probabilistic decision making uses probabilities to determine the best course of action.';
-                    break;
-                case 'planning':
-                    explanation = 'Planning decision making considers future outcomes to create a sequence of actions.';
-                    break;
-            }
-            document.getElementById('method-explanation').textContent = explanation;
-        });
 
         document.addEventListener('DOMContentLoaded', () => {
             if (window.LOG_DEBUG) {

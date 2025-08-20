@@ -151,7 +151,6 @@
         let gravity = 9.8;
         let animationId = null;
         let attemptCount = 0;
-        let trajectoryPoints = [];
 
         const basketballSVG = `
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
@@ -200,15 +199,6 @@
             ballImg.src = 'data:image/svg+xml,' + encodeURIComponent(basketballSVG);
             ctx.drawImage(ballImg, ballX - 25, ballY - 25, 50, 50);
 
-            // Draw trajectory
-            ctx.beginPath();
-            ctx.moveTo(trajectoryPoints[0].x, trajectoryPoints[0].y);
-            for (let i = 1; i < trajectoryPoints.length; i++) {
-                ctx.lineTo(trajectoryPoints[i].x, trajectoryPoints[i].y);
-            }
-            ctx.strokeStyle = 'rgba(231, 76, 60, 0.5)';
-            ctx.stroke();
-
             logDebug(`Ball position: {x: ${ballX}, y: ${ballY}}`);
         }
 
@@ -217,18 +207,16 @@
             ballY += ballVelocityY;
             ballVelocityY += gravity / 60; // Assuming 60 FPS
 
-            trajectoryPoints.push({x: ballX, y: ballY});
-
-            if (ballY > 500 || ballX > 800) {
-                ballY = Math.min(ballY, 500);
+            if (ballY > 500) {
+                ballY = 500;
                 ballVelocityY = 0;
                 ballVelocityX = 0;
                 cancelAnimationFrame(animationId);
                 checkResult();
-            } else {
-                drawScene();
-                animationId = requestAnimationFrame(updateBallPosition);
             }
+
+            drawScene();
+            animationId = requestAnimationFrame(updateBallPosition);
         }
 
         function launchBall() {
@@ -239,8 +227,6 @@
             ballY = 500;
             ballVelocityX = force * Math.cos(angle) / 10;
             ballVelocityY = -force * Math.sin(angle) / 10;
-            
-            trajectoryPoints = [{x: ballX, y: ballY}];
             
             logDebug(`Ball launched: Angle: ${angle.toFixed(2)}, Force: ${force}, Initial velocity: {x: ${ballVelocityX.toFixed(2)}, y: ${ballVelocityY.toFixed(2)}}`);
             

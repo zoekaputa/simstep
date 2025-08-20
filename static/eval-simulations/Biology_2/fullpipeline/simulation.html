@@ -58,6 +58,15 @@
             font-size: 24px;
             font-weight: bold;
         }
+        #timeValue {
+            text-align: center;
+            font-weight: bold;
+        }
+        #dietInfo {
+            margin-top: 20px;
+            text-align: center;
+            font-style: italic;
+        }
     </style>
 </head>
 <body>
@@ -83,6 +92,7 @@
         <div class="control-group">
             <label for="timeSlider">Time (minutes):</label>
             <input type="range" id="timeSlider" min="0" max="60" value="0">
+            <div id="timeValue">0</div>
         </div>
     </div>
     <div id="dataDisplay">
@@ -99,6 +109,7 @@
             <div id="lacticAcidValue" class="data-value">0</div>
         </div>
     </div>
+    <div id="dietInfo"></div>
     <script>
         const canvas = document.getElementById('simulationCanvas');
         const ctx = canvas.getContext('2d');
@@ -129,6 +140,22 @@
             img.src = 'data:image/svg+xml;base64,' + btoa(cyclistSVG);
         }
 
+        function drawMetabolismVisuals() {
+            // Draw ATP molecules
+            for (let i = 0; i < Math.min(cyclist.energy, 20); i++) {
+                rc.circle(30 + i * 30, 350, 10, { fill: 'yellow', fillStyle: 'solid' });
+            }
+
+            // Draw CO2 molecules
+            for (let i = 0; i < Math.min(cyclist.co2, 20); i++) {
+                rc.circle(570 - i * 30, 350, 10, { fill: 'gray', fillStyle: 'solid' });
+            }
+
+            // Draw lactic acid indicator
+            rc.rectangle(250, 380, 100, 10, { fill: 'red', fillStyle: 'solid' });
+            rc.rectangle(250, 380, cyclist.lacticAcid * 10, 10, { fill: 'darkred', fillStyle: 'solid' });
+        }
+
         function updateSimulation() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             
@@ -139,6 +166,7 @@
             });
 
             drawCyclist();
+            drawMetabolismVisuals();
 
             cyclist.x += cyclist.speed;
             if (cyclist.x > 600) cyclist.x = 0;
@@ -183,6 +211,25 @@
             if (time > 30 && cyclistType === 'endurance') {
                 cyclist.energy *= 1.2;
                 cyclist.co2 *= 0.9;
+            }
+
+            document.getElementById('timeValue').textContent = time;
+
+            updateDietInfo(diet);
+        }
+
+        function updateDietInfo(diet) {
+            const dietInfo = document.getElementById('dietInfo');
+            switch (diet) {
+                case 'balanced':
+                    dietInfo.textContent = 'Balanced diet provides steady energy production.';
+                    break;
+                case 'highCarb':
+                    dietInfo.textContent = 'High carb diet increases energy production but also CO2 output.';
+                    break;
+                case 'highFat':
+                    dietInfo.textContent = 'High fat diet slightly decreases energy production but reduces lactic acid buildup.';
+                    break;
             }
         }
 

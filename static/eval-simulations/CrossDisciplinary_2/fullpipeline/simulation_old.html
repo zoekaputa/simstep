@@ -95,7 +95,16 @@
     <div id="dataDisplay"></div>
 
     <script>
+        window.LOG_DEBUG = false;
+
+        function logDebug(message) {
+            if (window.LOG_DEBUG) {
+                console.log(`DEBUG [${new Date().toISOString()}]: ${message}`);
+            }
+        }
+
         const canvas = document.getElementById('canvas');
+        const rc = rough.canvas(canvas);
         const ctx = canvas.getContext('2d');
 
         const cityASvg = `
@@ -154,59 +163,44 @@
 
         function updateData() {
             const timeline = document.getElementById('timeline').value;
-            const comparison = document.getElementById('cityComparison').value;
             const dataDisplay = document.getElementById('dataDisplay');
-            let html = `<h3>Year ${timeline}</h3>`;
-
-            const cityData = {
-                'City A': {
-                    population: 1000000 + timeline * 10000,
-                    economy: 100 + timeline * 2,
-                    greenSpace: Math.max(0, 30 - timeline * 0.2)
-                },
-                'City B': {
-                    population: 900000 + timeline * 8000,
-                    economy: 90 + timeline * 1.8,
-                    greenSpace: Math.max(0, 35 - timeline * 0.1)
-                },
-                'City C': {
-                    population: 800000 + timeline * 5000,
-                    economy: 80 + timeline * 1.5,
-                    greenSpace: Math.min(50, 40 + timeline * 0.1)
-                }
-            };
-
-            if (comparison === 'all' || comparison.includes('A')) {
-                html += `<p>City A (Short-term Focus): Population ${cityData['City A'].population.toLocaleString()}, Economy $${cityData['City A'].economy.toFixed(1)}B, Green Space ${cityData['City A'].greenSpace.toFixed(1)}%</p>`;
-            }
-            if (comparison === 'all' || comparison.includes('B')) {
-                html += `<p>City B (Balanced Approach): Population ${cityData['City B'].population.toLocaleString()}, Economy $${cityData['City B'].economy.toFixed(1)}B, Green Space ${cityData['City B'].greenSpace.toFixed(1)}%</p>`;
-            }
-            if (comparison === 'all' || comparison.includes('C')) {
-                html += `<p>City C (Long-term Focus): Population ${cityData['City C'].population.toLocaleString()}, Economy $${cityData['City C'].economy.toFixed(1)}B, Green Space ${cityData['City C'].greenSpace.toFixed(1)}%</p>`;
-            }
-
-            dataDisplay.innerHTML = html;
+            dataDisplay.innerHTML = `
+                <h3>Year ${timeline}</h3>
+                <p>City A (Short-term Focus): Population 1M, Economy $${Math.round(100 + timeline * 2)}B, Green Space ${Math.max(0, 30 - timeline * 0.2)}%</p>
+                <p>City B (Balanced Approach): Population 900K, Economy $${Math.round(90 + timeline * 1.8)}B, Green Space ${Math.max(0, 35 - timeline * 0.1)}%</p>
+                <p>City C (Long-term Focus): Population 800K, Economy $${Math.round(80 + timeline * 1.5)}B, Green Space ${Math.min(50, 40 + timeline * 0.1)}%</p>
+            `;
         }
 
         document.getElementById('timeline').addEventListener('input', () => {
+            logDebug(`Timeline changed to ${document.getElementById('timeline').value}`);
             updateData();
         });
 
         document.getElementById('shockEvent').addEventListener('click', () => {
+            logDebug('Shock event triggered');
             alert('A major environmental disaster has occurred! All cities must adapt their strategies.');
-            const timeline = document.getElementById('timeline');
-            timeline.value = Math.min(100, parseInt(timeline.value) + 10);
-            updateData();
         });
 
-        document.getElementById('cityComparison').addEventListener('change', () => {
-            updateData();
+        document.getElementById('cityComparison').addEventListener('change', (e) => {
+            logDebug(`City comparison changed to ${e.target.value}`);
+            // Implement city comparison logic here
         });
 
         document.addEventListener('DOMContentLoaded', () => {
             drawCities();
             updateData();
+            
+            if (window.LOG_DEBUG) {
+                logDebug('Simulation initialized');
+                document.querySelectorAll('svg').forEach((svg, index) => {
+                    const rect = svg.getBoundingClientRect();
+                    logDebug(`SVG #${index}: Position {x: ${rect.x}, y: ${rect.y}}, Size {w: ${rect.width}, h: ${rect.height}}`);
+                });
+                document.querySelectorAll('input, button, select').forEach((control) => {
+                    logDebug(`Control ${control.id || 'unnamed'} (${control.tagName}): Initial value: ${control.value || 'N/A'}`);
+                });
+            }
         });
     </script>
 </body>

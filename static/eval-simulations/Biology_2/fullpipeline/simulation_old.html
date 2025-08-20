@@ -100,14 +100,6 @@
         </div>
     </div>
     <script>
-        window.LOG_DEBUG = false;
-
-        function logDebug(message) {
-            if (window.LOG_DEBUG) {
-                console.log(`DEBUG [${new Date().toISOString()}]: ${message}`);
-            }
-        }
-
         const canvas = document.getElementById('simulationCanvas');
         const ctx = canvas.getContext('2d');
         const rc = rough.canvas(canvas);
@@ -155,16 +147,13 @@
             document.getElementById('co2Value').textContent = cyclist.co2.toFixed(2);
             document.getElementById('lacticAcidValue').textContent = cyclist.lacticAcid.toFixed(2);
 
-            logDebug(`Cyclist position: ${cyclist.x}, ${cyclist.y}`);
-            logDebug(`Energy: ${cyclist.energy}, CO2: ${cyclist.co2}, Lactic Acid: ${cyclist.lacticAcid}`);
-
             requestAnimationFrame(updateSimulation);
         }
 
         function updateMetabolism() {
             const cyclistType = document.getElementById('cyclistSelect').value;
             const diet = document.getElementById('dietSelect').value;
-            const time = document.getElementById('timeSlider').value;
+            const time = parseInt(document.getElementById('timeSlider').value);
 
             let baseEnergy = cyclistType === 'sprinter' ? 10 : 5;
             let baseCO2 = cyclistType === 'sprinter' ? 5 : 8;
@@ -184,7 +173,17 @@
             cyclist.lacticAcid = baseLacticAcid * (1 + time / 40);
             cyclist.speed = baseEnergy / 10;
 
-            logDebug(`Metabolism updated: Energy=${cyclist.energy}, CO2=${cyclist.co2}, LacticAcid=${cyclist.lacticAcid}`);
+            // Implement anaerobic threshold
+            if (time > 30 && cyclistType === 'sprinter') {
+                cyclist.lacticAcid *= 1.5;
+                cyclist.energy *= 0.8;
+            }
+
+            // Implement aerobic efficiency for endurance cyclist
+            if (time > 30 && cyclistType === 'endurance') {
+                cyclist.energy *= 1.2;
+                cyclist.co2 *= 0.9;
+            }
         }
 
         document.getElementById('cyclistSelect').addEventListener('change', updateMetabolism);
@@ -193,26 +192,6 @@
 
         updateMetabolism();
         updateSimulation();
-
-        document.addEventListener('DOMContentLoaded', () => {
-            if (window.LOG_DEBUG) {
-                logDebug('Simulation initialized');
-                document.querySelectorAll('svg').forEach((svg, index) => {
-                    const rect = svg.getBoundingClientRect();
-                    logDebug(`SVG #${index}: Position {x: ${rect.x}, y: ${rect.y}}, Size {w: ${rect.width}, h: ${rect.height}}`);
-                });
-                document.querySelectorAll('input, button, select').forEach((control) => {
-                    logDebug(`Control ${control.id || 'unnamed'} (${control.tagName}): Initial value: ${control.value || 'N/A'}`);
-                });
-                
-                document.querySelectorAll('button').forEach((button) => {
-                    button.addEventListener('click', () => logDebug(`Button ${button.id || 'unnamed'} clicked`));
-                });
-                document.querySelectorAll('input').forEach((input) => {
-                    input.addEventListener('change', (e) => logDebug(`Input ${input.id || 'unnamed'} changed to ${e.target.value}`));
-                });
-            }
-        });
     </script>
 </body>
 </html>

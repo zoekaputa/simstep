@@ -84,6 +84,14 @@
         <div id="response-diagram"></div>
     </div>
     <script>
+        window.LOG_DEBUG = false;
+
+        function logDebug(message) {
+            if (window.LOG_DEBUG) {
+                console.log(`DEBUG [${new Date().toISOString()}]: ${message}`);
+            }
+        }
+
         const canvas = document.getElementById('canvas');
         const rc = rough.canvas(canvas);
         const ctx = canvas.getContext('2d');
@@ -127,6 +135,7 @@
             const img = new Image();
             img.onload = () => {
                 ctx.drawImage(img, 200, 0, 400, 600);
+                logDebug('Body drawn');
             };
             img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(bodySvg);
         }
@@ -136,6 +145,7 @@
                 const img = new Image();
                 img.onload = () => {
                     ctx.drawImage(img, pathogen.x, pathogen.y, 50, 50);
+                    logDebug(`Pathogen drawn at {x: ${pathogen.x}, y: ${pathogen.y}}`);
                 };
                 img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(pathogenSvgs[selectedPathogen]);
             });
@@ -143,11 +153,13 @@
 
         function updateDefenseStageIndicator() {
             document.getElementById('defense-stage-indicator').textContent = `Current Defense Stage: ${currentStage}`;
+            logDebug(`Defense stage updated to: ${currentStage}`);
         }
 
         function startSimulation() {
+            logDebug('Simulation started');
             currentStage = 'Physical Barriers';
-            pathogens = [{x: 100, y: 100}, {x: 300, y: 200}, {x: 500, y: 300}];
+            pathogens = [{x: 100, y: 100}];
             updateDefenseStageIndicator();
             drawBody();
             drawPathogens();
@@ -166,6 +178,7 @@
         }
 
         function resetSimulation() {
+            logDebug('Simulation reset');
             currentStage = 'none';
             pathogens = [];
             updateDefenseStageIndicator();
@@ -176,10 +189,27 @@
         document.getElementById('reset-simulation').addEventListener('click', resetSimulation);
         document.getElementById('pathogen-selector').addEventListener('change', (e) => {
             selectedPathogen = e.target.value;
+            logDebug(`Selected pathogen changed to: ${selectedPathogen}`);
         });
 
         document.addEventListener('DOMContentLoaded', () => {
             drawBody();
+            if (window.LOG_DEBUG) {
+                logDebug('Simulation initialized');
+                document.querySelectorAll('svg').forEach((svg, index) => {
+                    const rect = svg.getBoundingClientRect();
+                    logDebug(`SVG #${index}: Position {x: ${rect.x}, y: ${rect.y}}, Size {w: ${rect.width}, h: ${rect.height}}`);
+                });
+                document.querySelectorAll('input, button, select').forEach((control) => {
+                    logDebug(`Control ${control.id || 'unnamed'} (${control.tagName}): Initial value: ${control.value || 'N/A'}`);
+                });
+                document.querySelectorAll('button').forEach((button) => {
+                    button.addEventListener('click', () => logDebug(`Button ${button.id || 'unnamed'} clicked`));
+                });
+                document.querySelectorAll('input').forEach((input) => {
+                    input.addEventListener('change', (e) => logDebug(`Input ${input.id || 'unnamed'} changed to ${e.target.value}`));
+                });
+            }
         });
     </script>
 </body>

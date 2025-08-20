@@ -1,3 +1,6 @@
+The simulation failed several tests, so I will provide a corrected version of the HTML code that fixes the issues.
+
+<START>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -136,10 +139,16 @@
         };
 
         const electrodes = {
-            zinc: { color: '#D3D3D3', name: 'Zinc' },
-            copper: { color: '#B87333', name: 'Copper' },
-            aluminum: { color: '#848789', name: 'Aluminum' },
-            magnesium: { color: '#B3B3B3', name: 'Magnesium' }
+            zinc: { color: '#D3D3D3', name: 'Zinc', voltage: 0.76 },
+            copper: { color: '#B87333', name: 'Copper', voltage: 0.34 },
+            aluminum: { color: '#848789', name: 'Aluminum', voltage: 1.66 },
+            magnesium: { color: '#B3B3B3', name: 'Magnesium', voltage: 2.37 }
+        };
+
+        const fruits = {
+            lemon: { voltage: 1.0 },
+            orange: { voltage: 0.7 },
+            apple: { voltage: 0.8 }
         };
 
         let state = {
@@ -223,6 +232,13 @@
             logDebug(`Hydrogen bubbles drawn around (${x}, ${y})`);
         }
 
+        function calculateVoltage() {
+            const [anode, cathode] = state.electrodes;
+            const fruitVoltage = fruits[state.fruitType].voltage;
+            const electrodeVoltage = electrodes[cathode].voltage - electrodes[anode].voltage;
+            return (fruitVoltage + electrodeVoltage) * state.seriesCount;
+        }
+
         function updateSimulation() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -244,7 +260,7 @@
             drawWire(startX - 60, 300, 100, 200);
             drawWire(startX + (state.seriesCount - 1) * fruitSpacing + 60, 300, 700, 200);
 
-            state.voltage = state.seriesCount * 1.5;
+            state.voltage = calculateVoltage();
             state.current = state.voltage / 100;
 
             drawLED(400, 100, state.voltage >= 1.5);
@@ -282,15 +298,4 @@
             logDebug(`Time changed to ${state.time}s`);
         });
 
-        document.addEventListener('DOMContentLoaded', () => {
-            updateSimulation();
-            if (window.LOG_DEBUG) {
-                logDebug('Simulation initialized');
-                document.querySelectorAll('svg').forEach((svg, index) => {
-                    const rect = svg.getBoundingClientRect();
-                    logDebug(`SVG #${index}: Position {x: ${rect.x}, y: ${rect.y}}, Size {w: ${rect.width}, h: ${rect.height}}`);
-                });
-                document.querySelectorAll('input, button, select').forEach((control) => {
-                    logDebug(`Control ${control.id || 'unnamed'} (${control.tagName}): Initial value: ${control.value || 'N/A'}`);
-                });
-                document.querySelectorAll
+        document.addEventListener('D
