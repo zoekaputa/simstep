@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="description" content="SimStep: Multi-Level Abstractions for Incremental Specification and Debugging of AI-Generated Educational Simulations">
@@ -7,94 +7,102 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>SimStep: Multi-Level Abstractions for Incremental Specification and Debugging of AI-Generated Educational Simulations</title>
 
-  <!-- (optional) Google Analytics -->
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){ dataLayer.push(arguments); }
-    gtag('js', new Date()); gtag('config', 'G-PYVRSFMDRL');
-  </script>
-
   <!-- Fonts & CSS -->
-  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans:400,700|Noto+Sans:400,600|Castoro:400,700" rel="stylesheet">
   <link rel="stylesheet" href="./static/css/bulma.min.css">
-  <link rel="stylesheet" href="./static/css/bulma-carousel.min.css">
-  <link rel="stylesheet" href="./static/css/bulma-slider.min.css">
   <link rel="stylesheet" href="./static/css/fontawesome.all.min.css">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
-  <link rel="stylesheet" href="./static/css/index.css">
   <link rel="icon" href="./static/images/favicon.svg">
 
-  <!-- JS libs -->
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-  <script defer src="./static/js/fontawesome.all.min.js"></script>
-  <script src="./static/js/bulma-carousel.min.js"></script>
-  <script src="./static/js/bulma-slider.min.js"></script>
-  <script src="./static/js/index.js"></script>
-
   <style>
-    /* One-at-a-time carousel, no peeking */
-    #sim-carousel.carousel,
-    #sim-carousel .carousel-container,
-    #sim-carousel .carousel-items { overflow: hidden; }
-    #sim-carousel .carousel-items .item { flex: 0 0 100% !important; }
-
-    .sim-slide { width: 100%; }
-    .sim-card   { border-radius: 16px; overflow: hidden; box-shadow: 0 8px 24px rgba(0,0,0,.08); }
-    .sim-figure { position: relative; width: 100%; padding-top: 56.25%; } /* 16:9 frame */
-
-    /* If we have a real image */
-    .sim-figure img { position:absolute; inset:0; width:100%; height:100%; object-fit:contain; display:block; background:#f5f7fb; }
-
-    .sim-body  { padding: 1rem 1.25rem 1.25rem; }
-    .sim-title { margin-bottom: .25rem; }
-    .carousel .carousel-nav-left, .carousel .carousel-nav-right { filter: drop-shadow(0 2px 6px rgba(0,0,0,.25)); }
-
-    /* 3-dot mini pager (prev • current • next) */
-    .mini-dots { display:flex; gap:.5rem; align-items:center; justify-content:center; }
-    .mini-dots button {
-      width:10px; height:10px; border-radius:50%;
-      border:none; background:#d2d2d2; cursor:pointer;
+    :root{
+      --title-gap: 2rem;     /* consistent space below section titles */
+      --title-gap-large: 2.5rem; /* a bit more under the Video title */
     }
-    .mini-dots button.is-active { background:#363636; cursor:default; }
-    .mini-dots button[disabled] { opacity:.5; cursor:default; }
+    body { font-family: 'Noto Sans', Arial, sans-serif; color:#2b2b2b; }
 
-    /* Avoid flashing blank on mount */
-    #sim-carousel { visibility:hidden; }
-    #sim-carousel.ready { visibility:visible; }
+    /* ===== Navbar ===== */
+    .navbar { border-bottom: 1px solid #eee; }
+    .navbar-item.is-active { font-weight: 700; color: #222 !important; }
 
-    /* ---------- HTML thumbnail (JSON fallback) ---------- */
-    .thumb-html { position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
-                  background: linear-gradient(135deg,#f7fbff,#eaf2ff); }
-    .thumb-card { width:86%; height:82%; background:#fff; border-radius:24px; box-shadow: 0 8px 24px rgba(0,0,0,.12);
-                  padding:36px 40px; display:flex; flex-direction:column; }
-    .thumb-title { font:700 46px/1.2 'Google Sans', Arial, sans-serif; color:#0f172a; margin-bottom:18px; }
-    .thumb-body  { flex:1; overflow-y:auto; font: 22px/1.45 'Noto Sans', Arial, sans-serif; color:#334155; padding-right:12px; }
-    .thumb-pill  { margin-top:16px; font:600 20px/1.35 'Noto Sans', Arial, sans-serif; color:#374151; }
-    .thumb-pill span { background:#eef2ff; padding:12px 16px; border-radius:12px; display:inline-block; }
+    /* ===== Section title spacing (consistent everywhere) ===== */
+    .hero .title,
+    .section .title { margin-bottom: var(--title-gap); }
 
-    /* Make sure scrollbars are visible across platforms */
-    .thumb-body { scrollbar-width: thin; scrollbar-color: #c7cdd7 transparent; }
-    .thumb-body::-webkit-scrollbar { width: 10px; }
-    .thumb-body::-webkit-scrollbar-track { background: transparent; }
-    .thumb-body::-webkit-scrollbar-thumb { background: #c7cdd7; border-radius: 8px; }
-    .thumb-body::-webkit-scrollbar-thumb:hover { background:#b3b9c4; }
+    /* Give the video title a tad more space */
+    #video-section .title { margin-bottom: var(--title-gap-large); }
+
+    /* Nicely center the Drive iframe and keep aspect ratio */
+    .publication-video {
+      position: relative;
+      width: 100%;
+      padding-bottom: 56.25%; /* 16:9 */
+      height: 0;
+      overflow: hidden;
+      border-radius: 10px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+      background: #f7f8fb;
+    }
+    .publication-video iframe {
+      position: absolute; inset: 0;
+      width: 100%; height: 100%;
+      border: 0;
+    }
   </style>
 </head>
 
 <body>
 
-  <!-- ===== HERO / AUTHORS (unchanged content above your slideshow) ===== -->
+  <!-- ===== NAVBAR ===== -->
+  <nav class="navbar is-light" role="navigation" aria-label="main navigation">
+    <div class="container is-max-desktop">
+      <div class="navbar-brand">
+        <a class="navbar-item" href="index.html" style="font-weight:700;">SimStep</a>
+        <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="mainNav">
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+        </a>
+      </div>
+
+      <div id="mainNav" class="navbar-menu">
+        <div class="navbar-start">
+          <a class="navbar-item" href="index.html">Home</a>
+          <a class="navbar-item" href="gallery.html">Gallery</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <script>
+    // Burger menu + active tab highlight
+    document.addEventListener('DOMContentLoaded', () => {
+      const burger = document.querySelector('.navbar-burger');
+      const targetId = burger?.getAttribute('data-target');
+      const menu = document.getElementById(targetId || 'mainNav');
+      burger?.addEventListener('click', () => {
+        burger.classList.toggle('is-active');
+        menu?.classList.toggle('is-active');
+      });
+      const here = location.pathname.split('/').pop() || 'index.html';
+      document.querySelectorAll('.navbar-item[href]').forEach(a => {
+        if (a.getAttribute('href') === here) a.classList.add('is-active');
+      });
+    });
+  </script>
+
+  <!-- ===== HERO / AUTHORS ===== -->
   <section class="hero">
     <div class="hero-body">
       <div class="container is-max-desktop">
         <div class="columns is-centered">
           <div class="column has-text-centered">
-            <h1 class="title is-1 publication-title">
+            <h1 class="title is-1">
               SimStep: Multi-Level Abstractions for Incremental Specification and
               Debugging of AI-Generated Educational Simulations
             </h1>
 
-            <section class="section">
+            <!-- Authors -->
+            <section class="section" style="padding-top:1.25rem;">
               <div class="container is-max-desktop">
                 <div class="columns is-multiline is-centered is-variable is-6">
                   <div class="column is-one-third has-text-centered">
@@ -125,6 +133,7 @@
               </div>
             </section>
 
+            <!-- Buttons -->
             <div class="columns is-centered">
               <div class="column is-narrow has-text-centered">
                 <a href="./static/paper.pdf" class="button is-normal is-rounded is-dark">
@@ -132,9 +141,7 @@
                   <span>Paper</span>
                 </a>
                 <a href="https://drive.google.com/file/d/1rvRXmUn6RzwwuetmGyQaFkunC6R1nr7t/preview" class="button is-normal is-rounded is-dark">
-                  <span class="icon">
-                    <svg class="svg-inline--fa fa-youtube fa-w-18" aria-hidden="true" focusable="false" data-prefix="fab" data-icon="youtube" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><path fill="currentColor" d="M549.655 124.083c-6.281-23.65-24.787-42.276-48.284-48.597C458.781 64 288 64 288 64S117.22 64 74.629 75.486c-23.497 6.322-42.003 24.947-48.284 48.597-11.412 42.867-11.412 132.305-11.412 132.305s0 89.438 11.412 132.305c6.281 23.65 24.787 41.5 48.284 47.821C117.22 448 288 448 288 448s170.78 0 213.371-11.486c23.497-6.321 42.003-24.171 48.284-47.821 11.412-42.867 11.412-132.305 11.412-132.305zm-317.51 213.508V175.185l142.739 81.205-142.739 81.201z"></path></svg>
-                  </span>
+                  <span class="icon"><i class="fab fa-youtube"></i></span>
                   <span>Video</span>
                 </a>
                 <a href="https://github.com/zoekaputa/SALT" class="external-link button is-normal is-rounded is-dark">
@@ -147,21 +154,84 @@
           </div>
         </div>
       </div>
+    </div>
   </section>
 
-  <!-- ===== OVERVIEW / ABSTRACT / VIDEO / UI (unchanged) ===== -->
-  <section class="hero is-small"><div class="hero-body"><div class="container"><h2 class="title is-4 has-text-centered">SimStep Overview</h2><div class="columns is-centered"><div class="column is-three-quarters has-text-centered"><img src="static/paper_files/figures/teaser.jpg" alt="Overview image" style="max-width: 100%; height: auto;"></div></div></div></div></section>
-  <section class="section hero is-light"><div class="container is-max-desktop"><div class="columns is-centered has-text-centered"><div class="column is-four-fifths"><h2 class="title is-3">Abstract</h2><div class="content has-text-justified"><p>Interactive simulations have the potential to enhance STEM learning, yet their effectiveness is often limited by reliance on generic, off-the-shelf content that fails to meet diverse learners' needs. While generative AI can enable educators to rapidly author custom simulations, existing approaches require significant technical expertise or complex iterative prompting to align the learning objectives and simulation behavior. We present SimStep, an authoring tool leveraging multi-level abstractions to incrementally specify, validate, and debug AI-generated educational simulations.</p></div></div></div></div></section>
-  <section class="hero is-small"><div class="columns is-centered has-text-centered"><div class="column is-four-fifths"><h2 class="title is-3">Video</h2><div class="publication-video"><iframe src="https://drive.google.com/file/d/1rvRXmUn6RzwwuetmGyQaFkunC6R1nr7t/preview" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen=""></iframe></div></div></div></section>
-  <section class="hero is-small"><div class="hero-body"><div class="container"><h2 class="title is-4 has-text-centered">UI Screens</h2><div class="columns is-centered"><div class="column is-three-quarters has-text-centered"><img src="static/paper_files/figures/screens.jpg" alt="UI Screens" style="max-width: 100%; height: auto;"></div></div></div></div></section>
-  <section class="section" id="BibTeX"><div class="container is-max-desktop content"><h2 class="title">BibTeX</h2>Coming soon...</div></section>
+  <!-- ===== OVERVIEW ===== -->
+  <section class="hero is-small">
+    <div class="hero-body">
+      <div class="container">
+        <h2 class="title is-4 has-text-centered">SimStep Overview</h2>
+        <div class="columns is-centered">
+          <div class="column is-three-quarters has-text-centered">
+            <img src="static/paper_files/figures/teaser.jpg" alt="Overview image" style="max-width: 100%; height: auto;">
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 
-  <!-- ===== SIMULATION SLIDESHOW ===== -->
-  <section class="section" id="SimSlideshow">
+  <!-- ===== ABSTRACT ===== -->
+  <section class="section hero is-light">
     <div class="container is-max-desktop">
-      <h2 class="title is-3 has-text-centered">Simulation Slideshow</h2>
-      <div id="sim-carousel" class="carousel mt-5"></div>
-      <div class="has-text-centered mt-3"><div id="sim-mini-pager" class="mini-dots"></div></div>
+      <div class="columns is-centered has-text-centered">
+        <div class="column is-four-fifths">
+          <h2 class="title is-3">Abstract</h2>
+          <div class="content has-text-justified">
+            <p>
+              Interactive simulations have the potential to enhance STEM learning, yet their effectiveness
+              is often limited by reliance on generic, off-the-shelf content that fails to meet diverse
+              learners' needs. While generative AI can enable educators to rapidly author custom simulations,
+              existing approaches require significant technical expertise or complex iterative prompting to
+              align the learning objectives and simulation behavior. We present SimStep, an authoring tool
+              leveraging multi-level abstractions to incrementally specify, validate, and debug AI-generated
+              educational simulations.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== VIDEO ===== -->
+  <section class="hero is-small" id="video-section">
+    <div class="hero-body">
+      <div class="container">
+        <div class="columns is-centered has-text-centered">
+          <div class="column is-four-fifths">
+            <h2 class="title is-3">Video</h2>
+            <div class="publication-video">
+              <iframe
+                src="https://drive.google.com/file/d/1rvRXmUn6RzwwuetmGyQaFkunC6R1nr7t/preview"
+                allow="autoplay; encrypted-media"
+                allowfullscreen>
+              </iframe>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== UI SCREENS ===== -->
+  <section class="hero is-small">
+    <div class="hero-body">
+      <div class="container">
+        <h2 class="title is-4 has-text-centered">UI Screens</h2>
+        <div class="columns is-centered">
+          <div class="column is-three-quarters has-text-centered">
+            <img src="static/paper_files/figures/screens.jpg" alt="UI Screens" style="max-width: 100%; height: auto;">
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== BIBTEX ===== -->
+  <section class="section" id="BibTeX">
+    <div class="container is-max-desktop content">
+      <h2 class="title">BibTeX</h2>
+      Coming soon...
     </div>
   </section>
 
@@ -171,218 +241,20 @@
       <div class="columns is-centered">
         <div class="column is-8">
           <div class="content">
-            <p>This website is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International License</a>.</p>
-            <p>This means you are free to borrow the <a href="https://github.com/nerfies/nerfies.github.io">source code</a> of this website; we just ask that you link back to this page in the footer.</p>
+            <p>
+              This website is licensed under a
+              <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International License</a>.
+            </p>
+            <p>
+              This means you are free to borrow the
+              <a href="https://github.com/nerfies/nerfies.github.io">source code</a>;
+              we just ask that you link back to this page in the footer.
+            </p>
           </div>
         </div>
       </div>
     </div>
   </footer>
 
-  <!-- ===== SLIDESHOW SCRIPT ===== -->
-  <script>
-  (async () => {
-    const ROOT_PATH   = "./static/eval-simulations";
-    const INPUTS_PATH = "./static/sim-inputs";
-
-    const carouselEl = document.getElementById("sim-carousel");
-    const pagerEl    = document.getElementById("sim-mini-pager");
-
-    const preferredScreens = ["screenshot.png","simulation.png","preview.png","cover.png"];
-    const otherCandidates  = ["thumbnail.png","ui-map.png","concept-map.png","scenario-map.png"];
-
-    function naturalCompare(a, b) {
-      const rx = /(\d+)|(\D+)/g, ax = [], bx = [];
-      a.replace(rx, (_, n, s) => ax.push([n ? +n : NaN, s || ""]));
-      b.replace(rx, (_, n, s) => bx.push([n ? +n : NaN, s || ""]));
-      while (ax.length && bx.length) {
-        const [an, as] = ax.shift(), [bn, bs] = bx.shift();
-        if (!Number.isNaN(an) && !Number.isNaN(bn)) { if (an !== bn) return an - bn; }
-        else { const d = as.localeCompare(bs); if (d) return d; }
-      }
-      return ax.length - bx.length;
-    }
-
-    /* -------- encoding & formatting helpers -------- */
-    function fixMojibake(s="") {
-      // cover both â€” and â styles + common cases
-      const map = {
-        'â€”':'—','â€“':'–','â€¦':'…','â€˜':'‘','â€™':'’','â€œ':'“','â€�':'”','â€¢':'•','Â°':'°','Â·':'·','Â©':'©','Â®':'®',
-        'â†’':'→','â†”':'↔','â‰¤':'≤','â‰¥':'≥','â‰ ':'≠','âˆ’':'−','âˆš':'√','âˆ†':'Δ',
-        'â':'—','â':'–','â':'’','â':'“','â':'”','â¢':'•','â¦':'…','Â':''
-      };
-      return Object.keys(map).reduce((t,k)=>t.split(k).join(map[k]), s);
-    }
-    const escapeHTML = (s="") => s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
-    const allowArrows = s => s.replace(/->/g,"→");
-
-    // H2O, CO2, etc.
-    function withChemSubscripts(s="") {
-      return s.replace(/([A-Za-z])(\d+)/g, (_m, el, num) => `${el}<sub>${num}</sub>`);
-    }
-    // ^2, ^3 → <sup>…>
-    function withCaretSupers(s="") {
-      s = s.replace(/\^(\d+)/g, (_m, d) => `<sup>${d}</sup>`);
-      s = s.replace(/²/g, "<sup>2</sup>").replace(/³/g, "<sup>3</sup>").replace(/¹/g,"<sup>1</sup>");
-      return s;
-    }
-
-    function formatRichText(raw="") {
-      let t = fixMojibake(raw);
-      t = allowArrows(t);
-      t = escapeHTML(t);           // escape first
-      t = withChemSubscripts(t);   // then inject safe tags
-      t = withCaretSupers(t);
-      return t;
-    }
-
-    /* -------- thumb renderers -------- */
-    function renderHTMLThumb(fig, data, fallbackTitle) {
-      const title = data?.scenario?.title || fallbackTitle || "";
-      const body  = data?.content || data?.scenario?.content || "";
-      const hypo  = data?.hypothesis?.hypothesis || "";
-
-      const titleHTML = formatRichText(title);
-      const bodyHTML  = formatRichText(body);
-      const hypoHTML  = formatRichText(hypo);
-
-      fig.innerHTML = `
-        <div class="thumb-html">
-          <div class="thumb-card">
-            <div class="thumb-title">${titleHTML}</div>
-            <div class="thumb-body">${bodyHTML}</div>
-            ${hypo ? `<div class="thumb-pill"><span>Hypothesis: ${hypoHTML}</span></div>` : ``}
-          </div>
-        </div>`;
-    }
-
-    function renderImageThumb(fig, url, alt) {
-      const img = document.createElement("img");
-      img.alt = alt + " thumbnail";
-      img.src = url;
-      fig.appendChild(img);
-    }
-
-    async function resolveThumb(slug, title, figEl) {
-      // Prefer JSON → HTML card (scrollable, no clipping)
-      try {
-        const jr = await fetch(`${INPUTS_PATH}/${encodeURIComponent(slug)}.json`, { cache: "no-store" });
-        if (jr.ok) {
-          const data = await jr.json();
-          renderHTMLThumb(figEl, data, title);
-          return; // done
-        }
-      } catch {}
-
-      // Else try real images
-      const candidates = [
-        ...preferredScreens.map(t => `${ROOT_PATH}/${slug}/${t}`),
-        ...preferredScreens.map(t => `${ROOT_PATH}/${slug}/fullpipeline/${t}`),
-        ...otherCandidates.map(t => `${ROOT_PATH}/${slug}/${t}`),
-        ...otherCandidates.map(t => `${ROOT_PATH}/${slug}/fullpipeline/${t}`)
-      ];
-      for (const url of candidates) {
-        try {
-          const r = await fetch(url, { method: "HEAD", cache: "no-store" });
-          if (!r.ok) continue;
-          renderImageThumb(figEl, url, title);
-          return;
-        } catch {}
-      }
-
-      // Fallback to simple title art if nothing else
-      const fallback = document.createElement("div");
-      fallback.className = "thumb-html";
-      fallback.innerHTML = `
-        <div class="thumb-card">
-          <div class="thumb-title">${escapeHTML(title)}</div>
-        </div>`;
-      figEl.appendChild(fallback);
-    }
-
-    function makeSlide({ slug, title }) {
-      const simURL = `${ROOT_PATH}/${slug}/fullpipeline/simulation.html`;
-      const slide = document.createElement("div");
-      slide.className = "item sim-slide";
-      slide.innerHTML = `
-        <div class="sim-card card">
-          <a href="${simURL}">
-            <figure class="sim-figure"></figure>
-          </a>
-          <div class="sim-body">
-            <p class="title is-5 sim-title">${title}</p>
-            <p class="subtitle is-6 has-text-grey">${slug}</p>
-            <a class="button is-dark is-rounded is-small" href="${simURL}">Open Simulation</a>
-          </div>
-        </div>`;
-      return slide;
-    }
-
-    function renderMiniDots(instance, count) {
-      pagerEl.innerHTML = "";
-      const prev = document.createElement("button");
-      prev.title = "Previous"; prev.onclick = () => instance.prev();
-      const curr = document.createElement("button");
-      curr.className = "is-active"; curr.disabled = true;
-      curr.title = `Slide ${instance.index + 1} of ${count}`;
-      const next = document.createElement("button");
-      next.title = "Next"; next.onclick = () => instance.next();
-      pagerEl.append(prev, curr, next);
-    }
-
-    try {
-      const res = await fetch(`${ROOT_PATH}/manifest.json`, { cache: "no-store" });
-      if (!res.ok) throw new Error(`Manifest load failed: ${res.status}`);
-      const raw = await res.json();
-      if (!Array.isArray(raw) || raw.length === 0) return;
-
-      // Validate sims first
-      const items = [];
-      for (const it of raw) {
-        const slug  = it.slug;
-        const title = it.title || slug.replace(/[_-]+/g, " ");
-        try {
-          const head = await fetch(`${ROOT_PATH}/${slug}/fullpipeline/simulation.html`, { method: "HEAD", cache: "no-store" });
-          if (!head.ok) continue;
-          items.push({ slug, title });
-        } catch {}
-      }
-      if (!items.length) return;
-
-      // Natural sort by title
-      items.sort((a,b) => naturalCompare(a.title, b.title));
-
-      // Build slides and resolve thumbs (HTML or image)
-      for (const it of items) {
-        const slide = makeSlide(it);
-        carouselEl.appendChild(slide);
-        const fig = slide.querySelector(".sim-figure");
-        await resolveThumb(it.slug, it.title, fig);
-      }
-
-      // Mount carousel after first slide content is present
-      await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));
-      const [inst] = bulmaCarousel.attach('#sim-carousel', {
-        slidesToScroll: 1, slidesToShow: 1, infinite: true, loop: true,
-        autoplay: false, pauseOnHover: true, navigation: true, pagination: false
-      });
-
-      // Show only after mount to avoid initial blank
-      carouselEl.classList.add("ready");
-      try { inst.next(); inst.prev(); } catch {}
-
-      renderMiniDots(inst, items.length);
-      inst.on('after:show', () => renderMiniDots(inst, items.length));
-
-      document.addEventListener('keydown', (e) => {
-        if (e.key === 'ArrowRight') inst.next();
-        if (e.key === 'ArrowLeft')  inst.prev();
-      });
-
-    } catch (err) {
-      console.error(err);
-    }
-  })();
-  </script>
 </body>
 </html>
