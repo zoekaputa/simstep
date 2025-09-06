@@ -1,0 +1,233 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>School Storage System Simulation</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cabin+Sketch:wght@400;700&family=Londrina+Sketch&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/roughjs@latest/bundled/rough.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: 'Cabin Sketch', cursive;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #f0f0f0;
+        }
+        #canvas {
+            border: 2px solid #333;
+            background-color: white;
+        }
+        .controls {
+            margin-top: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+        }
+        select, button {
+            font-family: 'Cabin Sketch', cursive;
+            font-size: 16px;
+            padding: 5px;
+        }
+        #performanceGraph {
+            margin-top: 20px;
+            width: 80%;
+            max-width: 600px;
+        }
+    </style>
+</head>
+<body>
+    <h1>School Storage System Simulation</h1>
+    <p>Welcome to the School Storage System Simulation! In this experiment, you'll explore different ways to organize and access student information and items. You'll see how various storage methods perform under different conditions. Play around with the controls below and observe how quickly you can find or store information using different structures. Can you figure out which method works best for different scenarios?</p>
+    <canvas id="canvas" width="800" height="400"></canvas>
+    <div class="controls">
+        <div id="structureSelect">
+            <button class="structureBtn" data-structure="linkedList">Chained Lockers</button>
+            <button class="structureBtn" data-structure="array">Numbered Locker Rows</button>
+            <button class="structureBtn" data-structure="hashTable">Student ID Based Assignments</button>
+            <button class="structureBtn" data-structure="tree">Club Storage Hierarchy</button>
+        </div>
+        <select id="operationSelect">
+            <option value="insert">Insert</option>
+            <option value="search">Search</option>
+            <option value="delete">Delete</option>
+        </select>
+        <select id="datasetSelect">
+            <option value="small">Small (10 items)</option>
+            <option value="medium">Medium (100 items)</option>
+            <option value="large">Large (1000 items)</option>
+        </select>
+        <button id="runOperation">Run Operation</button>
+        <button id="resetGraphButton">Reset Graph</button>
+    </div>
+    <canvas id="performanceGraph"></canvas>
+
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const rc = rough.canvas(canvas);
+
+        const structureButtons = document.querySelectorAll('.structureBtn');
+        const operationSelect = document.getElementById('operationSelect');
+        const datasetSelect = document.getElementById('datasetSelect');
+        const runOperationButton = document.getElementById('runOperation');
+        const resetGraphButton = document.getElementById('resetGraphButton');
+
+        let currentStructure = 'linkedList';
+        let currentOperation = 'insert';
+        let currentDatasetSize = 'small';
+
+        function drawStructure() {
+            rc.rectangle(10, 10, 780, 380, {
+                roughness: 2,
+                fill: 'white',
+                fillStyle: 'solid'
+            });
+
+            switch(currentStructure) {
+                case 'array':
+                    for (let i = 0; i < 5; i++) {
+                        rc.rectangle(50 + i * 150, 150, 100, 100, {
+                            roughness: 1,
+                            fill: '#d4d4d4',
+                            fillStyle: 'solid'
+                        });
+                    }
+                    break;
+                case 'linkedList':
+                    for (let i = 0; i < 4; i++) {
+                        rc.circle(100 + i * 200, 200, 50, {
+                            roughness: 1,
+                            fill: '#ffff00',
+                            fillStyle: 'solid'
+                        });
+                        if (i < 3) {
+                            rc.line(125 + i * 200, 200, 75 + (i + 1) * 200, 200, {
+                                roughness: 1
+                            });
+                        }
+                    }
+                    break;
+                case 'hashTable':
+                    rc.rectangle(50, 50, 700, 300, {
+                        roughness: 1,
+                        fill: '#f0f0f0',
+                        fillStyle: 'solid'
+                    });
+                    for (let i = 0; i < 3; i++) {
+                        rc.line(50, 150 + i * 100, 750, 150 + i * 100, {
+                            roughness: 1
+                        });
+                    }
+                    break;
+                case 'tree':
+                    rc.circle(400, 50, 40, {
+                        roughness: 1,
+                        fill: '#ffff00',
+                        fillStyle: 'solid'
+                    });
+                    rc.line(400, 90, 200, 200, { roughness: 1 });
+                    rc.line(400, 90, 600, 200, { roughness: 1 });
+                    rc.circle(200, 200, 30, {
+                        roughness: 1,
+                        fill: '#ffff00',
+                        fillStyle: 'solid'
+                    });
+                    rc.circle(600, 200, 30, {
+                        roughness: 1,
+                        fill: '#ffff00',
+                        fillStyle: 'solid'
+                    });
+                    break;
+            }
+        }
+
+        let performanceData = {
+            labels: [],
+            datasets: [{
+                label: 'Operation Time',
+                data: [],
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 1
+            }]
+        };
+
+        const performanceChart = new Chart(document.getElementById('performanceGraph'), {
+            type: 'bar',
+            data: performanceData,
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        function updatePerformanceGraph(operationTime) {
+            performanceData.labels.push(`${currentStructure} - ${currentOperation}`);
+            performanceData.datasets[0].data.push(operationTime);
+            performanceChart.update();
+        }
+
+        function resetPerformanceGraph() {
+            performanceData.labels = [];
+            performanceData.datasets[0].data = [];
+            performanceChart.update();
+        }
+
+        function simulateOperation() {
+            let operationTime;
+            switch(currentStructure) {
+                case 'array':
+                    operationTime = Math.random() * 100 + 50;
+                    break;
+                case 'linkedList':
+                    operationTime = Math.random() * 150 + 100;
+                    break;
+                case 'hashTable':
+                    operationTime = Math.random() * 50 + 10;
+                    break;
+                case 'tree':
+                    operationTime = Math.random() * 75 + 25;
+                    break;
+            }
+            operationTime *= currentDatasetSize === 'small' ? 1 : currentDatasetSize === 'medium' ? 2 : 3;
+            updatePerformanceGraph(operationTime);
+        }
+
+        structureButtons.forEach(button => {
+            button.addEventListener('click', (e) => {
+                currentStructure = e.target.dataset.structure;
+                drawStructure();
+            });
+        });
+
+        operationSelect.addEventListener('change', (e) => {
+            currentOperation = e.target.value;
+        });
+
+        datasetSelect.addEventListener('change', (e) => {
+            currentDatasetSize = e.target.value;
+        });
+
+        runOperationButton.addEventListener('click', () => {
+            simulateOperation();
+        });
+
+        resetGraphButton.addEventListener('click', () => {
+            resetPerformanceGraph();
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            drawStructure();
+        });
+    </script>
+</body>
+</html>

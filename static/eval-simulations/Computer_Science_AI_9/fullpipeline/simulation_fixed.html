@@ -1,0 +1,243 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text Prediction Adventure</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cabin+Sketch:wght@400;700&family=Londrina+Sketch&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/roughjs@latest/bundled/rough.js"></script>
+    <style>
+        body {
+            font-family: 'Cabin Sketch', cursive;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        h1 {
+            font-family: 'Cabin Sketch', cursive;
+            font-weight: 700;
+            color: #2c3e50;
+        }
+        #canvas {
+            background-color: white;
+            border: 2px solid #2c3e50;
+            margin-bottom: 20px;
+        }
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        input, select, button {
+            font-family: 'Cabin Sketch', cursive;
+            font-size: 16px;
+            padding: 5px 10px;
+            border: 2px solid #2c3e50;
+            border-radius: 5px;
+        }
+        button {
+            background-color: #3498db;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        #predictions, #analysis, #modelInfo {
+            font-family: 'Cabin Sketch', cursive;
+            font-weight: 400;
+            background-color: white;
+            border: 2px solid #2c3e50;
+            padding: 10px;
+            margin-bottom: 20px;
+            width: 80%;
+            max-width: 600px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Text Prediction Adventure</h1>
+    <p>Welcome to the Text Prediction Adventure! Here, you'll explore how computers can predict what you're going to type next. It's like having a friend who can finish your sentences, but this friend is a computer! Type some text, choose a prediction model, and see what happens. Can you figure out how the computer makes its guesses?</p>
+    
+    <canvas id="canvas" width="800" height="400"></canvas>
+    
+    <div class="controls">
+        <input type="text" id="textInput" placeholder="Type your text here">
+        <div id="modelSelector">
+            <input type="radio" id="statistical" name="model" value="statistical" checked>
+            <label for="statistical">Statistical Model</label>
+            <input type="radio" id="neural" name="model" value="neural">
+            <label for="neural">Neural Model</label>
+            <input type="radio" id="transformer" name="model" value="transformer">
+            <label for="transformer">Transformer Model</label>
+        </div>
+        <button id="predictButton">Predict</button>
+    </div>
+    
+    <div id="modelInfo"></div>
+    <div id="predictions"></div>
+    <div id="analysis"></div>
+
+    <script>
+        const canvas = document.getElementById('canvas');
+        const rc = rough.canvas(canvas);
+        const ctx = canvas.getContext('2d');
+
+        const textInput = document.getElementById('textInput');
+        const modelSelector = document.getElementById('modelSelector');
+        const predictButton = document.getElementById('predictButton');
+        const modelInfoDiv = document.getElementById('modelInfo');
+        const predictionsDiv = document.getElementById('predictions');
+        const analysisDiv = document.getElementById('analysis');
+
+        const robotSVG = `
+            <svg width="100" height="120" viewBox="0 0 100 120">
+                <rect x="10" y="20" width="80" height="80" rx="10" fill="#3498db" />
+                <circle cx="35" cy="50" r="10" fill="white" />
+                <circle cx="65" cy="50" r="10" fill="white" />
+                <rect x="30" y="80" width="40" height="5" rx="2" fill="white" />
+                <rect x="20" y="100" width="20" height="20" rx="5" fill="#3498db" />
+                <rect x="60" y="100" width="20" height="20" rx="5" fill="#3498db" />
+            </svg>
+        `;
+
+        const brainSVG = `
+            <svg width="100" height="100" viewBox="0 0 100 100">
+                <path d="M50 5 C 25 5, 5 25, 5 50 C 5 75, 25 95, 50 95 C 75 95, 95 75, 95 50 C 95 25, 75 5, 50 5" fill="#e74c3c" />
+                <path d="M30 30 Q 50 10, 70 30 T 70 70 Q 50 90, 30 70 T 30 30" fill="none" stroke="white" stroke-width="3" />
+            </svg>
+        `;
+
+        function drawScene() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            rc.rectangle(10, 10, canvas.width - 20, canvas.height - 20, { roughness: 2, fill: '#f0f0f0' });
+            
+            const robotImg = new Image();
+            robotImg.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(robotSVG);
+            robotImg.onload = () => ctx.drawImage(robotImg, 50, 150, 100, 120);
+
+            const brainImg = new Image();
+            brainImg.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(brainSVG);
+            brainImg.onload = () => ctx.drawImage(brainImg, 650, 150, 100, 100);
+
+            rc.line(150, 200, 650, 200, { roughness: 2 });
+            
+            ctx.font = '20px "Cabin Sketch"';
+            ctx.fillText('Input', 50, 50);
+            ctx.fillText('Processing', 350, 50);
+            ctx.fillText('Output', 650, 50);
+        }
+
+        function animateProcessing() {
+            let x = 150;
+            const animate = () => {
+                ctx.clearRect(151, 190, 498, 20);
+                rc.circle(x, 200, 10, { fill: 'red' });
+                x += 5;
+                if (x < 650) {
+                    requestAnimationFrame(animate);
+                }
+            };
+            animate();
+        }
+
+        function generatePredictions(input, model) {
+            const words = input.toLowerCase().split(' ');
+            const lastWord = words[words.length - 1];
+            let predictions = [];
+
+            switch(model) {
+                case 'statistical':
+                    predictions = [
+                        lastWord + ' is',
+                        lastWord + ' was',
+                        'the ' + lastWord,
+                        'a ' + lastWord,
+                        lastWord + 's'
+                    ];
+                    break;
+                case 'neural':
+                    predictions = [
+                        lastWord + ' and',
+                        'in the ' + lastWord,
+                        lastWord + ' of',
+                        'with ' + lastWord,
+                        lastWord + ' for'
+                    ];
+                    break;
+                case 'transformer':
+                    predictions = [
+                        lastWord + ' however',
+                        'despite the ' + lastWord,
+                        lastWord + ' nevertheless',
+                        'although ' + lastWord,
+                        lastWord + ' consequently'
+                    ];
+                    break;
+            }
+
+            return predictions.map(p => p.toLowerCase());
+        }
+
+        function updateModelInfo(model) {
+            let info = "";
+            switch(model) {
+                case 'statistical':
+                    info = "Statistical Model: Uses frequency of word pairs in the input. Fast but limited context understanding.";
+                    break;
+                case 'neural':
+                    info = "Neural Model: Uses patterns learned from a large dataset. Better at capturing context but computationally intensive.";
+                    break;
+                case 'transformer':
+                    info = "Transformer Model: Uses context from the entire input sequence. Excellent at understanding context but requires significant computational resources.";
+                    break;
+            }
+            modelInfoDiv.textContent = info;
+        }
+
+        function predict() {
+            const input = textInput.value;
+            const model = document.querySelector('input[name="model"]:checked').value;
+            updateModelInfo(model);
+            animateProcessing();
+            setTimeout(() => {
+                const predictions = generatePredictions(input, model);
+                let predictionHTML = '<h3>Predictions:</h3><ul>';
+                predictions.forEach(p => {
+                    predictionHTML += `<li>${p}</li>`;
+                });
+                predictionHTML += '</ul>';
+                predictionsDiv.innerHTML = predictionHTML;
+
+                let analysis;
+                switch(model) {
+                    case 'statistical':
+                        analysis = "This prediction uses frequency of word pairs in the input.";
+                        break;
+                    case 'neural':
+                        analysis = "This prediction uses patterns learned from a large dataset.";
+                        break;
+                    case 'transformer':
+                        analysis = "This prediction uses context from the entire input sequence.";
+                        break;
+                }
+                analysisDiv.textContent = `Analysis: ${analysis}`;
+            }, 1000);
+        }
+
+        drawScene();
+        predictButton.addEventListener('click', predict);
+        modelSelector.addEventListener('change', (e) => updateModelInfo(e.target.value));
+        updateModelInfo('statistical');
+    </script>
+</body>
+</html>

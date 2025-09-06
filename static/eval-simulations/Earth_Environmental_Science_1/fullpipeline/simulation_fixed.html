@@ -1,0 +1,347 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tectonic Adventures</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cabin+Sketch:wght@400;700&family=Londrina+Sketch&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/roughjs@latest/bundled/rough.js"></script>
+    <style>
+        body {
+            font-family: 'Cabin Sketch', cursive;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 20px;
+        }
+        h1 {
+            font-family: 'Cabin Sketch', cursive;
+            font-weight: 700;
+            font-size: 2.5em;
+            color: #333;
+        }
+        .description {
+            font-family: 'Cabin Sketch', cursive;
+            font-weight: 400;
+            font-size: 1.2em;
+            max-width: 800px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        #simulationCanvas {
+            border: 2px solid #333;
+            margin-bottom: 20px;
+        }
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        label {
+            font-family: 'Cabin Sketch', cursive;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+        select, button {
+            font-family: 'Cabin Sketch', cursive;
+            font-size: 1em;
+            padding: 5px 10px;
+            border: 2px solid #333;
+            border-radius: 5px;
+            background-color: #fff;
+            cursor: pointer;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #dataTable {
+            border-collapse: collapse;
+            width: 100%;
+            max-width: 800px;
+        }
+        #dataTable th, #dataTable td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        #dataTable th {
+            background-color: #f2f2f2;
+        }
+        #analysisPanel, #predictionTool {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #fff;
+            max-width: 800px;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <h1>Tectonic Adventures</h1>
+    <div class="description">
+        Welcome to Tectonic Adventures! In this simulation, you'll explore how Earth's tectonic plates interact and shape our planet's surface. Experiment with different types of plate boundaries, adjust the speed of plate movement, and observe the fascinating geological features that form over time. Get ready to unleash your inner geologist and uncover the secrets of Earth's dynamic crust!
+    </div>
+    <canvas id="simulationCanvas" width="800" height="400"></canvas>
+    <div class="controls">
+        <div class="control-group">
+            <label for="boundaryType">Boundary Type:</label>
+            <select id="boundaryType">
+                <option value="divergent">Divergent</option>
+                <option value="convergent">Convergent</option>
+                <option value="transform">Transform</option>
+            </select>
+        </div>
+        <div class="control-group">
+            <label for="plateSpeed">Plate Speed (cm/year):</label>
+            <input type="range" id="plateSpeed" min="1" max="10" value="5">
+        </div>
+        <div class="control-group">
+            <label for="simulationTime">Simulation Time (million years):</label>
+            <input type="number" id="simulationTime" min="1" max="100" value="10">
+        </div>
+        <button id="startSimulation">Start Simulation</button>
+        <button id="recordFeatures">Record Features</button>
+    </div>
+    <table id="dataTable">
+        <thead>
+            <tr>
+                <th>Boundary Type</th>
+                <th>Time (million years)</th>
+                <th>Features Formed</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+    <div id="analysisPanel">
+        <h2>Data Analysis</h2>
+        <p id="analysisResult"></p>
+    </div>
+    <div id="predictionTool">
+        <h2>Feature Prediction</h2>
+        <p>Based on your observations, what features do you predict will form in the next simulation?</p>
+        <input type="text" id="prediction" placeholder="Enter your prediction">
+        <button id="submitPrediction">Submit Prediction</button>
+    </div>
+    <script>
+        window.LOG_DEBUG = false;
+
+        function logDebug(message) {
+            if (window.LOG_DEBUG) {
+                console.log(`DEBUG [${new Date().toISOString()}]: ${message}`);
+            }
+        }
+
+        const canvas = document.getElementById('simulationCanvas');
+        const rc = rough.canvas(canvas);
+
+        let boundaryType = 'divergent';
+        let plateSpeed = 5;
+        let simulationTime = 10;
+        let animationId;
+        let plates = [];
+
+        function initSimulation() {
+            logDebug('Initializing simulation');
+            plates = [
+                { x: 0, y: 200, width: 400, height: 100, depth: 50 },
+                { x: 400, y: 200, width: 400, height: 100, depth: 50 }
+            ];
+            drawScene();
+        }
+
+        function drawScene() {
+            logDebug('Drawing scene');
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            rc.rectangle(0, 300, canvas.width, 100, {
+                fill: 'orange',
+                fillStyle: 'solid',
+                roughness: 2
+            });
+
+            plates.forEach(plate => {
+                drawPlate3D(plate);
+            });
+
+            switch (boundaryType) {
+                case 'divergent':
+                    drawDivergentFeatures();
+                    break;
+                case 'convergent':
+                    drawConvergentFeatures();
+                    break;
+                case 'transform':
+                    drawTransformFeatures();
+                    break;
+            }
+        }
+
+        function drawPlate3D(plate) {
+            rc.rectangle(plate.x, plate.y, plate.width, plate.height, {
+                fill: 'gray',
+                fillStyle: 'solid',
+                roughness: 1
+            });
+
+            rc.line(plate.x, plate.y, plate.x, plate.y + plate.depth, { roughness: 1 });
+            rc.line(plate.x + plate.width, plate.y, plate.x + plate.width, plate.y + plate.depth, { roughness: 1 });
+            rc.line(plate.x, plate.y + plate.depth, plate.x + plate.width, plate.y + plate.depth, { roughness: 1 });
+        }
+
+        function drawDivergentFeatures() {
+            logDebug('Drawing divergent features');
+            const centerX = canvas.width / 2;
+            rc.line(centerX, 200, centerX, 300, { roughness: 2, strokeWidth: 2 });
+            rc.polygon([[centerX - 50, 200], [centerX, 150], [centerX + 50, 200]], {
+                fill: 'red',
+                fillStyle: 'solid',
+                roughness: 1
+            });
+        }
+
+        function drawConvergentFeatures() {
+            logDebug('Drawing convergent features');
+            const centerX = canvas.width / 2;
+            rc.line(centerX - 50, 200, centerX, 150, { roughness: 2, strokeWidth: 2 });
+            rc.line(centerX + 50, 200, centerX, 150, { roughness: 2, strokeWidth: 2 });
+            rc.polygon([[centerX - 30, 150], [centerX, 100], [centerX + 30, 150]], {
+                fill: 'brown',
+                fillStyle: 'solid',
+                roughness: 1
+            });
+        }
+
+        function drawTransformFeatures() {
+            logDebug('Drawing transform features');
+            const centerX = canvas.width / 2;
+            rc.line(centerX - 50, 180, centerX + 50, 220, { roughness: 2, strokeWidth: 2 });
+            rc.line(centerX - 50, 220, centerX + 50, 180, { roughness: 2, strokeWidth: 2 });
+        }
+
+        function animate() {
+            logDebug('Animating');
+            switch (boundaryType) {
+                case 'divergent':
+                    plates[0].x -= plateSpeed / 10;
+                    plates[1].x += plateSpeed / 10;
+                    break;
+                case 'convergent':
+                    plates[0].x += plateSpeed / 10;
+                    plates[1].x -= plateSpeed / 10;
+                    break;
+                case 'transform':
+                    plates[0].y -= plateSpeed / 10;
+                    plates[1].y += plateSpeed / 10;
+                    break;
+            }
+            drawScene();
+            animationId = requestAnimationFrame(animate);
+        }
+
+        document.getElementById('boundaryType').addEventListener('change', (e) => {
+            boundaryType = e.target.value;
+            logDebug(`Boundary type changed to ${boundaryType}`);
+            drawScene();
+        });
+
+        document.getElementById('plateSpeed').addEventListener('input', (e) => {
+            plateSpeed = parseInt(e.target.value);
+            logDebug(`Plate speed changed to ${plateSpeed}`);
+        });
+
+        document.getElementById('simulationTime').addEventListener('input', (e) => {
+            simulationTime = parseInt(e.target.value);
+            logDebug(`Simulation time changed to ${simulationTime}`);
+        });
+
+        document.getElementById('startSimulation').addEventListener('click', () => {
+            logDebug('Simulation started');
+            cancelAnimationFrame(animationId);
+            initSimulation();
+            animate();
+            setTimeout(() => {
+                cancelAnimationFrame(animationId);
+                logDebug('Simulation ended');
+            }, simulationTime * 1000);
+        });
+
+        document.getElementById('recordFeatures').addEventListener('click', () => {
+            logDebug('Recording features');
+            const table = document.getElementById('dataTable').getElementsByTagName('tbody')[0];
+            const row = table.insertRow();
+            row.insertCell(0).textContent = boundaryType;
+            row.insertCell(1).textContent = simulationTime;
+            row.insertCell(2).textContent = getFeatures();
+            updateAnalysis();
+        });
+
+        document.getElementById('submitPrediction').addEventListener('click', () => {
+            const prediction = document.getElementById('prediction').value;
+            logDebug(`Prediction submitted: ${prediction}`);
+            alert(`Your prediction: ${prediction}\nLet's run the simulation and see if you're right!`);
+        });
+
+        function getFeatures() {
+            switch (boundaryType) {
+                case 'divergent':
+                    return 'Rift Valley, Mid-Ocean Ridge';
+                case 'convergent':
+                    return 'Ocean Trench, Volcanic Arc, Mountains';
+                case 'transform':
+                    return 'Fault Line';
+                default:
+                    return 'Unknown';
+            }
+        }
+
+        function updateAnalysis() {
+            logDebug('Updating analysis');
+            const table = document.getElementById('dataTable');
+            const rows = table.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
+            let analysis = 'Based on your recordings:\n';
+            for (let i = 0; i < rows.length; i++) {
+                const cells = rows[i].getElementsByTagName('td');
+                analysis += `- ${cells[0].textContent} boundaries formed ${cells[2].textContent} over ${cells[1].textContent} million years.\n`;
+            }
+            document.getElementById('analysisResult').textContent = analysis;
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            initSimulation();
+            logDebug('Simulation initialized');
+            if (window.LOG_DEBUG) {
+                document.querySelectorAll('input, button, select').forEach((control) => {
+                    logDebug(`Control ${control.id || 'unnamed'} (${control.tagName}): Initial value: ${control.value || 'N/A'}`);
+                });
+                document.querySelectorAll('button').forEach((button) => {
+                    button.addEventListener('click', () => logDebug(`Button ${button.id || 'unnamed'} clicked`));
+                });
+                document.querySelectorAll('input').forEach((input) => {
+                    input.addEventListener('change', (e) => logDebug(`Input ${input.id || 'unnamed'} changed to ${e.target.value}`));
+                });
+            }
+        });
+    </script>
+</body>
+</html>

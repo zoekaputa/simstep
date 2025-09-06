@@ -1,0 +1,254 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Basketball Shot Simulator</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cabin+Sketch:wght@400;700&family=Londrina+Sketch&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/roughjs@latest/bundled/rough.js"></script>
+    <style>
+        body {
+            font-family: 'Cabin Sketch', cursive;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #f0f0f0;
+        }
+        h1 {
+            font-family: 'Cabin Sketch', cursive;
+            font-weight: 700;
+            color: #333;
+        }
+        p {
+            font-family: 'Cabin Sketch', cursive;
+            font-weight: 400;
+            color: #666;
+            max-width: 800px;
+            text-align: center;
+        }
+        #canvas-container {
+            position: relative;
+            width: 800px;
+            height: 600px;
+        }
+        canvas {
+            border: 2px solid #333;
+        }
+        #controls {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        label {
+            margin-bottom: 5px;
+        }
+        input[type="range"] {
+            width: 200px;
+        }
+        button {
+            font-family: 'Cabin Sketch', cursive;
+            font-weight: 700;
+            font-size: 18px;
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #outcome {
+            font-size: 24px;
+            font-weight: 700;
+            margin-top: 20px;
+        }
+        table {
+            margin-top: 20px;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #333;
+            padding: 8px;
+            text-align: center;
+        }
+        th {
+            background-color: #4CAF50;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <h1>Basketball Shot Simulator</h1>
+    <p>Welcome to the Basketball Shot Simulator! In this experiment, you'll explore how different factors affect the trajectory of a basketball shot. Adjust the initial velocity, launch angle, and air resistance to see how they impact the ball's path. Can you make the perfect shot? Experiment with different combinations and observe the results!</p>
+    <div id="canvas-container">
+        <canvas id="canvas" width="800" height="600"></canvas>
+    </div>
+    <div id="controls">
+        <div class="control-group">
+            <label for="velocity">Initial Velocity (m/s):</label>
+            <input type="range" id="velocity" min="0" max="200" value="16.7" step="0.1">
+            <span id="velocity-value">16.7</span>
+        </div>
+        <div class="control-group">
+            <label for="angle">Launch Angle (degrees):</label>
+            <input type="range" id="angle" min="0" max="90" value="45" step="1">
+            <span id="angle-value">45</span>
+        </div>
+        <div class="control-group">
+            <label for="air-resistance">Air Resistance (0-1):</label>
+            <input type="range" id="air-resistance" min="0" max="1" value="0.1" step="0.01">
+            <span id="air-resistance-value">0.1</span>
+        </div>
+        <button id="launch">Launch Ball</button>
+    </div>
+    <div id="outcome"></div>
+    <table id="data-table">
+        <thead>
+            <tr>
+                <th>Attempt</th>
+                <th>Velocity (m/s)</th>
+                <th>Angle (degrees)</th>
+                <th>Air Resistance</th>
+                <th>Outcome</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const rc = rough.canvas(canvas);
+
+        let ballX = 50;
+        let ballY = 500;
+        const basketX = 700;
+        const basketY = 300;
+        const gravity = 9.8;
+        let attempts = 0;
+
+        function drawCourt() {
+            rc.rectangle(0, 0, canvas.width, canvas.height, {fill: '#B7E4C7', roughness: 0.5});
+            rc.rectangle(50, 50, 700, 500, {fill: '#98C9A3', stroke: '#FFF', strokeWidth: 2, roughness: 0.5});
+            rc.circle(400, 300, 120, {stroke: '#FFF', strokeWidth: 2, roughness: 0.5});
+            rc.line(400, 50, 400, 550, {stroke: '#FFF', strokeWidth: 2, roughness: 0.5});
+        }
+
+        function drawBasket() {
+            rc.rectangle(basketX - 40, basketY - 15, 80, 5, {fill: '#FF6B35', roughness: 0.5});
+            rc.curve([[basketX - 40, basketY - 10], [basketX, basketY + 10], [basketX + 40, basketY - 10]], {stroke: '#000', strokeWidth: 2, roughness: 0.5});
+        }
+
+        function drawBall(x, y) {
+            rc.circle(x, y, 40, {fill: '#F7A41D', stroke: '#000', strokeWidth: 2, roughness: 0.5});
+            rc.line(x - 20, y, x + 20, y, {stroke: '#000', strokeWidth: 2, roughness: 0.5});
+            rc.line(x, y - 20, x, y + 20, {stroke: '#000', strokeWidth: 2, roughness: 0.5});
+        }
+
+        function updateSimulation() {
+            const velocity = parseFloat(document.getElementById('velocity').value);
+            const angle = parseFloat(document.getElementById('angle').value);
+            const airResistance = parseFloat(document.getElementById('air-resistance').value);
+
+            document.getElementById('velocity-value').textContent = velocity.toFixed(1);
+            document.getElementById('angle-value').textContent = angle.toFixed(0);
+            document.getElementById('air-resistance-value').textContent = airResistance.toFixed(2);
+        }
+
+        function launchBall() {
+            document.getElementById('outcome').textContent = '';
+            const velocity = parseFloat(document.getElementById('velocity').value);
+            const angle = parseFloat(document.getElementById('angle').value);
+            const airResistance = parseFloat(document.getElementById('air-resistance').value);
+
+            let vx = velocity * Math.cos(angle * Math.PI / 180);
+            let vy = -velocity * Math.sin(angle * Math.PI / 180);
+            let x = ballX;
+            let y = ballY;
+            let t = 0;
+            const dt = 0.01;
+            let passedThroughHoop = false;
+
+            function animate() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                drawCourt();
+                drawBasket();
+
+                x += vx * dt;
+                y += vy * dt;
+                vy += gravity * dt;
+
+                vx *= (1 - airResistance * dt);
+                vy *= (1 - airResistance * dt);
+
+                drawBall(x, y);
+
+                if (Math.abs(x - basketX) < 40 && Math.abs(y - basketY) < 30) {
+                    passedThroughHoop = true;
+                }
+
+                if (y < canvas.height && x < canvas.width) {
+                    requestAnimationFrame(animate);
+                } else {
+                    checkOutcome(passedThroughHoop);
+                }
+
+                t += dt;
+            }
+
+            animate();
+        }
+
+        function checkOutcome(passedThroughHoop) {
+            attempts++;
+            let outcome;
+            if (passedThroughHoop) {
+                outcome = "YAY";
+                document.getElementById('outcome').style.color = '#4CAF50';
+            } else {
+                outcome = "MISS";
+                document.getElementById('outcome').style.color = '#FF6B35';
+            }
+            document.getElementById('outcome').textContent = outcome;
+
+            const velocity = document.getElementById('velocity').value;
+            const angle = document.getElementById('angle').value;
+            const airResistance = document.getElementById('air-resistance').value;
+
+            const tableBody = document.querySelector('#data-table tbody');
+            const newRow = tableBody.insertRow();
+            newRow.innerHTML = `
+                <td>${attempts}</td>
+                <td>${velocity}</td>
+                <td>${angle}</td>
+                <td>${airResistance}</td>
+                <td>${outcome}</td>
+            `;
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            drawCourt();
+            drawBasket();
+            drawBall(ballX, ballY);
+            updateSimulation();
+        });
+
+        document.getElementById('velocity').addEventListener('input', updateSimulation);
+        document.getElementById('angle').addEventListener('input', updateSimulation);
+        document.getElementById('air-resistance').addEventListener('input', updateSimulation);
+        document.getElementById('launch').addEventListener('click', launchBall);
+    </script>
+</body>
+</html>

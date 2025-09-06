@@ -1,0 +1,213 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Garden Biodiversity Simulation</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cabin+Sketch:wght@400;700&family=Londrina+Sketch&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/roughjs@latest/bundled/rough.js"></script>
+    <style>
+        body {
+            font-family: 'Cabin Sketch', cursive;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #f0f8ff;
+            margin: 0;
+            padding: 20px;
+        }
+        h1, h2 {
+            font-family: 'Cabin Sketch', cursive;
+            font-weight: 700;
+            color: #2c3e50;
+        }
+        .description {
+            font-family: 'Cabin Sketch', cursive;
+            font-weight: 400;
+            max-width: 800px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        #gardenCanvas {
+            border: 2px solid #2c3e50;
+            margin-bottom: 20px;
+        }
+        .controls {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+        button, input {
+            font-family: 'Cabin Sketch', cursive;
+            font-size: 16px;
+            padding: 10px;
+            border: 2px solid #2c3e50;
+            border-radius: 5px;
+            background-color: #ecf0f1;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #bdc3c7;
+        }
+        #dataDisplay {
+            font-family: 'Cabin Sketch', cursive;
+            font-weight: 400;
+            border: 2px solid #2c3e50;
+            padding: 10px;
+            margin-top: 20px;
+            background-color: #ecf0f1;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+        .plot-data {
+            border: 1px solid #2c3e50;
+            padding: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Garden Biodiversity Simulation</h1>
+    <div class="description">
+        <p>Welcome to the Garden Biodiversity Simulation! In this experiment, you'll explore how the number of plant and animal species in a garden affects its overall health and resilience. You'll observe four different garden plots with varying levels of biodiversity and see how they respond to changes over time and unexpected disturbances.</p>
+    </div>
+    <canvas id="gardenCanvas" width="800" height="400"></canvas>
+    <div class="controls">
+        <input type="range" id="timeSlider" min="0" max="100" value="0">
+        <label for="timeSlider">Time (Days): <span id="timeValue">0</span></label>
+        <button id="disturbanceButton">Simulate Disturbance</button>
+    </div>
+    <h2>Data Display</h2>
+    <div id="dataDisplay"></div>
+
+    <script>
+        window.LOG_DEBUG = false;
+
+        function logDebug(message) {
+            if (window.LOG_DEBUG) {
+                console.log(`DEBUG [${new Date().toISOString()}]: ${message}`);
+            }
+        }
+
+        const canvas = document.getElementById('gardenCanvas');
+        const ctx = canvas.getContext('2d');
+        const rc = rough.canvas(canvas);
+
+        const timeSlider = document.getElementById('timeSlider');
+        const timeValue = document.getElementById('timeValue');
+        const disturbanceButton = document.getElementById('disturbanceButton');
+        const dataDisplay = document.getElementById('dataDisplay');
+
+        const plots = [
+            { name: 'Plot A', species: 10, health: 100, x: 0, y: 0 },
+            { name: 'Plot B', species: 5, health: 100, x: 200, y: 0 },
+            { name: 'Plot C', species: 3, health: 100, x: 400, y: 0 },
+            { name: 'Plot D', species: 1, health: 100, x: 600, y: 0 }
+        ];
+
+        function drawPlot(plot) {
+            const plantCount = Math.min(plot.species, 10);
+            rc.rectangle(plot.x, plot.y, 200, 400, { 
+                fill: `rgba(0, ${plot.health * 2}, 0, 0.3)`,
+                fillStyle: 'solid',
+                roughness: 2
+            });
+
+            for (let i = 0; i < plantCount; i++) {
+                const x = plot.x + 20 + (i % 3) * 60;
+                const y = plot.y + 50 + Math.floor(i / 3) * 100;
+                drawPlant(x, y, plot.health);
+            }
+
+            ctx.font = '20px "Cabin Sketch"';
+            ctx.fillStyle = '#2c3e50';
+            ctx.fillText(plot.name, plot.x + 10, plot.y + 30);
+            ctx.fillText(`Species: ${plot.species}`, plot.x + 10, plot.y + 380);
+        }
+
+        function drawPlant(x, y, health) {
+            const color = `rgb(0, ${Math.min(health * 2, 255)}, 0)`;
+            rc.circle(x, y, 30, { fill: color, fillStyle: 'solid', roughness: 2 });
+            rc.line(x, y + 15, x, y + 50, { roughness: 2 });
+        }
+
+        function updateSimulation() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            plots.forEach(plot => drawPlot(plot));
+            updateDataDisplay();
+            logDebug('Simulation updated');
+        }
+
+        function simulateDisturbance() {
+            plots.forEach(plot => {
+                const impact = Math.random() * (11 - plot.species);
+                plot.health = Math.max(0, plot.health - impact);
+                logDebug(`Disturbance impact on ${plot.name}: ${impact}`);
+            });
+            updateSimulation();
+        }
+
+        function updateDataDisplay() {
+            dataDisplay.innerHTML = '';
+            plots.forEach(plot => {
+                const stabilityScore = plot.health * plot.species / 10;
+                const resilienceScore = plot.species * 10;
+                const pestControlScore = stabilityScore * 0.8;
+                const cropResilienceScore = resilienceScore * 0.9;
+
+                const plotDiv = document.createElement('div');
+                plotDiv.classList.add('plot-data');
+                plotDiv.innerHTML = `
+                    <h3>${plot.name}</h3>
+                    <strong>Ecosystem Stability:</strong> ${stabilityScore.toFixed(2)}<br>
+                    <strong>Ecosystem Resilience:</strong> ${resilienceScore.toFixed(2)}<br>
+                    <strong>Natural Pest Control:</strong> ${pestControlScore.toFixed(2)}<br>
+                    <strong>Crop Variety Resilience:</strong> ${cropResilienceScore.toFixed(2)}
+                `;
+                dataDisplay.appendChild(plotDiv);
+            });
+            logDebug('Data display updated');
+        }
+
+        timeSlider.addEventListener('input', () => {
+            const time = parseInt(timeSlider.value);
+            timeValue.textContent = time;
+            plots.forEach(plot => {
+                plot.health = Math.min(100, plot.health + (plot.species / 10));
+            });
+            updateSimulation();
+            logDebug(`Time changed to ${time}`);
+        });
+
+        disturbanceButton.addEventListener('click', () => {
+            simulateDisturbance();
+            logDebug('Disturbance simulated');
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            updateSimulation();
+            if (window.LOG_DEBUG) {
+                logDebug('Simulation initialized');
+                document.querySelectorAll('svg').forEach((svg, index) => {
+                    const rect = svg.getBoundingClientRect();
+                    logDebug(`SVG #${index}: Position {x: ${rect.x}, y: ${rect.y}}, Size {w: ${rect.width}, h: ${rect.height}}`);
+                });
+                document.querySelectorAll('input, button, select').forEach((control) => {
+                    logDebug(`Control ${control.id || 'unnamed'} (${control.tagName}): Initial value: ${control.value || 'N/A'}`);
+                });
+                
+                document.querySelectorAll('button').forEach((button) => {
+                    button.addEventListener('click', () => logDebug(`Button ${button.id || 'unnamed'} clicked`));
+                });
+                document.querySelectorAll('input').forEach((input) => {
+                    input.addEventListener('change', (e) => logDebug(`Input ${input.id || 'unnamed'} changed to ${e.target.value}`));
+                });
+            }
+        });
+    </script>
+</body>
+</html>
