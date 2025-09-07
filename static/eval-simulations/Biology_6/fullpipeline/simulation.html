@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neural Signal Transmission Simulator</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cabin+Sketch:wght@400;700&family=Londrina+Sketch&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/roughjs@latest/bundled/rough.js"></script>
+    <style>
+        body {
+            font-family: 'Cabin Sketch', cursive;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 20px;
+        }
+        h1 {
+            font-family: 'Cabin Sketch', cursive;
+            font-weight: 700;
+            color: #3a3a3a;
+        }
+        p {
+            font-family: 'Cabin Sketch', cursive;
+            font-weight: 400;
+            color: #555;
+            max-width: 800px;
+            text-align: center;
+        }
+        #canvas-container {
+            position: relative;
+            width: 800px;
+            height: 400px;
+            margin-bottom: 20px;
+        }
+        canvas {
+            border: 2px solid #3a3a3a;
+            border-radius: 10px;
+        }
+        #controls {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        button, input {
+            font-family: 'Cabin Sketch', cursive;
+            font-size: 16px;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        input[type="range"] {
+            width: 200px;
+        }
+        #graphs {
+            display: flex;
+            justify-content: space-around;
+            width: 100%;
+            max-width: 800px;
+        }
+        .graph {
+            width: 45%;
+            height: 200px;
+            border: 2px solid #3a3a3a;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Neural Signal Transmission Simulator</h1>
+    <p>Welcome to the Neural Signal Transmission Simulator! In this experiment, you'll explore how signals travel through a neuron, from the dendrites to the axon terminal. You'll see how neurotransmitters, myelin sheaths, and nodes of Ranvier all play crucial roles in this fascinating process. Adjust the neurotransmitter quantity and observe how it affects signal transmission. Let's dive into the world of neural communication!</p>
+    <div id="canvas-container">
+        <canvas id="neuronCanvas" width="800" height="400"></canvas>
+    </div>
+    <div id="controls">
+        <input type="range" id="neurotransmitterSlider" min="0" max="100" value="50">
+        <label for="neurotransmitterSlider">Neurotransmitter Quantity (molecules)</label>
+        <button id="startButton">Start Simulation</button>
+        <button id="resetButton">Reset</button>
+    </div>
+    <div id="graphs">
+        <canvas id="speedGraph" class="graph"></canvas>
+        <canvas id="successGraph" class="graph"></canvas>
+    </div>
+    <script>
+        window.LOG_DEBUG = false;
+
+        function logDebug(message) {
+            if (window.LOG_DEBUG) {
+                console.log(`DEBUG [${new Date().toISOString()}]: ${message}`);
+            }
+        }
+
+        const neuronCanvas = document.getElementById('neuronCanvas');
+        const speedGraph = document.getElementById('speedGraph');
+        const successGraph = document.getElementById('successGraph');
+        const rc = rough.canvas(neuronCanvas);
+        const rcSpeed = rough.canvas(speedGraph);
+        const rcSuccess = rough.canvas(successGraph);
+
+        const neuronSVG = `
+            <svg viewBox="0 0 800 400">
+                <path d="M100,200 C150,100 250,100 300,200 S450,300 500,200 S650,100 700,200" fill="none" stroke="#3a3a3a" stroke-width="10"/>
+                <circle cx="100" cy="200" r="40" fill="#f0f0f0" stroke="#3a3a3a" stroke-width="5"/>
+                <circle cx="700" cy="200" r="20" fill="#f0f0f0" stroke="#3a3a3a" stroke-width="5"/>
+            </svg>
+        `;
+
+        const neurotransmitterSVG = `
+            <svg viewBox="0 0 20 20">
+                <circle cx="10" cy="10" r="8" fill="#4CAF50"/>
+            </svg>
+        `;
+
+        let neurotransmitters = [];
+        let signalSpeed = 0;
+        let transmissionSuccess = 0;
+
+        function drawNeuron() {
+            rc.path('M100,200 C150,100 250,100 300,200 S450,300 500,200 S650,100 700,200', {
+                stroke: '#3a3a3a',
+                strokeWidth: 10,
+                roughness: 1
+            });
+            rc.circle(100, 200, 80, { fill: 'white', stroke: '#3a3a3a', strokeWidth: 5, roughness: 1 });
+            rc.circle(700, 200, 40, { fill: 'white', stroke: '#3a3a3a', strokeWidth: 5, roughness: 1 });
+        }
+
+        function drawMyelin() {
+            for (let i = 300; i < 700; i += 100) {
+                rc.rectangle(i, 180, 80, 40, { fill: '#FFD700', stroke: '#3a3a3a', strokeWidth: 2, roughness: 0.5 });
+            }
+        }
+
+        function drawNeurotransmitters() {
+            neurotransmitters.forEach(nt => {
+                rc.circle(nt.x, nt.y, 10, { fill: '#4CAF50', stroke: '#3a3a3a', strokeWidth: 1, roughness: 0.5 });
+            });
+        }
+
+        function updateSimulation() {
+            neuronCanvas.getContext('2d').clearRect(0, 0, neuronCanvas.width, neuronCanvas.height);
+            drawNeuron();
+            drawMyelin();
+            drawNeurotransmitters();
+
+            neurotransmitters.forEach(nt => {
+                nt.x += 5;
+                nt.y = 200 + Math.sin(nt.x / 20) * 20;
+            });
+
+            neurotransmitters = neurotransmitters.filter(nt => nt.x < 800);
+
+            signalSpeed = 50 + Math.random() * 50;
+            transmissionSuccess = neurotransmitters.length / 2;
+
+            updateGraphs();
+
+            if (neurotransmitters.length > 0) {
+                requestAnimationFrame(updateSimulation);
+            }
+        }
+
+        function updateGraphs() {
+            speedGraph.getContext('2d').clearRect(0, 0, speedGraph.width, speedGraph.height);
+            successGraph.getContext('2d').clearRect(0, 0, successGraph.width, successGraph.height);
+
+            rcSpeed.line(0, 100, 200, 100 - signalSpeed, { stroke: '#3a3a3a', strokeWidth: 2 });
+            rcSuccess.line(0, 100, 200, 100 - transmissionSuccess, { stroke: '#3a3a3a', strokeWidth: 2 });
+        }
+
+        document.getElementById('startButton').addEventListener('click', () => {
+            logDebug('Start button clicked');
+            const quantity = parseInt(document.getElementById('neurotransmitterSlider').value);
+            neurotransmitters = Array(quantity).fill().map(() => ({ x: 100, y: 200 }));
+            updateSimulation();
+        });
+
+        document.getElementById('resetButton').addEventListener('click', () => {
+            logDebug('Reset button clicked');
+            neurotransmitters = [];
+            signalSpeed = 0;
+            transmissionSuccess = 0;
+            neuronCanvas.getContext('2d').clearRect(0, 0, neuronCanvas.width, neuronCanvas.height);
+            drawNeuron();
+            drawMyelin();
+            updateGraphs();
+        });
+
+        document.getElementById('neurotransmitterSlider').addEventListener('input', (e) => {
+            logDebug(`Neurotransmitter slider changed to ${e.target.value}`);
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            drawNeuron();
+            drawMyelin();
+            updateGraphs();
+
+            if (window.LOG_DEBUG) {
+                logDebug('Simulation initialized');
+                document.querySelectorAll('svg').forEach((svg, index) => {
+                    const rect = svg.getBoundingClientRect();
+                    logDebug(`SVG #${index}: Position {x: ${rect.x}, y: ${rect.y}}, Size {w: ${rect.width}, h: ${rect.height}}`);
+                });
+                document.querySelectorAll('input, button, select').forEach((control) => {
+                    logDebug(`Control ${control.id || 'unnamed'} (${control.tagName}): Initial value: ${control.value || 'N/A'}`);
+                });
+            }
+        });
+    </script>
+</body>
+</html>
