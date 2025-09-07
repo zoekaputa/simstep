@@ -1,0 +1,289 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Desert Water Resource Management Simulation</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cabin+Sketch:wght@400;700&family=Londrina+Sketch&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/roughjs@latest/bundled/rough.js"></script>
+    <style>
+        body {
+            font-family: 'Cabin Sketch', cursive;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 20px;
+        }
+        h1 {
+            font-family: 'Cabin Sketch', cursive;
+            font-weight: 700;
+            color: #2c3e50;
+        }
+        p {
+            font-family: 'Cabin Sketch', cursive;
+            font-weight: 400;
+            color: #34495e;
+            max-width: 800px;
+            text-align: center;
+        }
+        #simulationCanvas {
+            border: 2px solid #2c3e50;
+            margin-bottom: 20px;
+        }
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        button, select {
+            font-family: 'Cabin Sketch', cursive;
+            font-weight: 700;
+            font-size: 16px;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            background-color: #3498db;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover, select:hover {
+            background-color: #2980b9;
+        }
+        select {
+            background-color: #2ecc71;
+        }
+        select:hover {
+            background-color: #27ae60;
+        }
+        #results {
+            font-family: 'Cabin Sketch', cursive;
+            font-weight: 400;
+            color: #2c3e50;
+            text-align: center;
+            margin-top: 20px;
+        }
+        #iwmBtn.active {
+            background-color: #e74c3c;
+        }
+        #iwmBtn.active::after {
+            content: " ✓";
+        }
+        #waterInfo {
+            font-family: 'Cabin Sketch', cursive;
+            font-weight: 400;
+            color: #2c3e50;
+            text-align: center;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Desert Water Resource Management Simulation</h1>
+    <p>Welcome to the Desert Water Resource Management Simulation! In this experiment, you'll explore the challenges of managing water resources in a desert environment. You'll analyze water consumption patterns, implement conservation strategies, and develop an integrated management approach to sustain human activities while protecting the fragile desert ecosystem.</p>
+    <canvas id="simulationCanvas" width="800" height="600"></canvas>
+    <div class="controls">
+        <button id="measureBtn">Measure Water Supply</button>
+        <select id="conserveMeasures">
+            <option value="">Select Conservation Measure</option>
+            <option value="rationing">Personal Water Rationing</option>
+            <option value="irrigation">Drip Irrigation</option>
+            <option value="recycling">Water Recycling in Industry</option>
+            <option value="cityPlanning">Desert City Planning</option>
+        </select>
+        <button id="recordBtn">Record Water Metrics</button>
+        <button id="wqpBtn">Activate Water Quality Protection</button>
+        <button id="iwmBtn">Activate Integrated Management</button>
+        <button id="compareBtn">Compare Results</button>
+    </div>
+    <div id="waterInfo"></div>
+    <div id="results"></div>
+
+    <script>
+        window.LOG_DEBUG = false;
+
+        function logDebug(message) {
+            if (window.LOG_DEBUG) {
+                console.log(`DEBUG [${new Date().toISOString()}]: ${message}`);
+            }
+        }
+
+        const canvas = document.getElementById('simulationCanvas');
+        const ctx = canvas.getContext('2d');
+        const rc = rough.canvas(canvas);
+
+        const desertEnvironment = {
+            waterSupply: 1000000, // Initial water supply in gallons
+            waterUsageData: [],
+            population: 100000,
+            agricultureUsage: 500000,
+            updateFrequency: 1, // Daily updates
+            events: ['drought', 'rainstorm'],
+            iwmActive: false,
+
+            updateWaterSupply: function() {
+                const usage = this.population * 0.1 + this.agricultureUsage;
+                this.waterSupply -= usage;
+                this.waterUsageData.push({date: new Date(), usage: usage});
+
+                // Random events
+                if (Math.random() < 0.1) {
+                    const event = this.events[Math.floor(Math.random() * this.events.length)];
+                    if (event === 'drought') {
+                        this.waterSupply *= 0.9;
+                    } else if (event === 'rainstorm') {
+                        this.waterSupply *= 1.1;
+                    }
+                }
+
+                if (this.iwmActive) {
+                    this.waterSupply *= 1.01; // Slight increase due to IWM
+                }
+
+                logDebug(`Water supply updated: ${this.waterSupply.toFixed(2)} gallons`);
+            }
+        };
+
+        function drawScene() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            rc.rectangle(0, 0, canvas.width, canvas.height, {
+                fill: 'khaki',
+                fillStyle: 'solid',
+                roughness: 2
+            });
+
+            // Draw sun
+            rc.circle(700, 100, 60, {
+                fill: 'yellow',
+                fillStyle: 'solid',
+                roughness: 1
+            });
+
+            // Draw water supply
+            const waterHeight = (desertEnvironment.waterSupply / 1000000) * 300;
+            rc.rectangle(350, 600 - waterHeight, 100, waterHeight, {
+                fill: 'blue',
+                fillStyle: 'solid',
+                roughness: 1
+            });
+
+            logDebug(`Scene redrawn. Water supply: ${desertEnvironment.waterSupply.toFixed(2)} gallons`);
+        }
+
+        function drawWaterUsageGraph() {
+            const graphWidth = 300;
+            const graphHeight = 150;
+            const graphX = 450;
+            const graphY = 50;
+
+            rc.rectangle(graphX, graphY, graphWidth, graphHeight, { roughness: 1 });
+
+            const dataPoints = desertEnvironment.waterUsageData.slice(-30); // Last 30 days
+            if (dataPoints.length > 1) {
+                const xStep = graphWidth / (dataPoints.length - 1);
+                const maxUsage = Math.max(...dataPoints.map(d => d.usage));
+                const yScale = graphHeight / maxUsage;
+
+                let path = `M${graphX},${graphY + graphHeight - dataPoints[0].usage * yScale}`;
+                for (let i = 1; i < dataPoints.length; i++) {
+                    path += ` L${graphX + i * xStep},${graphY + graphHeight - dataPoints[i].usage * yScale}`;
+                }
+
+                rc.path(path, { roughness: 1, stroke: 'blue' });
+            }
+        }
+
+        document.getElementById('measureBtn').addEventListener('click', () => {
+            drawScene();
+            drawWaterUsageGraph();
+
+            const waterSupplyCubicMeters = desertEnvironment.waterSupply * 0.00378541; // Convert gallons to cubic meters
+            const dailyUsage = desertEnvironment.waterUsageData.length > 0 ? desertEnvironment.waterUsageData[desertEnvironment.waterUsageData.length - 1].usage : 0;
+            const dailyUsageCubicMeters = dailyUsage * 0.00378541; // Convert gallons to cubic meters
+
+            const waterInfo = `
+                Current water supply: ${waterSupplyCubicMeters.toFixed(2)} cubic meters
+                Daily water usage rate: ${dailyUsageCubicMeters.toFixed(2)} cubic meters/day
+            `;
+            document.getElementById('waterInfo').innerHTML = waterInfo.replace(/\n/g, '<br>');
+
+            logDebug(`Measured water supply: ${waterSupplyCubicMeters.toFixed(2)} cubic meters`);
+        });
+
+        document.getElementById('conserveMeasures').addEventListener('change', (e) => {
+            const measure = e.target.value;
+            if (measure) {
+                desertEnvironment.waterSupply *= 1.05;
+                drawScene();
+            }
+            logDebug(`Conservation measure applied: ${measure}. New water supply: ${desertEnvironment.waterSupply.toFixed(2)} gallons`);
+        });
+
+        document.getElementById('recordBtn').addEventListener('click', () => {
+            const metrics = {
+                supply: desertEnvironment.waterSupply,
+                population: desertEnvironment.population,
+                agricultureUsage: desertEnvironment.agricultureUsage
+            };
+            logDebug(`Recorded metrics: ${JSON.stringify(metrics)}`);
+        });
+
+        document.getElementById('wqpBtn').addEventListener('click', () => {
+            desertEnvironment.waterSupply *= 1.02;
+            drawScene();
+            logDebug(`Water quality protection activated. New water supply: ${desertEnvironment.waterSupply.toFixed(2)} gallons`);
+        });
+
+        document.getElementById('iwmBtn').addEventListener('click', () => {
+            desertEnvironment.iwmActive = !desertEnvironment.iwmActive;
+            const iwmBtn = document.getElementById('iwmBtn');
+            if (desertEnvironment.iwmActive) {
+                iwmBtn.classList.add('active');
+                desertEnvironment.waterSupply *= 1.1;
+            } else {
+                iwmBtn.classList.remove('active');
+                desertEnvironment.waterSupply /= 1.1;
+            }
+            drawScene();
+            logDebug(`Integrated management ${desertEnvironment.iwmActive ? 'activated' : 'deactivated'}. New water supply: ${desertEnvironment.waterSupply.toFixed(2)} gallons`);
+        });
+
+        document.getElementById('compareBtn').addEventListener('click', () => {
+            const efficiency = (desertEnvironment.waterSupply / 1000000) * 100;
+            const results = `Water Management Plan Efficiency: ${efficiency.toFixed(2)}%`;
+            document.getElementById('results').textContent = results;
+            logDebug(`Comparison results: ${results}`);
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            drawScene();
+            setInterval(() => {
+                desertEnvironment.updateWaterSupply();
+                drawScene();
+            }, desertEnvironment.updateFrequency * 24 * 60 * 60 * 1000);
+
+            if (window.LOG_DEBUG) {
+                logDebug('Simulation initialized');
+                document.querySelectorAll('input, button, select').forEach((control) => {
+                    logDebug(`Control ${control.id || 'unnamed'} (${control.tagName}): Initial value: ${control.value || 'N/A'}`);
+                });
+                
+                document.querySelectorAll('button').forEach((button) => {
+                    button.addEventListener('click', () => logDebug(`Button ${button.id || 'unnamed'} clicked`));
+                });
+                document.querySelectorAll('input').forEach((input) => {
+                    input.addEventListener('change', (e) => logDebug(`Input ${input.id || 'unnamed'} changed to ${e.target.value}`));
+                });
+            }
+        });
+    </script>
+</body>
+</html>

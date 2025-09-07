@@ -1,0 +1,226 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SecurityNet System Simulation</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cabin+Sketch:wght@400;700&family=Londrina+Sketch&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/roughjs@latest/bundled/rough.js"></script>
+    <style>
+        body {
+            font-family: 'Cabin Sketch', cursive;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #f0f8ff;
+            margin: 0;
+            padding: 20px;
+        }
+        h1 {
+            font-family: 'Cabin Sketch', cursive;
+            font-weight: 700;
+            color: #4a4a4a;
+        }
+        #description {
+            font-family: 'Cabin Sketch', cursive;
+            font-weight: 400;
+            max-width: 800px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        #simulation-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        #controls {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        button, select {
+            font-family: 'Cabin Sketch', cursive;
+            font-size: 16px;
+            padding: 10px;
+            border: 2px solid #4a4a4a;
+            border-radius: 5px;
+            background-color: #ffffff;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover, select:hover {
+            background-color: #e0e0e0;
+        }
+        #defense-stage-indicator {
+            margin-top: 20px;
+            font-weight: bold;
+        }
+        #response-diagram {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>SecurityNet System Simulation</h1>
+    <div id="description">
+        Welcome to the SecurityNet System Simulation! In this experiment, you'll explore how our body's defense mechanisms work together to protect us from intruders. Just like a high-tech security system, our body has multiple layers of protection. You'll see how physical barriers, rapid response teams, and specialized units work together to keep us safe. Get ready to control the simulation and see these defenses in action!
+    </div>
+    <div id="simulation-container">
+        <canvas id="canvas" width="800" height="600"></canvas>
+        <div id="controls">
+            <select id="pathogen-selector">
+                <option value="virus">Virus</option>
+                <option value="bacteria">Bacteria</option>
+                <option value="fungus">Fungus</option>
+            </select>
+            <button id="start-simulation">Start Simulation</button>
+            <button id="reset-simulation">Reset Simulation</button>
+            <button id="zoom-in">Zoom In</button>
+            <button id="zoom-out">Zoom Out</button>
+        </div>
+        <div id="defense-stage-indicator">Current Defense Stage: None</div>
+        <div id="response-diagram"></div>
+    </div>
+    <script>
+        const canvas = document.getElementById('canvas');
+        const rc = rough.canvas(canvas);
+        const ctx = canvas.getContext('2d');
+
+        let currentStage = 'none';
+        let selectedPathogen = 'virus';
+        let pathogens = [];
+        let immuneComponents = [];
+        let zoomLevel = 1;
+        let zoomCenter = { x: canvas.width / 2, y: canvas.height / 2 };
+
+        function drawBody() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.save();
+            ctx.translate(zoomCenter.x, zoomCenter.y);
+            ctx.scale(zoomLevel, zoomLevel);
+            ctx.translate(-zoomCenter.x, -zoomCenter.y);
+            
+            rc.path('M200,50 Q100,200 100,350 Q100,550 200,550 Q300,550 300,350 Q300,200 200,50', {
+                stroke: 'black',
+                strokeWidth: 2,
+                fill: '#f8d5a3',
+                fillStyle: 'solid'
+            });
+
+            drawPathogens();
+            drawImmuneComponents();
+            ctx.restore();
+        }
+
+        function drawPathogens() {
+            pathogens.forEach(pathogen => {
+                drawPathogen(pathogen.x, pathogen.y, selectedPathogen);
+            });
+        }
+
+        function drawPathogen(x, y, type) {
+            const pathogenOptions = {
+                stroke: 'black',
+                strokeWidth: 1,
+                fill: type === 'virus' ? '#ff7f7f' : type === 'bacteria' ? '#7fbfff' : '#9f7fbf',
+                fillStyle: 'solid'
+            };
+
+            if (type === 'virus') {
+                rc.circle(x, y, 20, pathogenOptions);
+                rc.circle(x, y, 15, { ...pathogenOptions, fill: 'transparent' });
+                rc.line(x, y - 20, x, y + 20, pathogenOptions);
+                rc.line(x - 20, y, x + 20, y, pathogenOptions);
+            } else if (type === 'bacteria') {
+                rc.ellipse(x, y, 40, 30, pathogenOptions);
+                rc.line(x - 15, y - 5, x + 15, y - 5, pathogenOptions);
+                rc.line(x - 15, y + 5, x + 15, y + 5, pathogenOptions);
+            } else {
+                rc.path(`M${x},${y-20} Q${x+15},${y-5} ${x},${y+10} Q${x-15},${y-5} ${x},${y-20}`, pathogenOptions);
+                rc.line(x, y + 10, x, y + 20, pathogenOptions);
+            }
+        }
+
+        function drawImmuneComponents() {
+            immuneComponents.forEach(component => {
+                rc.circle(component.x, component.y, 10, {
+                    stroke: 'black',
+                    strokeWidth: 1,
+                    fill: '#00ff00',
+                    fillStyle: 'solid'
+                });
+            });
+        }
+
+        function updateDefenseStageIndicator() {
+            document.getElementById('defense-stage-indicator').textContent = `Current Defense Stage: ${currentStage}`;
+        }
+
+        function startSimulation() {
+            currentStage = 'Physical Barriers';
+            pathogens = [{x: 100, y: 100}, {x: 300, y: 200}, {x: 500, y: 300}];
+            immuneComponents = [];
+            updateDefenseStageIndicator();
+            drawBody();
+
+            setTimeout(() => {
+                currentStage = 'First Response';
+                immuneComponents.push({x: 150, y: 150}, {x: 350, y: 250});
+                updateDefenseStageIndicator();
+                drawBody();
+            }, 2000);
+
+            setTimeout(() => {
+                currentStage = 'Specialized Response';
+                immuneComponents.push({x: 200, y: 200}, {x: 400, y: 300}, {x: 550, y: 350});
+                updateDefenseStageIndicator();
+                drawBody();
+            }, 4000);
+        }
+
+        function resetSimulation() {
+            currentStage = 'none';
+            pathogens = [];
+            immuneComponents = [];
+            zoomLevel = 1;
+            zoomCenter = { x: canvas.width / 2, y: canvas.height / 2 };
+            updateDefenseStageIndicator();
+            drawBody();
+        }
+
+        function zoomIn() {
+            zoomLevel *= 1.2;
+            drawBody();
+        }
+
+        function zoomOut() {
+            zoomLevel /= 1.2;
+            drawBody();
+        }
+
+        document.getElementById('start-simulation').addEventListener('click', startSimulation);
+        document.getElementById('reset-simulation').addEventListener('click', resetSimulation);
+        document.getElementById('pathogen-selector').addEventListener('change', (e) => {
+            selectedPathogen = e.target.value;
+            drawBody();
+        });
+        document.getElementById('zoom-in').addEventListener('click', zoomIn);
+        document.getElementById('zoom-out').addEventListener('click', zoomOut);
+
+        canvas.addEventListener('mousemove', (e) => {
+            const rect = canvas.getBoundingClientRect();
+            zoomCenter.x = (e.clientX - rect.left) / zoomLevel;
+            zoomCenter.y = (e.clientY - rect.top) / zoomLevel;
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            drawBody();
+        });
+    </script>
+</body>
+</html>

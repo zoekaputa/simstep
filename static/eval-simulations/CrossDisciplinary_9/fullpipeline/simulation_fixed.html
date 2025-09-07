@@ -1,0 +1,153 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Planning Network Simulator</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cabin+Sketch:wght@400;700&family=Londrina+Sketch&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/roughjs@latest/bundled/rough.js"></script>
+    <style>
+        body {
+            font-family: 'Cabin Sketch', cursive;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 20px;
+        }
+        h1, h2 {
+            font-family: 'Cabin Sketch', cursive;
+            font-weight: 700;
+            color: #333;
+        }
+        #description {
+            font-family: 'Cabin Sketch', cursive;
+            font-weight: 400;
+            max-width: 800px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        #canvas {
+            border: 2px solid #333;
+            background-color: white;
+        }
+        #controls {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .slider-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        input[type="range"] {
+            width: 200px;
+        }
+        #profitDisplay {
+            font-size: 24px;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Event Planning Network Simulator</h1>
+    <div id="description">
+        Welcome to the Event Planning Network Simulator! This interactive tool helps you understand how different elements of an event interact and influence each other. Adjust the sliders to see how changes in cost, attendance, and food cost affect the overall profit of the event.
+    </div>
+    <canvas id="canvas" width="800" height="600"></canvas>
+    <div id="controls">
+        <h2>Event Parameters</h2>
+        <div class="slider-container">
+            <label for="costSlider">Cost:</label>
+            <input type="range" id="costSlider" min="1000" max="10000" step="100" value="5000">
+            <span id="costValue">5000</span>
+        </div>
+        <div class="slider-container">
+            <label for="attendanceSlider">Attendance:</label>
+            <input type="range" id="attendanceSlider" min="50" max="500" step="10" value="250">
+            <span id="attendanceValue">250</span>
+        </div>
+        <div class="slider-container">
+            <label for="foodCostSlider">Food Cost per Person:</label>
+            <input type="range" id="foodCostSlider" min="10" max="100" step="1" value="50">
+            <span id="foodCostValue">50</span>
+        </div>
+    </div>
+    <div id="profitDisplay">Profit: $0</div>
+
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const rc = rough.canvas(canvas);
+
+        const elements = [
+            { x: 200, y: 150, label: 'Cost' },
+            { x: 400, y: 150, label: 'Attendance' },
+            { x: 600, y: 150, label: 'Food Cost' },
+            { x: 400, y: 400, label: 'Profit' }
+        ];
+
+        const connections = [
+            { from: elements[0], to: elements[3] },
+            { from: elements[1], to: elements[3] },
+            { from: elements[2], to: elements[3] }
+        ];
+
+        function drawElement(x, y, label) {
+            rc.circle(x, y, 40, { fill: 'lightblue', stroke: 'blue' });
+            ctx.font = '14px Cabin Sketch';
+            ctx.fillStyle = 'black';
+            ctx.textAlign = 'center';
+            ctx.fillText(label, x, y);
+        }
+
+        function drawConnection(x1, y1, x2, y2) {
+            rc.line(x1, y1, x2, y2, { stroke: 'gray' });
+        }
+
+        function redraw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            elements.forEach(el => drawElement(el.x, el.y, el.label));
+            connections.forEach(conn => drawConnection(conn.from.x, conn.from.y, conn.to.x, conn.to.y));
+        }
+
+        function updateProfit() {
+            const cost = parseInt(document.getElementById('costSlider').value);
+            const attendance = parseInt(document.getElementById('attendanceSlider').value);
+            const foodCost = parseInt(document.getElementById('foodCostSlider').value);
+            
+            const revenue = attendance * 100; // Assume $100 per ticket
+            const totalFoodCost = attendance * foodCost;
+            const profit = revenue - cost - totalFoodCost;
+            
+            document.getElementById('profitDisplay').textContent = `Profit: $${profit}`;
+        }
+
+        document.getElementById('costSlider').addEventListener('input', (e) => {
+            document.getElementById('costValue').textContent = e.target.value;
+            updateProfit();
+        });
+
+        document.getElementById('attendanceSlider').addEventListener('input', (e) => {
+            document.getElementById('attendanceValue').textContent = e.target.value;
+            updateProfit();
+        });
+
+        document.getElementById('foodCostSlider').addEventListener('input', (e) => {
+            document.getElementById('foodCostValue').textContent = e.target.value;
+            updateProfit();
+        });
+
+        redraw();
+        updateProfit();
+    </script>
+</body>
+</html>

@@ -1,0 +1,219 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EcoTray Energy Experiment</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cabin+Sketch:wght@400;700&family=Londrina+Sketch&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/roughjs@latest/bundled/rough.js"></script>
+    <style>
+        body {
+            font-family: 'Cabin Sketch', cursive;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 20px;
+        }
+        h1 {
+            font-family: 'Cabin Sketch', cursive;
+            font-weight: 700;
+            color: #2c3e50;
+        }
+        p {
+            font-family: 'Cabin Sketch', cursive;
+            font-weight: 400;
+            color: #34495e;
+            max-width: 800px;
+            text-align: center;
+        }
+        #canvas {
+            border: 2px solid #2c3e50;
+            background-color: #ecf0f1;
+        }
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        button {
+            font-family: 'Cabin Sketch', cursive;
+            font-weight: 700;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        #energyDisplay, #results {
+            font-family: 'Cabin Sketch', cursive;
+            font-weight: 400;
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #ecf0f1;
+            border: 1px solid #bdc3c7;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>EcoTray Energy Experiment</h1>
+    <p>Welcome to the EcoTray Energy Experiment! In this simulation, we'll explore how energy flows through a cafeteria ecosystem. You'll see how energy is transferred from the cafeteria lights to the salad bar (our producers) and then through different levels of students (consumers). Pay attention to how the energy changes at each level!</p>
+    <canvas id="canvas" width="800" height="600"></canvas>
+    <div class="controls">
+        <button id="startSimulation">Start Simulation</button>
+        <button id="measureEnergy">Measure Energy</button>
+        <button id="calculateEfficiency">Calculate Efficiency</button>
+        <button id="repeatExperiment">Repeat Experiment</button>
+        <button id="reset">Reset</button>
+    </div>
+    <div id="energyDisplay"></div>
+    <div id="results"></div>
+
+    <script>
+        window.LOG_DEBUG = true;
+
+        function logDebug(message) {
+            if (window.LOG_DEBUG) {
+                console.log(`DEBUG [${new Date().toISOString()}]: ${message}`);
+            }
+        }
+
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const rc = rough.canvas(canvas);
+
+        let energy = {
+            light: 1000,
+            producer: 0,
+            primaryConsumer: 0,
+            secondaryConsumer: 0,
+            tertiaryConsumer: 0
+        };
+
+        function drawScene() {
+            rc.rectangle(0, 0, canvas.width, canvas.height, {
+                fill: '#ecf0f1',
+                fillStyle: 'solid'
+            });
+            
+            // Draw light
+            rc.circle(400, 100, 80, {
+                fill: 'yellow',
+                fillStyle: 'solid'
+            });
+            
+            // Draw salad bar
+            rc.rectangle(300, 200, 200, 100, {
+                fill: '#8cc63f',
+                fillStyle: 'solid'
+            });
+            rc.circle(350, 250, 20, { fill: 'red', fillStyle: 'solid' }); // Tomato
+            rc.rectangle(400, 230, 40, 40, { fill: 'orange', fillStyle: 'solid' }); // Carrot
+            rc.ellipse(460, 250, 50, 30, { fill: '#a05a2c', fillStyle: 'solid' }); // Potato
+            
+            // Draw students
+            rc.circle(225, 400, 20, { fill: '#f5d7b5', fillStyle: 'solid' }); // Head
+            rc.rectangle(215, 420, 20, 40, { fill: '#3498db', fillStyle: 'solid' }); // Body
+            rc.rectangle(210, 460, 10, 15, { fill: '#2c3e50', fillStyle: 'solid' }); // Left leg
+            rc.rectangle(230, 460, 10, 15, { fill: '#2c3e50', fillStyle: 'solid' }); // Right leg
+
+            rc.circle(400, 400, 20, { fill: '#f5d7b5', fillStyle: 'solid' }); // Head
+            rc.rectangle(390, 420, 20, 40, { fill: '#3498db', fillStyle: 'solid' }); // Body
+            rc.rectangle(385, 460, 10, 15, { fill: '#2c3e50', fillStyle: 'solid' }); // Left leg
+            rc.rectangle(405, 460, 10, 15, { fill: '#2c3e50', fillStyle: 'solid' }); // Right leg
+
+            rc.circle(575, 400, 20, { fill: '#f5d7b5', fillStyle: 'solid' }); // Head
+            rc.rectangle(565, 420, 20, 40, { fill: '#3498db', fillStyle: 'solid' }); // Body
+            rc.rectangle(560, 460, 10, 15, { fill: '#2c3e50', fillStyle: 'solid' }); // Left leg
+            rc.rectangle(580, 460, 10, 15, { fill: '#2c3e50', fillStyle: 'solid' }); // Right leg
+            
+            // Draw energy labels
+            ctx.font = '16px "Cabin Sketch"';
+            ctx.fillStyle = '#2c3e50';
+            ctx.fillText(`Light Energy: ${energy.light.toFixed(2)} J`, 50, 100);
+            ctx.fillText(`Producer Energy: ${energy.producer.toFixed(2)} J`, 50, 250);
+            ctx.fillText(`Primary Consumer: ${energy.primaryConsumer.toFixed(2)} J`, 50, 400);
+            ctx.fillText(`Secondary Consumer: ${energy.secondaryConsumer.toFixed(2)} J`, 300, 500);
+            ctx.fillText(`Tertiary Consumer: ${energy.tertiaryConsumer.toFixed(2)} J`, 550, 500);
+
+            logDebug('Scene redrawn');
+        }
+
+        function startSimulation() {
+            logDebug('Simulation started');
+            energy.producer = energy.light * 0.02; // 2% conversion
+            energy.primaryConsumer = energy.producer * 0.1; // 10% transfer
+            energy.secondaryConsumer = energy.primaryConsumer * 0.1; // 10% transfer
+            energy.tertiaryConsumer = energy.secondaryConsumer * 0.1; // 10% transfer
+            drawScene();
+        }
+
+        function measureEnergy() {
+            logDebug('Energy measured');
+            document.getElementById('energyDisplay').innerHTML = `
+                Light Energy: ${energy.light.toFixed(2)} J<br>
+                Producer Energy: ${energy.producer.toFixed(2)} J<br>
+                Primary Consumer Energy: ${energy.primaryConsumer.toFixed(2)} J<br>
+                Secondary Consumer Energy: ${energy.secondaryConsumer.toFixed(2)} J<br>
+                Tertiary Consumer Energy: ${energy.tertiaryConsumer.toFixed(2)} J
+            `;
+        }
+
+        function calculateEfficiency() {
+            logDebug('Efficiency calculated');
+            const producerEfficiency = (energy.producer / energy.light) * 100;
+            const primaryEfficiency = (energy.primaryConsumer / energy.producer) * 100;
+            const secondaryEfficiency = (energy.secondaryConsumer / energy.primaryConsumer) * 100;
+            const tertiaryEfficiency = (energy.tertiaryConsumer / energy.secondaryConsumer) * 100;
+
+            document.getElementById('results').innerHTML = `
+                Producer Efficiency: ${producerEfficiency.toFixed(2)}%<br>
+                Primary Consumer Efficiency: ${primaryEfficiency.toFixed(2)}%<br>
+                Secondary Consumer Efficiency: ${secondaryEfficiency.toFixed(2)}%<br>
+                Tertiary Consumer Efficiency: ${tertiaryEfficiency.toFixed(2)}%
+            `;
+        }
+
+        function repeatExperiment() {
+            logDebug('Experiment repeated');
+            energy = {
+                light: 1000,
+                producer: 0,
+                primaryConsumer: 0,
+                secondaryConsumer: 0,
+                tertiaryConsumer: 0
+            };
+            drawScene();
+            document.getElementById('energyDisplay').innerHTML = '';
+            document.getElementById('results').innerHTML = '';
+        }
+
+        function reset() {
+            logDebug('Simulation reset');
+            repeatExperiment();
+        }
+
+        document.getElementById('startSimulation').addEventListener('click', startSimulation);
+        document.getElementById('measureEnergy').addEventListener('click', measureEnergy);
+        document.getElementById('calculateEfficiency').addEventListener('click', calculateEfficiency);
+        document.getElementById('repeatExperiment').addEventListener('click', repeatExperiment);
+        document.getElementById('reset').addEventListener('click', reset);
+
+        document.addEventListener('DOMContentLoaded', () => {
+            logDebug('DOM content loaded');
+            drawScene();
+        });
+    </script>
+</body>
+</html>
