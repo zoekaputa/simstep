@@ -1,0 +1,273 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Treehouse Eco-Energy Lab</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cabin+Sketch:wght@400;700&family=Londrina+Sketch&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/roughjs@latest/bundled/rough.js"></script>
+    <style>
+        body {
+            font-family: 'Cabin Sketch', cursive;
+            background-color: #f0f8ff;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        h1 {
+            font-family: 'Cabin Sketch', cursive;
+            font-weight: 700;
+            color: #2c3e50;
+        }
+        #canvas-container {
+            width: 800px;
+            height: 600px;
+            border: 2px solid #2c3e50;
+            margin-bottom: 20px;
+            position: relative;
+        }
+        #canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+        #controls {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+        }
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        label {
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        input[type="range"] {
+            width: 200px;
+        }
+        #meters {
+            display: flex;
+            justify-content: space-around;
+            width: 100%;
+            margin-top: 20px;
+        }
+        .meter {
+            text-align: center;
+        }
+        #description {
+            max-width: 800px;
+            text-align: justify;
+            margin-bottom: 20px;
+            font-family: 'Cabin Sketch', cursive;
+            font-weight: 400;
+            color: #34495e;
+        }
+        .draggable {
+            position: absolute;
+            cursor: move;
+        }
+    </style>
+</head>
+<body>
+    <h1>Treehouse Eco-Energy Lab</h1>
+    <div id="description">
+        Welcome to the Treehouse Eco-Energy Lab! In this experiment, you'll explore how different renewable energy sources can power a sustainable treehouse. You'll learn about solar panels, wind turbines, hydro generators, and more. Adjust the environmental conditions and see how they affect energy production and storage. Can you create an efficient and reliable energy system for our treehouse?
+    </div>
+    <div id="canvas-container">
+        <canvas id="canvas" width="800" height="600"></canvas>
+    </div>
+    <div id="controls">
+        <div class="control-group">
+            <label for="sunSlider">Sunlight (hours/day)</label>
+            <input type="range" id="sunSlider" min="0" max="12" value="6" step="0.5">
+        </div>
+        <div class="control-group">
+            <label for="windSlider">Wind Speed (mph)</label>
+            <input type="range" id="windSlider" min="0" max="30" value="10" step="1">
+        </div>
+        <div class="control-group">
+            <label for="waterSlider">Stream Flow (gallons/min)</label>
+            <input type="range" id="waterSlider" min="0" max="100" value="50" step="5">
+        </div>
+        <div class="control-group">
+            <label for="earthSlider">Ground Temperature (°F)</label>
+            <input type="range" id="earthSlider" min="32" max="80" value="55" step="1">
+        </div>
+        <div class="control-group">
+            <label for="biomassSlider">Biomass Availability (lbs/day)</label>
+            <input type="range" id="biomassSlider" min="0" max="50" value="25" step="5">
+        </div>
+    </div>
+    <div id="meters">
+        <div class="meter">
+            <label>Energy Production (kWh/day)</label>
+            <div id="energyMeter">0</div>
+        </div>
+        <div class="meter">
+            <label>Energy Storage (kWh)</label>
+            <div id="storageMeter">0</div>
+        </div>
+        <div class="meter">
+            <label>Energy Consumption (kWh/day)</label>
+            <div id="consumptionMeter">0</div>
+        </div>
+    </div>
+    <script>
+        const canvas = document.getElementById('canvas');
+        const rc = rough.canvas(canvas);
+        const ctx = canvas.getContext('2d');
+
+        const components = [
+            { type: 'solarPanel', x: 400, y: 150, width: 100, height: 50 },
+            { type: 'windTurbine', x: 100, y: 200, width: 100, height: 200 },
+            { type: 'hydroTurbine', x: 600, y: 400, width: 100, height: 100 },
+            { type: 'geothermal', x: 200, y: 400, width: 100, height: 100 },
+            { type: 'biomass', x: 500, y: 450, width: 100, height: 100 }
+        ];
+
+        function drawComponent(component) {
+            switch(component.type) {
+                case 'solarPanel':
+                    rc.polygon([[component.x, component.y + component.height], [component.x + component.width/2, component.y], [component.x + component.width, component.y + component.height]], {
+                        fill: 'blue',
+                        fillStyle: 'solid',
+                        roughness: 1
+                    });
+                    break;
+                case 'windTurbine':
+                    rc.line(component.x + component.width/2, component.y, component.x + component.width/2, component.y + component.height, { roughness: 1 });
+                    rc.ellipse(component.x + component.width/2, component.y + 20, 80, 80, { roughness: 1 });
+                    rc.line(component.x + component.width/2, component.y + 20, component.x + component.width, component.y + 20, { roughness: 1 });
+                    rc.line(component.x + component.width/2, component.y + 20, component.x + component.width/2 - 40, component.y + 60, { roughness: 1 });
+                    rc.line(component.x + component.width/2, component.y + 20, component.x + component.width/2 - 40, component.y - 20, { roughness: 1 });
+                    break;
+                case 'hydroTurbine':
+                    rc.rectangle(component.x, component.y + component.height/2, component.width, component.height/2, { roughness: 1 });
+                    rc.circle(component.x + component.width/2, component.y + component.height/4, component.width/4, { roughness: 1 });
+                    for(let i = 0; i < 8; i++) {
+                        let angle = i * Math.PI / 4;
+                        rc.line(
+                            component.x + component.width/2,
+                            component.y + component.height/4,
+                            component.x + component.width/2 + Math.cos(angle) * component.width/4,
+                            component.y + component.height/4 + Math.sin(angle) * component.width/4,
+                            { roughness: 1 }
+                        );
+                    }
+                    break;
+                case 'geothermal':
+                    rc.rectangle(component.x, component.y, component.width, component.height, { roughness: 1 });
+                    rc.line(component.x, component.y + component.height/2, component.x + component.width, component.y + component.height/2, { roughness: 1 });
+                    rc.line(component.x + component.width/2, component.y, component.x + component.width/2, component.y + component.height, { roughness: 1 });
+                    rc.circle(component.x + component.width/2, component.y + component.height/2, 20, { roughness: 1 });
+                    break;
+                case 'biomass':
+                    rc.rectangle(component.x, component.y + component.height/2, component.width, component.height/2, { roughness: 1 });
+                    for(let i = 0; i < 5; i++) {
+                        rc.line(
+                            component.x + i * component.width/5,
+                            component.y,
+                            component.x + i * component.width/5 + component.width/10,
+                            component.y + component.height/2,
+                            { roughness: 1 }
+                        );
+                    }
+                    break;
+            }
+        }
+
+        function drawTreehouse() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            rc.rectangle(300, 200, 200, 200, {
+                fill: 'brown',
+                fillStyle: 'solid',
+                roughness: 2
+            });
+
+            components.forEach(drawComponent);
+        }
+
+        function updateEnergy() {
+            const sunlight = parseFloat(document.getElementById('sunSlider').value);
+            const windSpeed = parseFloat(document.getElementById('windSlider').value);
+            const waterFlow = parseFloat(document.getElementById('waterSlider').value);
+            const groundTemp = parseFloat(document.getElementById('earthSlider').value);
+            const biomassAvail = parseFloat(document.getElementById('biomassSlider').value);
+
+            const solarEnergy = sunlight * 0.5;
+            const windEnergy = windSpeed * 0.3;
+            const hydroEnergy = waterFlow * 0.1;
+            const geothermalEnergy = (groundTemp - 32) * 0.2;
+            const biomassEnergy = biomassAvail * 0.1;
+
+            const totalEnergy = solarEnergy + windEnergy + hydroEnergy + geothermalEnergy + biomassEnergy;
+            const storage = Math.min(totalEnergy * 2, 100);
+            const consumption = totalEnergy * 0.8;
+
+            document.getElementById('energyMeter').textContent = totalEnergy.toFixed(2);
+            document.getElementById('storageMeter').textContent = storage.toFixed(2);
+            document.getElementById('consumptionMeter').textContent = consumption.toFixed(2);
+
+            drawTreehouse();
+            drawEnergyFlows(totalEnergy);
+        }
+
+        function drawEnergyFlows(energy) {
+            components.forEach(component => {
+                rc.line(component.x + component.width/2, component.y + component.height/2, 400, 300, {
+                    roughness: 2,
+                    strokeWidth: energy/10,
+                    stroke: 'yellow'
+                });
+            });
+        }
+
+        let draggedComponent = null;
+
+        canvas.addEventListener('mousedown', (e) => {
+            const rect = canvas.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+
+            draggedComponent = components.find(component => 
+                x >= component.x && x <= component.x + component.width &&
+                y >= component.y && y <= component.y + component.height
+            );
+        });
+
+        canvas.addEventListener('mousemove', (e) => {
+            if (draggedComponent) {
+                const rect = canvas.getBoundingClientRect();
+                draggedComponent.x = e.clientX - rect.left - draggedComponent.width/2;
+                draggedComponent.y = e.clientY - rect.top - draggedComponent.height/2;
+                drawTreehouse();
+            }
+        });
+
+        canvas.addEventListener('mouseup', () => {
+            draggedComponent = null;
+            updateEnergy();
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            drawTreehouse();
+            updateEnergy();
+
+            document.querySelectorAll('input[type="range"]').forEach(slider => {
+                slider.addEventListener('input', updateEnergy);
+            });
+        });
+    </script>
+</body>
+</html>

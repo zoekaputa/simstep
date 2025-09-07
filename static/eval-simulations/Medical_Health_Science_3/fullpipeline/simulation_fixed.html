@@ -1,0 +1,294 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emergency Response Trainer</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cabin+Sketch:wght@400;700&family=Londrina+Sketch&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/roughjs@latest/bundled/rough.js"></script>
+    <style>
+        body {
+            font-family: 'Cabin Sketch', cursive;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        h1 {
+            font-family: 'Cabin Sketch', cursive;
+            font-weight: 700;
+            color: #ff6b6b;
+        }
+        #canvas {
+            background-color: white;
+            border: 2px solid #333;
+            margin-bottom: 20px;
+        }
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .control-group {
+            background-color: #fff;
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        button, select {
+            font-family: 'Cabin Sketch', cursive;
+            font-size: 16px;
+            padding: 5px 10px;
+            cursor: pointer;
+            background-color: #4ecdc4;
+            border: none;
+            border-radius: 5px;
+            color: white;
+        }
+        button:hover, select:hover {
+            background-color: #45b7aa;
+        }
+        #description {
+            max-width: 800px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        #performanceTracker, #dataLogger {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        #feedback {
+            font-weight: bold;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Emergency Response Trainer</h1>
+    <div id="description">
+        <p>Welcome to the Emergency Response Trainer! In this simulation, you'll learn how to respond to sports-related injuries and emergencies. Your goal is to assess the situation, provide appropriate care, and ensure the safety of both the victim and yourself. Remember, quick thinking and proper technique can make all the difference in an emergency situation!</p>
+    </div>
+    <canvas id="canvas" width="800" height="600"></canvas>
+    <div class="controls">
+        <div class="control-group">
+            <select id="scenarioSelector">
+                <option value="sprain">Ankle Sprain</option>
+                <option value="strain">Muscle Strain</option>
+                <option value="concussion">Concussion</option>
+                <option value="fracture">Arm Fracture</option>
+            </select>
+            <select id="sportSelector">
+                <option value="soccer">Soccer</option>
+                <option value="basketball">Basketball</option>
+                <option value="tennis">Tennis</option>
+                <option value="swimming">Swimming</option>
+            </select>
+            <button id="startButton">Start Simulation</button>
+        </div>
+        <div class="control-group">
+            <button id="assessButton">Perform Assessment (ABCDE)</button>
+        </div>
+        <div class="control-group">
+            <button id="cprButton">Perform CPR</button>
+            <button id="aedButton">Use AED</button>
+        </div>
+        <div class="control-group">
+            <button id="bleedingControlButton">Control Bleeding</button>
+            <button id="splintButton">Apply Splint</button>
+            <button id="burnTreatmentButton">Treat Burn</button>
+        </div>
+        <div class="control-group">
+            <button id="recoveryPositionButton">Place in Recovery Position</button>
+        </div>
+    </div>
+    <div id="performanceTracker">
+        <h3>Performance Tracker</h3>
+        <p>Actions taken: <span id="actionsTaken">0</span></p>
+        <p>Correct actions: <span id="correctActions">0</span></p>
+        <p>Score: <span id="score">0%</span></p>
+    </div>
+    <div id="dataLogger">
+        <h3>Data Logger</h3>
+        <div id="logEntries"></div>
+        <div id="feedback"></div>
+    </div>
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const rc = rough.canvas(canvas);
+
+        let currentScenario = '';
+        let currentSport = '';
+        let victimState = 'normal';
+        let actionsTaken = 0;
+        let correctActions = 0;
+
+        function drawScene() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            rc.rectangle(0, 500, 800, 100, { fill: '#7ec850', fillStyle: 'solid' });
+            rc.circle(700, 100, 100, { fill: '#ffd700', fillStyle: 'solid' });
+            drawVictim();
+            drawSportSpecificElements();
+        }
+
+        function drawVictim() {
+            rc.path('M350,300 C370,250 430,250 450,300', { stroke: '#ffb3ba', strokeWidth: 2, fill: '#ffb3ba' }); // head
+            rc.line(400, 300, 400, 400, { stroke: '#ffb3ba', strokeWidth: 20 }); // body
+            rc.line(400, 330, 350, 380, { stroke: '#ffb3ba', strokeWidth: 10 }); // left arm
+            rc.line(400, 330, 450, 380, { stroke: '#ffb3ba', strokeWidth: 10 }); // right arm
+            rc.line(400, 400, 370, 480, { stroke: '#ffb3ba', strokeWidth: 10 }); // left leg
+            rc.line(400, 400, 430, 480, { stroke: '#ffb3ba', strokeWidth: 10 }); // right leg
+
+            drawInjury();
+        }
+
+        function drawInjury() {
+            switch (currentScenario) {
+                case 'sprain':
+                    rc.circle(370, 470, 20, { fill: 'purple', fillStyle: 'hachure' });
+                    break;
+                case 'strain':
+                    rc.line(400, 350, 450, 400, { stroke: 'red', strokeWidth: 3 });
+                    break;
+                case 'concussion':
+                    rc.circle(400, 270, 30, { stroke: 'yellow', strokeWidth: 2 });
+                    break;
+                case 'fracture':
+                    rc.zigzagLine(440, 340, 460, 380, { stroke: 'red', strokeWidth: 2 });
+                    break;
+            }
+        }
+
+        function drawSportSpecificElements() {
+            switch (currentSport) {
+                case 'soccer':
+                    rc.circle(100, 500, 40, { fill: 'black', fillStyle: 'solid' });
+                    break;
+                case 'basketball':
+                    rc.circle(100, 500, 40, { fill: 'orange', fillStyle: 'solid' });
+                    break;
+                case 'tennis':
+                    rc.ellipse(100, 500, 60, 40, { fill: 'yellow', fillStyle: 'solid' });
+                    break;
+                case 'swimming':
+                    rc.rectangle(50, 450, 100, 100, { fill: 'blue', fillStyle: 'solid' });
+                    break;
+            }
+        }
+
+        function startSimulation() {
+            currentScenario = document.getElementById('scenarioSelector').value;
+            currentSport = document.getElementById('sportSelector').value;
+            victimState = 'injured';
+            drawScene();
+            actionsTaken = 0;
+            correctActions = 0;
+            updatePerformanceTracker();
+            logAction('Simulation started', true);
+        }
+
+        function performAssessment() {
+            rc.rectangle(10, 10, 780, 580, { stroke: '#ff6b6b', strokeWidth: 2 });
+            updatePerformance(true);
+            logAction('Assessment performed', true);
+        }
+
+        function performCPR() {
+            rc.circle(400, 350, 50, { fill: 'rgba(255, 0, 0, 0.5)' });
+            const correct = currentScenario === 'concussion';
+            updatePerformance(correct);
+            logAction('CPR performed', correct);
+        }
+
+        function useAED() {
+            rc.rectangle(300, 400, 200, 100, { fill: 'yellow' });
+            const correct = currentScenario === 'concussion';
+            updatePerformance(correct);
+            logAction('AED used', correct);
+        }
+
+        function controlBleeding() {
+            rc.line(370, 330, 430, 390, { stroke: 'red', strokeWidth: 2 });
+            const correct = currentScenario === 'fracture';
+            updatePerformance(correct);
+            logAction('Bleeding controlled', correct);
+        }
+
+        function applySplint() {
+            rc.rectangle(360, 320, 80, 150, { fill: 'brown' });
+            const correct = currentScenario === 'fracture' || currentScenario === 'sprain';
+            updatePerformance(correct);
+            logAction('Splint applied', correct);
+        }
+
+        function treatBurn() {
+            rc.circle(400, 350, 30, { fill: 'blue' });
+            updatePerformance(false);
+            logAction('Burn treated', false);
+        }
+
+        function placeInRecoveryPosition() {
+            if (victimState === 'injured') {
+                ctx.save();
+                ctx.translate(400, 400);
+                ctx.rotate(Math.PI / 4);
+                ctx.translate(-400, -400);
+                drawVictim();
+                ctx.restore();
+                const correct = currentScenario === 'concussion';
+                updatePerformance(correct);
+                logAction('Victim placed in recovery position', correct);
+            } else {
+                updatePerformance(false);
+                logAction('Attempted to place victim in recovery position', false);
+            }
+        }
+
+        function updatePerformance(correct) {
+            actionsTaken++;
+            if (correct) correctActions++;
+            updatePerformanceTracker();
+        }
+
+        function updatePerformanceTracker() {
+            document.getElementById('actionsTaken').textContent = actionsTaken;
+            document.getElementById('correctActions').textContent = correctActions;
+            const score = actionsTaken > 0 ? Math.round((correctActions / actionsTaken) * 100) : 0;
+            document.getElementById('score').textContent = score + '%';
+        }
+
+        function logAction(action, correct) {
+            const logEntry = document.createElement('p');
+            logEntry.textContent = `${new Date().toLocaleTimeString()}: ${action}`;
+            document.getElementById('logEntries').appendChild(logEntry);
+
+            const feedback = document.getElementById('feedback');
+            feedback.textContent = correct ? 'Good job!' : 'This is not the right action.';
+            feedback.style.color = correct ? 'green' : 'red';
+        }
+
+        document.getElementById('startButton').addEventListener('click', startSimulation);
+        document.getElementById('assessButton').addEventListener('click', performAssessment);
+        document.getElementById('cprButton').addEventListener('click', performCPR);
+        document.getElementById('aedButton').addEventListener('click', useAED);
+        document.getElementById('bleedingControlButton').addEventListener('click', controlBleeding);
+        document.getElementById('splintButton').addEventListener('click', applySplint);
+        document.getElementById('burnTreatmentButton').addEventListener('click', treatBurn);
+        document.getElementById('recoveryPositionButton').addEventListener('click', placeInRecoveryPosition);
+
+        document.addEventListener('DOMContentLoaded', () => {
+            drawScene();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,327 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Epidemic Management Simulation</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cabin+Sketch:wght@400;700&family=Londrina+Sketch&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/roughjs@latest/bundled/rough.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: 'Cabin Sketch', cursive;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        h1 {
+            font-family: 'Cabin Sketch', cursive;
+            font-weight: 700;
+            color: #2c3e50;
+        }
+        .description {
+            font-family: 'Cabin Sketch', cursive;
+            font-weight: 400;
+            max-width: 800px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        #simulationCanvas {
+            border: 2px solid #2c3e50;
+            margin-bottom: 20px;
+        }
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        label {
+            margin-bottom: 5px;
+        }
+        input[type="range"] {
+            width: 200px;
+        }
+        button {
+            font-family: 'Cabin Sketch', cursive;
+            font-weight: 700;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        #resultsGraph {
+            width: 800px;
+            height: 400px;
+            margin-top: 20px;
+        }
+        #predictionInput {
+            margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        #predictionInput input {
+            margin-bottom: 10px;
+            padding: 5px;
+        }
+        #comparisonView {
+            margin-top: 20px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <h1>Epidemic Management Simulation</h1>
+    <div class="description">
+        Welcome to the Epidemic Management Simulation! In this experiment, you'll explore how different interventions can affect the spread of a disease in a population. You'll learn about concepts like disease transmission, vaccination, and public health measures. Use the controls below to set up your simulation and see how your choices impact the health outcomes of the population.
+    </div>
+    <canvas id="simulationCanvas" width="800" height="400"></canvas>
+    <div class="controls">
+        <div class="control-group">
+            <label for="populationSize">Population Size: <span id="populationSizeValue">500</span></label>
+            <input type="range" id="populationSize" min="100" max="1000" value="500">
+        </div>
+        <div class="control-group">
+            <label for="initialPrevalence">Initial Disease Prevalence: <span id="initialPrevalenceValue">5%</span></label>
+            <input type="range" id="initialPrevalence" min="1" max="20" value="5">
+        </div>
+        <div class="control-group">
+            <label>Interventions:</label>
+            <div>
+                <input type="checkbox" id="vaccination" name="intervention" value="vaccination">
+                <label for="vaccination">Vaccination</label>
+            </div>
+            <div>
+                <input type="checkbox" id="socialDistancing" name="intervention" value="socialDistancing">
+                <label for="socialDistancing">Social Distancing</label>
+            </div>
+            <div>
+                <input type="checkbox" id="publicEducation" name="intervention" value="publicEducation">
+                <label for="publicEducation">Public Education</label>
+            </div>
+            <div>
+                <input type="checkbox" id="testing" name="intervention" value="testing">
+                <label for="testing">Testing Program</label>
+            </div>
+        </div>
+    </div>
+    <button id="runSimulation">Run Simulation</button>
+    <canvas id="resultsGraph"></canvas>
+    <div id="predictionInput">
+        <h3>Make a Prediction</h3>
+        <input type="number" id="predictionValue" placeholder="Predict final infected percentage">
+        <button id="submitPrediction">Submit Prediction</button>
+    </div>
+    <div id="comparisonView"></div>
+
+    <script>
+        const canvas = document.getElementById('simulationCanvas');
+        const ctx = canvas.getContext('2d');
+        const rc = rough.canvas(canvas);
+
+        let population = [];
+        let infectedCount = 0;
+        let recoveredCount = 0;
+        let dayCount = 0;
+        let chart;
+        let animationId;
+
+        function createPerson(x, y, status) {
+            const color = status === 'infected' ? '#e74c3c' : (status === 'recovered' ? '#2ecc71' : '#3498db');
+            rc.circle(x + 10, y + 10, 20, { fill: color, stroke: 'black', strokeWidth: 1 });
+            return { x, y, status, vx: Math.random() * 2 - 1, vy: Math.random() * 2 - 1 };
+        }
+
+        function initializePopulation() {
+            population = [];
+            const populationSize = parseInt(document.getElementById('populationSize').value);
+            const initialPrevalence = parseInt(document.getElementById('initialPrevalence').value) / 100;
+
+            for (let i = 0; i < populationSize; i++) {
+                const x = Math.random() * (canvas.width - 20);
+                const y = Math.random() * (canvas.height - 20);
+                const status = Math.random() < initialPrevalence ? 'infected' : 'susceptible';
+                population.push(createPerson(x, y, status));
+            }
+
+            infectedCount = population.filter(p => p.status === 'infected').length;
+            recoveredCount = 0;
+            dayCount = 0;
+        }
+
+        function updatePopulation() {
+            const vaccinationActive = document.getElementById('vaccination').checked;
+            const socialDistancingActive = document.getElementById('socialDistancing').checked;
+            const publicEducationActive = document.getElementById('publicEducation').checked;
+            const testingActive = document.getElementById('testing').checked;
+
+            population.forEach(person => {
+                if (socialDistancingActive) {
+                    person.vx *= 0.5;
+                    person.vy *= 0.5;
+                }
+
+                person.x += person.vx;
+                person.y += person.vy;
+
+                if (person.x < 0 || person.x > canvas.width - 20) person.vx *= -1;
+                if (person.y < 0 || person.y > canvas.height - 20) person.vy *= -1;
+
+                if (person.status === 'infected') {
+                    population.forEach(other => {
+                        if (other.status === 'susceptible') {
+                            const dx = person.x - other.x;
+                            const dy = person.y - other.y;
+                            const distance = Math.sqrt(dx * dx + dy * dy);
+                            if (distance < 30) {
+                                let infectionChance = 0.1;
+                                if (publicEducationActive) infectionChance *= 0.7;
+                                if (vaccinationActive) infectionChance *= 0.5;
+                                if (Math.random() < infectionChance) {
+                                    other.status = 'infected';
+                                    infectedCount++;
+                                }
+                            }
+                        }
+                    });
+
+                    if (Math.random() < 0.01) {
+                        person.status = 'recovered';
+                        infectedCount--;
+                        recoveredCount++;
+                    }
+                }
+
+                if (testingActive && person.status === 'infected' && Math.random() < 0.1) {
+                    person.status = 'recovered';
+                    infectedCount--;
+                    recoveredCount++;
+                }
+            });
+
+            dayCount++;
+        }
+
+        function drawPopulation() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            population.forEach(person => {
+                createPerson(person.x, person.y, person.status);
+            });
+        }
+
+        function updateChart() {
+            const susceptibleCount = population.length - infectedCount - recoveredCount;
+            chart.data.labels.push(dayCount);
+            chart.data.datasets[0].data.push(susceptibleCount);
+            chart.data.datasets[1].data.push(infectedCount);
+            chart.data.datasets[2].data.push(recoveredCount);
+            chart.update();
+        }
+
+        function runSimulation() {
+            if (animationId) {
+                cancelAnimationFrame(animationId);
+            }
+            initializePopulation();
+            if (chart) chart.destroy();
+            chart = new Chart(document.getElementById('resultsGraph'), {
+                type: 'line',
+                data: {
+                    labels: [],
+                    datasets: [{
+                        label: 'Susceptible',
+                        data: [],
+                        borderColor: '#3498db',
+                        fill: false
+                    }, {
+                        label: 'Infected',
+                        data: [],
+                        borderColor: '#e74c3c',
+                        fill: false
+                    }, {
+                        label: 'Recovered',
+                        data: [],
+                        borderColor: '#2ecc71',
+                        fill: false
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    title: {
+                        display: true,
+                        text: 'Disease Spread Over Time'
+                    },
+                    scales: {
+                        x: {
+                            display: true,
+                            title: {
+                                display: true,
+                                text: 'Days'
+                            }
+                        },
+                        y: {
+                            display: true,
+                            title: {
+                                display: true,
+                                text: 'Number of People'
+                            }
+                        }
+                    }
+                }
+            });
+
+            function animate() {
+                updatePopulation();
+                drawPopulation();
+                updateChart();
+                if (infectedCount > 0 && dayCount < 100) {
+                    animationId = requestAnimationFrame(animate);
+                }
+            }
+
+            animate();
+        }
+
+        document.getElementById('runSimulation').addEventListener('click', runSimulation);
+
+        document.getElementById('populationSize').addEventListener('input', function() {
+            document.getElementById('populationSizeValue').textContent = this.value;
+        });
+
+        document.getElementById('initialPrevalence').addEventListener('input', function() {
+            document.getElementById('initialPrevalenceValue').textContent = this.value + '%';
+        });
+
+        document.getElementById('submitPrediction').addEventListener('click', function() {
+            const prediction = parseFloat(document.getElementById('predictionValue').value);
+            const actual = (infectedCount / population.length) * 100;
+            const difference = Math.abs(prediction - actual);
+            const comparisonView = document.getElementById('comparisonView');
+            comparisonView.innerHTML = `
+                <h3>Prediction vs Actual</h3>
+                <p>Your prediction: ${prediction.toFixed(2)}%</p>
+                <p>Actual final infected: ${actual.toFixed(2)}%</p>
+                <p>Difference: ${difference.toFixed(2)}%</p>
+            `;
+        });
+    </script>
+</body>
+</html>
