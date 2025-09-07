@@ -1,0 +1,344 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Collision Momentum Explorer</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cabin+Sketch:wght@400;700&family=Londrina+Sketch&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/roughjs@latest/bundled/rough.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f0f0f0;
+        }
+        h1 {
+            font-family: 'Cabin Sketch', cursive;
+            text-align: center;
+            color: #333;
+        }
+        #description {
+            background-color: #fff;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        #simulationArea {
+            width: 100%;
+            height: 300px;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+        }
+        #controls {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        .control-group {
+            flex-basis: 48%;
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input[type="range"] {
+            width: 100%;
+        }
+        button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #resultsDisplay {
+            background-color: #fff;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+        #momentumGraph {
+            width: 100%;
+            height: 200px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Collision Momentum Explorer</h1>
+    <div id="description">
+        Welcome to the Collision Momentum Explorer! In this experiment, you'll investigate how momentum is transferred between two cars during a collision. Adjust the mass and velocity of each car, set the collision angle, and observe how these factors affect the outcome. Pay close attention to the momentum before and after the collision. What patterns do you notice?
+    </div>
+    <canvas id="simulationArea"></canvas>
+    <div id="controls">
+        <div class="control-group">
+            <label for="massSlider1">Mass of Car 1 (kg):</label>
+            <input type="range" id="massSlider1" min="500" max="2000" value="1000">
+        </div>
+        <div class="control-group">
+            <label for="velocitySlider1">Velocity of Car 1 (m/s):</label>
+            <input type="range" id="velocitySlider1" min="0" max="20" value="10">
+        </div>
+        <div class="control-group">
+            <label for="massSlider2">Mass of Car 2 (kg):</label>
+            <input type="range" id="massSlider2" min="500" max="2000" value="1000">
+        </div>
+        <div class="control-group">
+            <label for="velocitySlider2">Velocity of Car 2 (m/s):</label>
+            <input type="range" id="velocitySlider2" min="0" max="20" value="10">
+        </div>
+        <div class="control-group">
+            <label for="angleSlider">Collision Angle (degrees):</label>
+            <input type="range" id="angleSlider" min="0" max="180" value="90">
+        </div>
+        <button id="collisionButton">Initiate Collision</button>
+    </div>
+    <div id="resultsDisplay"></div>
+    <canvas id="momentumGraph"></canvas>
+
+    <script>
+        const canvas = document.getElementById('simulationArea');
+        const rc = rough.canvas(canvas);
+        const ctx = canvas.getContext('2d');
+
+        canvas.width = canvas.offsetWidth;
+        canvas.height = canvas.offsetHeight;
+
+        const car1 = {
+            x: canvas.width * 0.25,
+            y: canvas.height / 2,
+            width: 60,
+            height: 30,
+            color: 'red',
+            mass: 1000,
+            velocity: 10,
+            angle: 0,
+            momentum: 0,
+            draw: function() {
+                const scale = this.mass / 1000;
+                const scaledWidth = this.width * scale;
+                const scaledHeight = this.height * scale;
+                
+                rc.rectangle(this.x - scaledWidth/2, this.y - scaledHeight/2, scaledWidth, scaledHeight, {
+                    fill: this.color,
+                    fillStyle: 'solid',
+                    roughness: 2
+                });
+                
+                rc.rectangle(this.x - scaledWidth/3, this.y - scaledHeight/2 - scaledHeight/4, scaledWidth*2/3, scaledHeight/4, {
+                    fill: this.color,
+                    fillStyle: 'solid',
+                    roughness: 1
+                });
+                
+                const wheelRadius = scaledHeight / 4;
+                rc.circle(this.x - scaledWidth/3, this.y + scaledHeight/2, wheelRadius*2, {
+                    fill: 'black',
+                    fillStyle: 'solid',
+                    roughness: 1
+                });
+                rc.circle(this.x + scaledWidth/3, this.y + scaledHeight/2, wheelRadius*2, {
+                    fill: 'black',
+                    fillStyle: 'solid',
+                    roughness: 1
+                });
+                
+                rc.line(this.x, this.y, this.x + Math.cos(this.angle) * this.velocity * 5, this.y + Math.sin(this.angle) * this.velocity * 5, {
+                    roughness: 1,
+                    strokeWidth: 2
+                });
+            },
+            updateMomentum: function() {
+                this.momentum = this.mass * this.velocity;
+            }
+        };
+
+        const car2 = {
+            x: canvas.width * 0.75,
+            y: canvas.height / 2,
+            width: 60,
+            height: 30,
+            color: 'blue',
+            mass: 1000,
+            velocity: 10,
+            angle: Math.PI,
+            momentum: 0,
+            draw: function() {
+                const scale = this.mass / 1000;
+                const scaledWidth = this.width * scale;
+                const scaledHeight = this.height * scale;
+                
+                rc.rectangle(this.x - scaledWidth/2, this.y - scaledHeight/2, scaledWidth, scaledHeight, {
+                    fill: this.color,
+                    fillStyle: 'solid',
+                    roughness: 2
+                });
+                
+                rc.rectangle(this.x - scaledWidth/3, this.y - scaledHeight/2 - scaledHeight/4, scaledWidth*2/3, scaledHeight/4, {
+                    fill: this.color,
+                    fillStyle: 'solid',
+                    roughness: 1
+                });
+                
+                const wheelRadius = scaledHeight / 4;
+                rc.circle(this.x - scaledWidth/3, this.y + scaledHeight/2, wheelRadius*2, {
+                    fill: 'black',
+                    fillStyle: 'solid',
+                    roughness: 1
+                });
+                rc.circle(this.x + scaledWidth/3, this.y + scaledHeight/2, wheelRadius*2, {
+                    fill: 'black',
+                    fillStyle: 'solid',
+                    roughness: 1
+                });
+                
+                rc.line(this.x, this.y, this.x + Math.cos(this.angle) * this.velocity * 5, this.y + Math.sin(this.angle) * this.velocity * 5, {
+                    roughness: 1,
+                    strokeWidth: 2
+                });
+            },
+            updateMomentum: function() {
+                this.momentum = this.mass * this.velocity;
+            }
+        };
+
+        function updateResults() {
+            car1.updateMomentum();
+            car2.updateMomentum();
+            const totalMomentum = car1.momentum + car2.momentum;
+            const kineticEnergy1 = 0.5 * car1.mass * car1.velocity * car1.velocity;
+            const kineticEnergy2 = 0.5 * car2.mass * car2.velocity * car2.velocity;
+            const totalEnergy = kineticEnergy1 + kineticEnergy2;
+
+            document.getElementById('resultsDisplay').innerHTML = `
+                <h3>Results:</h3>
+                <p>Momentum of Car 1: ${car1.momentum.toFixed(2)} kg⋅m/s</p>
+                <p>Momentum of Car 2: ${car2.momentum.toFixed(2)} kg⋅m/s</p>
+                <p>Total Momentum: ${totalMomentum.toFixed(2)} kg⋅m/s</p>
+                <p>Total Kinetic Energy: ${totalEnergy.toFixed(2)} J</p>
+            `;
+
+            updateMomentumGraph(car1.momentum, car2.momentum);
+        }
+
+        function updateMomentumGraph(momentum1, momentum2) {
+            // Graph update logic (unchanged)
+        }
+
+        function drawSimulation() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            car1.draw();
+            car2.draw();
+            drawLabels();
+            updateResults();
+            requestAnimationFrame(drawSimulation);
+        }
+
+        function drawLabels() {
+            rc.text('Car 1', car1.x - 25, car1.y - 30, { font: '14px Roboto', roughness: 1 });
+            rc.text('Car 2', car2.x - 25, car2.y - 30, { font: '14px Roboto', roughness: 1 });
+            rc.text('Velocity', car1.x + 30, car1.y + 30, { font: '14px Roboto', roughness: 1 });
+            rc.text('Velocity', car2.x + 30, car2.y + 30, { font: '14px Roboto', roughness: 1 });
+            rc.text('Collision Area', canvas.width / 2 - 50, canvas.height - 20, { font: '16px Roboto', roughness: 1 });
+        }
+
+        function calculateCollision() {
+            const angle = Math.PI * parseFloat(document.getElementById('angleSlider').value) / 180;
+            const v1 = car1.velocity;
+            const v2 = car2.velocity;
+            const m1 = car1.mass;
+            const m2 = car2.mass;
+
+            const v1x = v1 * Math.cos(car1.angle);
+            const v1y = v1 * Math.sin(car1.angle);
+            const v2x = v2 * Math.cos(car2.angle);
+            const v2y = v2 * Math.sin(car2.angle);
+
+            const v1fx = ((m1 - m2) * v1x + 2 * m2 * v2x) / (m1 + m2);
+            const v2fx = ((m2 - m1) * v2x + 2 * m1 * v1x) / (m1 + m2);
+
+            car1.velocity = Math.sqrt(v1fx * v1fx + v1y * v1y);
+            car2.velocity = Math.sqrt(v2fx * v2fx + v2y * v2y);
+
+            car1.angle = Math.atan2(v1y, v1fx);
+            car2.angle = Math.atan2(v2y, v2fx);
+
+            updateCarPositions();
+        }
+
+        function updateCarPositions() {
+            car1.x += car1.velocity * Math.cos(car1.angle);
+            car1.y += car1.velocity * Math.sin(car1.angle);
+            car2.x += car2.velocity * Math.cos(car2.angle);
+            car2.y += car2.velocity * Math.sin(car2.angle);
+
+            car1.x = Math.max(car1.width / 2, Math.min(car1.x, canvas.width - car1.width / 2));
+            car1.y = Math.max(car1.height / 2, Math.min(car1.y, canvas.height - car1.height / 2));
+            car2.x = Math.max(car2.width / 2, Math.min(car2.x, canvas.width - car2.width / 2));
+            car2.y = Math.max(car2.height / 2, Math.min(car2.y, canvas.height - car2.height / 2));
+        }
+
+        document.getElementById('massSlider1').addEventListener('input', function() {
+            car1.mass = parseFloat(this.value);
+        });
+
+        document.getElementById('velocitySlider1').addEventListener('input', function() {
+            car1.velocity = parseFloat(this.value);
+        });
+
+        document.getElementById('massSlider2').addEventListener('input', function() {
+            car2.mass = parseFloat(this.value);
+        });
+
+        document.getElementById('velocitySlider2').addEventListener('input', function() {
+            car2.velocity = parseFloat(this.value);
+        });
+
+        document.getElementById('angleSlider').addEventListener('input', function() {
+            const angle = parseFloat(this.value);
+            car1.angle = -angle / 2 * Math.PI / 180;
+            car2.angle = Math.PI + angle / 2 * Math.PI / 180;
+        });
+
+        document.getElementById('collisionButton').addEventListener('click', function() {
+            calculateCollision();
+            animateCollision();
+            updateResults();
+        });
+
+        function animateCollision() {
+            let frames = 60;
+            let frame = 0;
+            
+            function animate() {
+                if (frame < frames) {
+                    updateCarPositions();
+                    frame++;
+                    requestAnimationFrame(animate);
+                }
+            }
+            
+            animate();
+        }
+
+        drawSimulation();
+    </script>
+</body>
+</html>
