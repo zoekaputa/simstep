@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -97,8 +98,8 @@
     <div id="controls">
         <div class="control-group">
             <label for="velocity">Initial Velocity (m/s):</label>
-            <input type="range" id="velocity" min="1" max="20" value="10" step="0.1">
-            <span id="velocity-value">10</span>
+            <input type="range" id="velocity" min="0" max="200" value="16.7" step="0.1">
+            <span id="velocity-value">16.7</span>
         </div>
         <div class="control-group">
             <label for="angle">Launch Angle (degrees):</label>
@@ -127,74 +128,33 @@
     </table>
 
     <script>
-        window.LOG_DEBUG = false;
-        
-        function logDebug(message) {
-            if (window.LOG_DEBUG) {
-                console.log(`DEBUG [${new Date().toISOString()}]: ${message}`);
-            }
-        }
-
         const canvas = document.getElementById('canvas');
         const ctx = canvas.getContext('2d');
         const rc = rough.canvas(canvas);
 
-        const basketSVG = `
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
-                <rect x="10" y="40" width="80" height="5" fill="#FF6B35"/>
-                <path d="M10,45 Q50,65 90,45" fill="none" stroke="#FF6B35" stroke-width="2"/>
-            </svg>
-        `;
-
-        const ballSVG = `
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
-                <circle cx="50" cy="50" r="45" fill="#F7A41D"/>
-                <path d="M50,5 Q20,50 50,95 Q80,50 50,5" fill="none" stroke="#000" stroke-width="2"/>
-                <path d="M5,50 Q50,20 95,50 Q50,80 5,50" fill="none" stroke="#000" stroke-width="2"/>
-            </svg>
-        `;
-
-        const courtSVG = `
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600">
-                <rect x="0" y="0" width="800" height="600" fill="#B7E4C7"/>
-                <rect x="50" y="50" width="700" height="500" fill="#98C9A3" stroke="#FFF" stroke-width="2"/>
-                <circle cx="400" cy="300" r="60" fill="none" stroke="#FFF" stroke-width="2"/>
-                <line x1="400" y1="50" x2="400" y2="550" stroke="#FFF" stroke-width="2"/>
-            </svg>
-        `;
-
         let ballX = 50;
         let ballY = 500;
-        let basketX = 700;
-        let basketY = 300;
-        let gravity = 9.8;
+        const basketX = 700;
+        const basketY = 300;
+        const gravity = 9.8;
         let attempts = 0;
 
         function drawCourt() {
-            const img = new Image();
-            img.onload = () => {
-                ctx.drawImage(img, 0, 0, 800, 600);
-                logDebug('Court drawn');
-            };
-            img.src = 'data:image/svg+xml;base64,' + btoa(courtSVG);
+            rc.rectangle(0, 0, canvas.width, canvas.height, {fill: '#B7E4C7', roughness: 0.5});
+            rc.rectangle(50, 50, 700, 500, {fill: '#98C9A3', stroke: '#FFF', strokeWidth: 2, roughness: 0.5});
+            rc.circle(400, 300, 120, {stroke: '#FFF', strokeWidth: 2, roughness: 0.5});
+            rc.line(400, 50, 400, 550, {stroke: '#FFF', strokeWidth: 2, roughness: 0.5});
         }
 
         function drawBasket() {
-            const img = new Image();
-            img.onload = () => {
-                ctx.drawImage(img, basketX - 40, basketY - 30, 80, 60);
-                logDebug(`Basket drawn at {x: ${basketX}, y: ${basketY}}`);
-            };
-            img.src = 'data:image/svg+xml;base64,' + btoa(basketSVG);
+            rc.rectangle(basketX - 40, basketY - 15, 80, 5, {fill: '#FF6B35', roughness: 0.5});
+            rc.curve([[basketX - 40, basketY - 10], [basketX, basketY + 10], [basketX + 40, basketY - 10]], {stroke: '#000', strokeWidth: 2, roughness: 0.5});
         }
 
         function drawBall(x, y) {
-            const img = new Image();
-            img.onload = () => {
-                ctx.drawImage(img, x - 20, y - 20, 40, 40);
-                logDebug(`Ball drawn at {x: ${x}, y: ${y}}`);
-            };
-            img.src = 'data:image/svg+xml;base64,' + btoa(ballSVG);
+            rc.circle(x, y, 40, {fill: '#F7A41D', stroke: '#000', strokeWidth: 2, roughness: 0.5});
+            rc.line(x - 20, y, x + 20, y, {stroke: '#000', strokeWidth: 2, roughness: 0.5});
+            rc.line(x, y - 20, x, y + 20, {stroke: '#000', strokeWidth: 2, roughness: 0.5});
         }
 
         function updateSimulation() {
@@ -205,11 +165,10 @@
             document.getElementById('velocity-value').textContent = velocity.toFixed(1);
             document.getElementById('angle-value').textContent = angle.toFixed(0);
             document.getElementById('air-resistance-value').textContent = airResistance.toFixed(2);
-
-            logDebug(`Simulation updated: Velocity=${velocity}, Angle=${angle}, Air Resistance=${airResistance}`);
         }
 
         function launchBall() {
+            document.getElementById('outcome').textContent = '';
             const velocity = parseFloat(document.getElementById('velocity').value);
             const angle = parseFloat(document.getElementById('angle').value);
             const airResistance = parseFloat(document.getElementById('air-resistance').value);
@@ -219,7 +178,8 @@
             let x = ballX;
             let y = ballY;
             let t = 0;
-            const dt = 0.1;
+            const dt = 0.01;
+            let passedThroughHoop = false;
 
             function animate() {
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -235,12 +195,14 @@
 
                 drawBall(x, y);
 
-                logDebug(`Ball position: {x: ${x.toFixed(2)}, y: ${y.toFixed(2)}}, Velocity: {vx: ${vx.toFixed(2)}, vy: ${vy.toFixed(2)}}`);
+                if (Math.abs(x - basketX) < 40 && Math.abs(y - basketY) < 30) {
+                    passedThroughHoop = true;
+                }
 
                 if (y < canvas.height && x < canvas.width) {
                     requestAnimationFrame(animate);
                 } else {
-                    checkOutcome(x, y);
+                    checkOutcome(passedThroughHoop);
                 }
 
                 t += dt;
@@ -249,14 +211,14 @@
             animate();
         }
 
-        function checkOutcome(x, y) {
+        function checkOutcome(passedThroughHoop) {
             attempts++;
             let outcome;
-            if (Math.abs(x - basketX) < 40 && Math.abs(y - basketY) < 30) {
-                outcome = "Score!";
+            if (passedThroughHoop) {
+                outcome = "YAY";
                 document.getElementById('outcome').style.color = '#4CAF50';
             } else {
-                outcome = "Miss";
+                outcome = "MISS";
                 document.getElementById('outcome').style.color = '#FF6B35';
             }
             document.getElementById('outcome').textContent = outcome;
@@ -274,8 +236,6 @@
                 <td>${airResistance}</td>
                 <td>${outcome}</td>
             `;
-
-            logDebug(`Attempt ${attempts}: Outcome=${outcome}, Final position: {x: ${x.toFixed(2)}, y: ${y.toFixed(2)}}`);
         }
 
         document.addEventListener('DOMContentLoaded', () => {
@@ -283,24 +243,6 @@
             drawBasket();
             drawBall(ballX, ballY);
             updateSimulation();
-
-            if (window.LOG_DEBUG) {
-                logDebug('Simulation initialized');
-                document.querySelectorAll('svg').forEach((svg, index) => {
-                    const rect = svg.getBoundingClientRect();
-                    logDebug(`SVG #${index}: Position {x: ${rect.x}, y: ${rect.y}}, Size {w: ${rect.width}, h: ${rect.height}}`);
-                });
-                document.querySelectorAll('input, button, select').forEach((control) => {
-                    logDebug(`Control ${control.id || 'unnamed'} (${control.tagName}): Initial value: ${control.value || 'N/A'}`);
-                });
-                
-                document.querySelectorAll('button').forEach((button) => {
-                    button.addEventListener('click', () => logDebug(`Button ${button.id || 'unnamed'} clicked`));
-                });
-                document.querySelectorAll('input').forEach((input) => {
-                    input.addEventListener('change', (e) => logDebug(`Input ${input.id || 'unnamed'} changed to ${e.target.value}`));
-                });
-            }
         });
 
         document.getElementById('velocity').addEventListener('input', updateSimulation);

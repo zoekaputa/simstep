@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -33,6 +34,7 @@
         #simulationCanvas {
             border: 2px solid #333;
             background-color: #fff;
+            cursor: crosshair;
         }
         .controls {
             display: flex;
@@ -119,36 +121,18 @@
     </div>
     <table id="dataTable">
         <tr>
-            <th>Property</th>
-            <th>Value</th>
-        </tr>
-        <tr>
-            <td>Soil Depth</td>
-            <td id="soilDepth">0 cm</td>
-        </tr>
-        <tr>
-            <td>Organic Matter</td>
-            <td id="organicMatter">0%</td>
-        </tr>
-        <tr>
-            <td>Weathering Rate</td>
-            <td id="weatheringRate">0 mm/year</td>
-        </tr>
-        <tr>
-            <td>Horizon Development</td>
-            <td id="horizonDevelopment">None</td>
+            <th>Time (years)</th>
+            <th>Parent Material</th>
+            <th>Soil Depth (cm)</th>
+            <th>Organic Matter (%)</th>
+            <th>Weathering Rate (mm/year)</th>
+            <th>Horizon Development</th>
+            <th>pH</th>
+            <th>Cation Exchange Capacity (cmol/kg)</th>
         </tr>
     </table>
 
     <script>
-        window.LOG_DEBUG = false;
-
-        function logDebug(message) {
-            if (window.LOG_DEBUG) {
-                console.log(`DEBUG [${new Date().toISOString()}]: ${message}`);
-            }
-        }
-
         const canvas = document.getElementById('simulationCanvas');
         const ctx = canvas.getContext('2d');
         const rc = rough.canvas(canvas);
@@ -160,84 +144,35 @@
         const organismsSlider = document.getElementById('organisms');
         const timeSlider = document.getElementById('time');
         const runSimulationButton = document.getElementById('runSimulation');
-
-        const soilDepthElement = document.getElementById('soilDepth');
-        const organicMatterElement = document.getElementById('organicMatter');
-        const weatheringRateElement = document.getElementById('weatheringRate');
-        const horizonDevelopmentElement = document.getElementById('horizonDevelopment');
+        const dataTable = document.getElementById('dataTable');
 
         let soil = {
             depth: 0,
             organicMatter: 0,
             weatheringRate: 0,
-            horizons: []
+            horizons: [],
+            pH: 7,
+            cec: 10
         };
 
-        const rockSVG = `
-            <svg width="100" height="100" viewBox="0 0 100 100">
-                <defs>
-                    <linearGradient id="rockGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" style="stop-color:#8B8B8B;stop-opacity:1" />
-                        <stop offset="100%" style="stop-color:#4A4A4A;stop-opacity:1" />
-                    </linearGradient>
-                </defs>
-                <path d="M20,80 Q30,70 40,75 T60,65 T80,80 L80,100 L20,100 Z" fill="url(#rockGradient)" />
-            </svg>
-        `;
-
-        const plantSVG = `
-            <svg width="50" height="100" viewBox="0 0 50 100">
-                <path d="M25,100 C25,70 10,60 10,40 C10,20 25,20 25,30 C25,20 40,20 40,40 C40,60 25,70 25,100" fill="#4CAF50" />
-            </svg>
-        `;
+        let particles = [];
 
         function drawBackground() {
-            ctx.fillStyle = "#87CEEB";
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            rc.rectangle(0, 0, canvas.width, canvas.height, {
+                fill: "#87CEEB",
+                fillStyle: "solid"
+            });
 
             const groundLevel = canvas.height * 0.7;
-            ctx.fillStyle = "#8B4513";
-            ctx.fillRect(0, groundLevel, canvas.width, canvas.height - groundLevel);
-
             const slope = parseInt(slopeSlider.value);
             const slopeHeight = (slope / 45) * canvas.height * 0.3;
-            ctx.beginPath();
-            ctx.moveTo(0, groundLevel);
-            ctx.lineTo(canvas.width, groundLevel - slopeHeight);
-            ctx.lineTo(canvas.width, canvas.height);
-            ctx.lineTo(0, canvas.height);
-            ctx.closePath();
-            ctx.fillStyle = "#8B4513";
-            ctx.fill();
 
-            logDebug(`Background drawn with slope: ${slope}%, slopeHeight: ${slopeHeight}px`);
-        }
-
-        function drawRocks() {
-            const rockImg = new Image();
-            rockImg.src = 'data:image/svg+xml;base64,' + btoa(rockSVG);
-            rockImg.onload = () => {
-                for (let i = 0; i < 5; i++) {
-                    const x = Math.random() * canvas.width;
-                    const y = canvas.height - Math.random() * 100 - 50;
-                    ctx.drawImage(rockImg, x, y, 50, 50);
-                    logDebug(`Rock drawn at (${x}, ${y})`);
-                }
-            };
-        }
-
-        function drawPlants() {
-            const plantImg = new Image();
-            plantImg.src = 'data:image/svg+xml;base64,' + btoa(plantSVG);
-            plantImg.onload = () => {
-                const organismCount = parseInt(organismsSlider.value);
-                for (let i = 0; i < organismCount / 10; i++) {
-                    const x = Math.random() * canvas.width;
-                    const y = canvas.height - Math.random() * 100 - 100;
-                    ctx.drawImage(plantImg, x, y, 25, 50);
-                    logDebug(`Plant drawn at (${x}, ${y})`);
-                }
-            };
+            rc.path(`M0 ${groundLevel} L${canvas.width} ${groundLevel - slopeHeight} L${canvas.width} ${canvas.height} L0 ${canvas.height} Z`, {
+                fill: "#8B4513",
+                fillStyle: "hachure",
+                hachureAngle: 60,
+                hachureGap: 8
+            });
         }
 
         function drawSoilProfile() {
@@ -245,17 +180,23 @@
             const soilDepth = soil.depth;
             const horizons = soil.horizons;
 
-            ctx.fillStyle = "#8B4513";
-            ctx.fillRect(0, groundLevel, canvas.width, soilDepth);
-
             horizons.forEach((horizon, index) => {
                 const y = groundLevel + (index * soilDepth / horizons.length);
-                ctx.fillStyle = horizon.color;
-                ctx.fillRect(0, y, canvas.width, soilDepth / horizons.length);
-                logDebug(`Soil horizon drawn: ${horizon.name} at y=${y}`);
+                const height = soilDepth / horizons.length;
+                rc.rectangle(0, y, canvas.width, height, {
+                    fill: horizon.color,
+                    fillStyle: "hachure",
+                    hachureAngle: 45,
+                    hachureGap: 5
+                });
             });
+        }
 
-            logDebug(`Soil profile drawn with depth: ${soilDepth}px`);
+        function createGradient(color1, color2) {
+            const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
+            gradient.addColorStop(0, color1);
+            gradient.addColorStop(1, color2);
+            return gradient;
         }
 
         function updateSimulation() {
@@ -272,56 +213,111 @@
 
             soil.horizons = [];
             if (soil.depth > 50) {
-                soil.horizons.push({name: "O", color: "#3E2723"});
+                soil.horizons.push({name: "O", color: createGradient("#3E2723", "#4E342E")});
             }
             if (soil.depth > 100) {
-                soil.horizons.push({name: "A", color: "#5D4037"});
+                soil.horizons.push({name: "A", color: createGradient("#5D4037", "#6D4C41")});
             }
             if (soil.depth > 150) {
-                soil.horizons.push({name: "B", color: "#795548"});
+                soil.horizons.push({name: "B", color: createGradient("#795548", "#8D6E63")});
             }
 
-            soilDepthElement.textContent = `${soil.depth.toFixed(1)} cm`;
-            organicMatterElement.textContent = `${soil.organicMatter.toFixed(1)}%`;
-            weatheringRateElement.textContent = `${soil.weatheringRate.toFixed(2)} mm/year`;
-            horizonDevelopmentElement.textContent = soil.horizons.map(h => h.name).join(", ") || "None";
+            // Update pH and CEC based on parent material
+            switch(parentMaterial) {
+                case 'granite':
+                    soil.pH = 5.5 + time / 2000;
+                    soil.cec = 10 + time / 1000;
+                    break;
+                case 'limestone':
+                    soil.pH = 7.5 + time / 5000;
+                    soil.cec = 20 + time / 500;
+                    break;
+                case 'sandstone':
+                    soil.pH = 6.0 + time / 3000;
+                    soil.cec = 5 + time / 2000;
+                    break;
+                case 'shale':
+                    soil.pH = 6.5 + time / 4000;
+                    soil.cec = 15 + time / 750;
+                    break;
+            }
 
-            logDebug(`Simulation updated: depth=${soil.depth}, organicMatter=${soil.organicMatter}, weatheringRate=${soil.weatheringRate}`);
+            soil.pH = Math.min(8.5, soil.pH);
+            soil.cec = Math.min(40, soil.cec);
+
+            updateDataTable();
+
+            particles = [];
+            for (let i = 0; i < 50; i++) {
+                particles.push({
+                    x: Math.random() * canvas.width,
+                    y: canvas.height * 0.7 + Math.random() * soil.depth,
+                    size: Math.random() * 3 + 1,
+                    speed: Math.random() * 0.5 + 0.1
+                });
+            }
+        }
+
+        function updateDataTable() {
+            const newRow = dataTable.insertRow(-1);
+            newRow.insertCell(0).textContent = timeSlider.value;
+            newRow.insertCell(1).textContent = parentMaterialSelect.value;
+            newRow.insertCell(2).textContent = soil.depth.toFixed(1);
+            newRow.insertCell(3).textContent = soil.organicMatter.toFixed(1);
+            newRow.insertCell(4).textContent = soil.weatheringRate.toFixed(2);
+            newRow.insertCell(5).textContent = soil.horizons.map(h => h.name).join(", ") || "None";
+            newRow.insertCell(6).textContent = soil.pH.toFixed(1);
+            newRow.insertCell(7).textContent = soil.cec.toFixed(1);
+        }
+
+        function animateParticles() {
+            particles.forEach(particle => {
+                particle.y += particle.speed;
+                if (particle.y > canvas.height) {
+                    particle.y = canvas.height * 0.7;
+                }
+                rc.circle(particle.x, particle.y, particle.size, {
+                    fill: "#8B4513",
+                    fillStyle: "solid"
+                });
+            });
         }
 
         function drawSimulation() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             drawBackground();
             drawSoilProfile();
-            drawRocks();
-            drawPlants();
-            logDebug("Simulation drawn");
+            animateParticles();
+            requestAnimationFrame(drawSimulation);
         }
+
+        canvas.addEventListener('click', (event) => {
+            const rect = canvas.getBoundingClientRect();
+            const x = event.clientX - rect.left;
+            const y = event.clientY - rect.top;
+            const groundLevel = canvas.height * 0.7;
+
+            if (y > groundLevel && y < groundLevel + soil.depth) {
+                const digDepth = y - groundLevel;
+                const horizonIndex = Math.floor((digDepth / soil.depth) * soil.horizons.length);
+                const horizon = soil.horizons[horizonIndex];
+
+                if (horizon) {
+                    rc.circle(x, y, 30, {
+                        fill: horizon.color,
+                        fillStyle: "hachure",
+                        hachureAngle: 45,
+                        hachureGap: 2
+                    });
+                    ctx.fillStyle = "#000";
+                    ctx.font = "12px Cabin Sketch";
+                    ctx.fillText(`Horizon ${horizon.name}`, x - 30, y - 20);
+                }
+            }
+        });
 
         runSimulationButton.addEventListener('click', () => {
             updateSimulation();
-            drawSimulation();
-            logDebug("Simulation run button clicked");
-        });
-
-        document.addEventListener('DOMContentLoaded', () => {
-            if (window.LOG_DEBUG) {
-                logDebug('Simulation initialized');
-                document.querySelectorAll('svg').forEach((svg, index) => {
-                    const rect = svg.getBoundingClientRect();
-                    logDebug(`SVG #${index}: Position {x: ${rect.x}, y: ${rect.y}}, Size {w: ${rect.width}, h: ${rect.height}}`);
-                });
-                document.querySelectorAll('input, button, select').forEach((control) => {
-                    logDebug(`Control ${control.id || 'unnamed'} (${control.tagName}): Initial value: ${control.value || 'N/A'}`);
-                });
-                
-                document.querySelectorAll('button').forEach((button) => {
-                    button.addEventListener('click', () => logDebug(`Button ${button.id || 'unnamed'} clicked`));
-                });
-                document.querySelectorAll('input').forEach((input) => {
-                    input.addEventListener('change', (e) => logDebug(`Input ${input.id || 'unnamed'} changed to ${e.target.value}`));
-                });
-            }
         });
 
         drawSimulation();

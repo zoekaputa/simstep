@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -65,14 +66,15 @@
     <p>Use the controls below to adjust various properties of the drug and its delivery method. Observe how these changes affect the drug's movement and concentration in different parts of the body. Your goal is to develop strategies that maximize the drug's effectiveness while minimizing potential side effects.</p>
     
     <div id="simulationContainer">
-        <canvas id="visualDisplay"></canvas>
+        <canvas id="visualDisplay" width="600" height="400"></canvas>
         <div id="controls">
             <div class="control-group">
                 <label for="drugProperties">Drug Properties:</label>
                 <select id="drugProperties">
+                    <option value="nano">Nanoparticle</option>
                     <option value="small">Small Molecule</option>
                     <option value="large">Large Molecule</option>
-                    <option value="nanoparticle">Nanoparticle</option>
+                    <option value="macro">Macromolecule</option>
                 </select>
             </div>
             <div class="control-group">
@@ -108,7 +110,7 @@
     </div>
 
     <script>
-        window.LOG_DEBUG = false;
+        window.LOG_DEBUG = true;
 
         function logDebug(message) {
             if (window.LOG_DEBUG) {
@@ -140,6 +142,7 @@
         let releaseRate = 12;
         let adminSite = 'oral';
         let timeInterval = 0;
+        let drugType = 'nano';
 
         function drawBody() {
             rc.rectangle(150, 20, 300, 360, { roughness: 1.5, fill: 'lightyellow' });
@@ -182,8 +185,27 @@
                     drugParticles.splice(index, 1);
                 }
                 
-                rc.circle(particle.x, particle.y, 5, { roughness: 1, fill: 'blue' });
+                drawDrugParticle(particle);
             });
+        }
+
+        function drawDrugParticle(particle) {
+            let size;
+            switch(drugType) {
+                case 'nano':
+                    size = 1;
+                    break;
+                case 'small':
+                    size = 3;
+                    break;
+                case 'large':
+                    size = 5;
+                    break;
+                case 'macro':
+                    size = 7;
+                    break;
+            }
+            rc.circle(particle.x, particle.y, size, { roughness: 0.5, fill: 'blue' });
         }
 
         function releaseDrug() {
@@ -199,7 +221,8 @@
         document.getElementById('releaseButton').addEventListener('click', releaseDrug);
 
         document.getElementById('drugProperties').addEventListener('change', (e) => {
-            logDebug(`Drug properties changed to ${e.target.value}`);
+            drugType = e.target.value;
+            logDebug(`Drug properties changed to ${drugType}`);
         });
 
         document.getElementById('adminSite').addEventListener('change', (e) => {
@@ -270,24 +293,9 @@
         }
 
         document.addEventListener('DOMContentLoaded', () => {
-            if (window.LOG_DEBUG) {
-                logDebug('Simulation initialized');
-                document.querySelectorAll('svg').forEach((svg, index) => {
-                    const rect = svg.getBoundingClientRect();
-                    logDebug(`SVG #${index}: Position {x: ${rect.x}, y: ${rect.y}}, Size {w: ${rect.width}, h: ${rect.height}}`);
-                });
-                document.querySelectorAll('input, button, select').forEach((control) => {
-                    logDebug(`Control ${control.id || 'unnamed'} (${control.tagName}): Initial value: ${control.value || 'N/A'}`);
-                });
-                
-                document.querySelectorAll('button').forEach((button) => {
-                    button.addEventListener('click', () => logDebug(`Button ${button.id || 'unnamed'} clicked`));
-                });
-                document.querySelectorAll('input').forEach((input) => {
-                    input.addEventListener('change', (e) => logDebug(`Input ${input.id || 'unnamed'} changed to ${e.target.value}`));
-                });
-            }
+            logDebug('Simulation initialized');
             updateSimulation();
+            updateConcentrationGraph();
         });
     </script>
 </body>

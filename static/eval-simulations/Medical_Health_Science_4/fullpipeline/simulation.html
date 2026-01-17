@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -132,14 +133,6 @@
     <div id="comparisonView"></div>
 
     <script>
-        window.LOG_DEBUG = false;
-        
-        function logDebug(message) {
-            if (window.LOG_DEBUG) {
-                console.log(`DEBUG [${new Date().toISOString()}]: ${message}`);
-            }
-        }
-
         const canvas = document.getElementById('simulationCanvas');
         const ctx = canvas.getContext('2d');
         const rc = rough.canvas(canvas);
@@ -149,25 +142,11 @@
         let recoveredCount = 0;
         let dayCount = 0;
         let chart;
-
-        const personSVG = `
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
-                <circle cx="12" cy="7" r="5" fill="FILLCOLOR"/>
-                <path d="M3 19h18v2H3v-2zM13 13h-2v6h2v-6z" fill="FILLCOLOR"/>
-            </svg>
-        `;
+        let animationId;
 
         function createPerson(x, y, status) {
             const color = status === 'infected' ? '#e74c3c' : (status === 'recovered' ? '#2ecc71' : '#3498db');
-            const svgString = personSVG.replace(/FILLCOLOR/g, color);
-            const blob = new Blob([svgString], {type: 'image/svg+xml'});
-            const url = URL.createObjectURL(blob);
-            const img = new Image();
-            img.src = url;
-            img.onload = () => {
-                ctx.drawImage(img, x, y, 20, 20);
-                URL.revokeObjectURL(url);
-            };
+            rc.circle(x + 10, y + 10, 20, { fill: color, stroke: 'black', strokeWidth: 1 });
             return { x, y, status, vx: Math.random() * 2 - 1, vy: Math.random() * 2 - 1 };
         }
 
@@ -186,8 +165,6 @@
             infectedCount = population.filter(p => p.status === 'infected').length;
             recoveredCount = 0;
             dayCount = 0;
-
-            logDebug(`Population initialized with ${populationSize} people, ${infectedCount} infected`);
         }
 
         function updatePopulation() {
@@ -221,7 +198,6 @@
                                 if (Math.random() < infectionChance) {
                                     other.status = 'infected';
                                     infectedCount++;
-                                    logDebug(`Person at (${other.x}, ${other.y}) became infected`);
                                 }
                             }
                         }
@@ -231,7 +207,6 @@
                         person.status = 'recovered';
                         infectedCount--;
                         recoveredCount++;
-                        logDebug(`Person at (${person.x}, ${person.y}) recovered`);
                     }
                 }
 
@@ -239,7 +214,6 @@
                     person.status = 'recovered';
                     infectedCount--;
                     recoveredCount++;
-                    logDebug(`Person at (${person.x}, ${person.y}) identified by testing and isolated`);
                 }
             });
 
@@ -263,6 +237,9 @@
         }
 
         function runSimulation() {
+            if (animationId) {
+                cancelAnimationFrame(animationId);
+            }
             initializePopulation();
             if (chart) chart.destroy();
             chart = new Chart(document.getElementById('resultsGraph'), {
@@ -316,9 +293,7 @@
                 drawPopulation();
                 updateChart();
                 if (infectedCount > 0 && dayCount < 100) {
-                    requestAnimationFrame(animate);
-                } else {
-                    logDebug(`Simulation ended after ${dayCount} days`);
+                    animationId = requestAnimationFrame(animate);
                 }
             }
 
@@ -346,27 +321,6 @@
                 <p>Actual final infected: ${actual.toFixed(2)}%</p>
                 <p>Difference: ${difference.toFixed(2)}%</p>
             `;
-            logDebug(`Prediction submitted: ${prediction}%, Actual: ${actual}%, Difference: ${difference}%`);
-        });
-
-        document.addEventListener('DOMContentLoaded', () => {
-            if (window.LOG_DEBUG) {
-                logDebug('Simulation initialized');
-                document.querySelectorAll('svg').forEach((svg, index) => {
-                    const rect = svg.getBoundingClientRect();
-                    logDebug(`SVG #${index}: Position {x: ${rect.x}, y: ${rect.y}}, Size {w: ${rect.width}, h: ${rect.height}}`);
-                });
-                document.querySelectorAll('input, button, select').forEach((control) => {
-                    logDebug(`Control ${control.id || 'unnamed'} (${control.tagName}): Initial value: ${control.value || 'N/A'}`);
-                });
-                
-                document.querySelectorAll('button').forEach((button) => {
-                    button.addEventListener('click', () => logDebug(`Button ${button.id || 'unnamed'} clicked`));
-                });
-                document.querySelectorAll('input').forEach((input) => {
-                    input.addEventListener('change', (e) => logDebug(`Input ${input.id || 'unnamed'} changed to ${e.target.value}`));
-                });
-            }
         });
     </script>
 </body>

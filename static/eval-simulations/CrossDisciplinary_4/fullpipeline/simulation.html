@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -28,6 +29,12 @@
             height: 600px;
             border: 2px solid #2c3e50;
             margin-bottom: 20px;
+            position: relative;
+        }
+        #canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
         }
         #controls {
             display: flex;
@@ -64,6 +71,10 @@
             font-family: 'Cabin Sketch', cursive;
             font-weight: 400;
             color: #34495e;
+        }
+        .draggable {
+            position: absolute;
+            cursor: move;
         }
     </style>
 </head>
@@ -112,123 +123,79 @@
         </div>
     </div>
     <script>
-        window.LOG_DEBUG = false;
-
-        function logDebug(message) {
-            if (window.LOG_DEBUG) {
-                console.log(`DEBUG [${new Date().toISOString()}]: ${message}`);
-            }
-        }
-
         const canvas = document.getElementById('canvas');
         const rc = rough.canvas(canvas);
         const ctx = canvas.getContext('2d');
 
-        const treehouseSVG = `
-            <svg viewBox="0 0 200 200">
-                <polygon points="100,10 40,100 160,100" fill="#8B4513" stroke="#4A2511" stroke-width="2"/>
-                <rect x="60" y="100" width="80" height="60" fill="#A0522D" stroke="#4A2511" stroke-width="2"/>
-                <rect x="90" y="130" width="20" height="30" fill="#4A2511" stroke="#4A2511" stroke-width="2"/>
-            </svg>
-        `;
+        const components = [
+            { type: 'solarPanel', x: 400, y: 150, width: 100, height: 50 },
+            { type: 'windTurbine', x: 100, y: 200, width: 100, height: 200 },
+            { type: 'hydroTurbine', x: 600, y: 400, width: 100, height: 100 },
+            { type: 'geothermal', x: 200, y: 400, width: 100, height: 100 },
+            { type: 'biomass', x: 500, y: 450, width: 100, height: 100 }
+        ];
 
-        const solarPanelSVG = `
-            <svg viewBox="0 0 100 50">
-                <rect x="5" y="5" width="90" height="40" fill="#4169E1" stroke="#000000" stroke-width="2"/>
-                <line x1="5" y1="25" x2="95" y2="25" stroke="#000000" stroke-width="2"/>
-                <line x1="35" y1="5" x2="35" y2="45" stroke="#000000" stroke-width="2"/>
-                <line x1="65" y1="5" x2="65" y2="45" stroke="#000000" stroke-width="2"/>
-            </svg>
-        `;
-
-        const windTurbineSVG = `
-            <svg viewBox="0 0 100 200">
-                <rect x="45" y="50" width="10" height="150" fill="#A9A9A9" stroke="#000000" stroke-width="2"/>
-                <circle cx="50" cy="50" r="40" fill="none" stroke="#000000" stroke-width="2"/>
-                <path d="M50,50 L90,30 A40,40 0 0,0 70,10 Z" fill="#A9A9A9" stroke="#000000" stroke-width="2"/>
-                <path d="M50,50 L10,70 A40,40 0 0,0 30,90 Z" fill="#A9A9A9" stroke="#000000" stroke-width="2"/>
-                <path d="M50,50 L50,10 A40,40 0 0,0 30,10 Z" fill="#A9A9A9" stroke="#000000" stroke-width="2"/>
-            </svg>
-        `;
-
-        const hydroTurbineSVG = `
-            <svg viewBox="0 0 100 100">
-                <circle cx="50" cy="50" r="40" fill="#4682B4" stroke="#000000" stroke-width="2"/>
-                <path d="M50,50 L90,50 A40,40 0 0,0 50,10 Z" fill="#B0E0E6" stroke="#000000" stroke-width="2"/>
-                <path d="M50,50 L50,90 A40,40 0 0,0 90,50 Z" fill="#B0E0E6" stroke="#000000" stroke-width="2"/>
-                <path d="M50,50 L10,50 A40,40 0 0,0 50,90 Z" fill="#B0E0E6" stroke="#000000" stroke-width="2"/>
-                <path d="M50,50 L50,10 A40,40 0 0,0 10,50 Z" fill="#B0E0E6" stroke="#000000" stroke-width="2"/>
-                <circle cx="50" cy="50" r="5" fill="#000000"/>
-            </svg>
-        `;
-
-        const geothermalSVG = `
-            <svg viewBox="0 0 100 100">
-                <rect x="10" y="10" width="80" height="80" fill="#8B4513" stroke="#000000" stroke-width="2"/>
-                <path d="M20,20 Q50,60 80,20" fill="none" stroke="#FF4500" stroke-width="4"/>
-                <path d="M20,40 Q50,80 80,40" fill="none" stroke="#FF4500" stroke-width="4"/>
-                <path d="M20,60 Q50,100 80,60" fill="none" stroke="#FF4500" stroke-width="4"/>
-            </svg>
-        `;
-
-        const biomassSVG = `
-            <svg viewBox="0 0 100 100">
-                <rect x="20" y="40" width="60" height="40" fill="#8B4513" stroke="#000000" stroke-width="2"/>
-                <path d="M30,40 L50,10 L70,40" fill="#228B22" stroke="#000000" stroke-width="2"/>
-                <rect x="40" y="60" width="20" height="20" fill="#FF4500" stroke="#000000" stroke-width="2"/>
-            </svg>
-        `;
+        function drawComponent(component) {
+            switch(component.type) {
+                case 'solarPanel':
+                    rc.polygon([[component.x, component.y + component.height], [component.x + component.width/2, component.y], [component.x + component.width, component.y + component.height]], {
+                        fill: 'blue',
+                        fillStyle: 'solid',
+                        roughness: 1
+                    });
+                    break;
+                case 'windTurbine':
+                    rc.line(component.x + component.width/2, component.y, component.x + component.width/2, component.y + component.height, { roughness: 1 });
+                    rc.ellipse(component.x + component.width/2, component.y + 20, 80, 80, { roughness: 1 });
+                    rc.line(component.x + component.width/2, component.y + 20, component.x + component.width, component.y + 20, { roughness: 1 });
+                    rc.line(component.x + component.width/2, component.y + 20, component.x + component.width/2 - 40, component.y + 60, { roughness: 1 });
+                    rc.line(component.x + component.width/2, component.y + 20, component.x + component.width/2 - 40, component.y - 20, { roughness: 1 });
+                    break;
+                case 'hydroTurbine':
+                    rc.rectangle(component.x, component.y + component.height/2, component.width, component.height/2, { roughness: 1 });
+                    rc.circle(component.x + component.width/2, component.y + component.height/4, component.width/4, { roughness: 1 });
+                    for(let i = 0; i < 8; i++) {
+                        let angle = i * Math.PI / 4;
+                        rc.line(
+                            component.x + component.width/2,
+                            component.y + component.height/4,
+                            component.x + component.width/2 + Math.cos(angle) * component.width/4,
+                            component.y + component.height/4 + Math.sin(angle) * component.width/4,
+                            { roughness: 1 }
+                        );
+                    }
+                    break;
+                case 'geothermal':
+                    rc.rectangle(component.x, component.y, component.width, component.height, { roughness: 1 });
+                    rc.line(component.x, component.y + component.height/2, component.x + component.width, component.y + component.height/2, { roughness: 1 });
+                    rc.line(component.x + component.width/2, component.y, component.x + component.width/2, component.y + component.height, { roughness: 1 });
+                    rc.circle(component.x + component.width/2, component.y + component.height/2, 20, { roughness: 1 });
+                    break;
+                case 'biomass':
+                    rc.rectangle(component.x, component.y + component.height/2, component.width, component.height/2, { roughness: 1 });
+                    for(let i = 0; i < 5; i++) {
+                        rc.line(
+                            component.x + i * component.width/5,
+                            component.y,
+                            component.x + i * component.width/5 + component.width/10,
+                            component.y + component.height/2,
+                            { roughness: 1 }
+                        );
+                    }
+                    break;
+            }
+        }
 
         function drawTreehouse() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             
-            // Draw treehouse
-            const treehouseImg = new Image();
-            treehouseImg.onload = () => {
-                ctx.drawImage(treehouseImg, 300, 200, 200, 200);
-                logDebug('Treehouse drawn');
-            };
-            treehouseImg.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(treehouseSVG);
+            rc.rectangle(300, 200, 200, 200, {
+                fill: 'brown',
+                fillStyle: 'solid',
+                roughness: 2
+            });
 
-            // Draw solar panel
-            const solarPanelImg = new Image();
-            solarPanelImg.onload = () => {
-                ctx.drawImage(solarPanelImg, 400, 150, 100, 50);
-                logDebug('Solar panel drawn');
-            };
-            solarPanelImg.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(solarPanelSVG);
-
-            // Draw wind turbine
-            const windTurbineImg = new Image();
-            windTurbineImg.onload = () => {
-                ctx.drawImage(windTurbineImg, 100, 200, 100, 200);
-                logDebug('Wind turbine drawn');
-            };
-            windTurbineImg.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(windTurbineSVG);
-
-            // Draw hydro turbine
-            const hydroTurbineImg = new Image();
-            hydroTurbineImg.onload = () => {
-                ctx.drawImage(hydroTurbineImg, 600, 400, 100, 100);
-                logDebug('Hydro turbine drawn');
-            };
-            hydroTurbineImg.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(hydroTurbineSVG);
-
-            // Draw geothermal
-            const geothermalImg = new Image();
-            geothermalImg.onload = () => {
-                ctx.drawImage(geothermalImg, 200, 400, 100, 100);
-                logDebug('Geothermal system drawn');
-            };
-            geothermalImg.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(geothermalSVG);
-
-            // Draw biomass
-            const biomassImg = new Image();
-            biomassImg.onload = () => {
-                ctx.drawImage(biomassImg, 500, 450, 100, 100);
-                logDebug('Biomass system drawn');
-            };
-            biomassImg.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(biomassSVG);
+            components.forEach(drawComponent);
         }
 
         function updateEnergy() {
@@ -252,30 +219,54 @@
             document.getElementById('storageMeter').textContent = storage.toFixed(2);
             document.getElementById('consumptionMeter').textContent = consumption.toFixed(2);
 
-            logDebug(`Energy updated: Production=${totalEnergy.toFixed(2)}, Storage=${storage.toFixed(2)}, Consumption=${consumption.toFixed(2)}`);
+            drawTreehouse();
+            drawEnergyFlows(totalEnergy);
         }
+
+        function drawEnergyFlows(energy) {
+            components.forEach(component => {
+                rc.line(component.x + component.width/2, component.y + component.height/2, 400, 300, {
+                    roughness: 2,
+                    strokeWidth: energy/10,
+                    stroke: 'yellow'
+                });
+            });
+        }
+
+        let draggedComponent = null;
+
+        canvas.addEventListener('mousedown', (e) => {
+            const rect = canvas.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+
+            draggedComponent = components.find(component => 
+                x >= component.x && x <= component.x + component.width &&
+                y >= component.y && y <= component.y + component.height
+            );
+        });
+
+        canvas.addEventListener('mousemove', (e) => {
+            if (draggedComponent) {
+                const rect = canvas.getBoundingClientRect();
+                draggedComponent.x = e.clientX - rect.left - draggedComponent.width/2;
+                draggedComponent.y = e.clientY - rect.top - draggedComponent.height/2;
+                drawTreehouse();
+            }
+        });
+
+        canvas.addEventListener('mouseup', () => {
+            draggedComponent = null;
+            updateEnergy();
+        });
 
         document.addEventListener('DOMContentLoaded', () => {
             drawTreehouse();
             updateEnergy();
 
             document.querySelectorAll('input[type="range"]').forEach(slider => {
-                slider.addEventListener('input', () => {
-                    updateEnergy();
-                    logDebug(`Slider ${slider.id} changed to ${slider.value}`);
-                });
+                slider.addEventListener('input', updateEnergy);
             });
-
-            if (window.LOG_DEBUG) {
-                logDebug('Simulation initialized');
-                document.querySelectorAll('svg').forEach((svg, index) => {
-                    const rect = svg.getBoundingClientRect();
-                    logDebug(`SVG #${index}: Position {x: ${rect.x}, y: ${rect.y}}, Size {w: ${rect.width}, h: ${rect.height}}`);
-                });
-                document.querySelectorAll('input, button, select').forEach((control) => {
-                    logDebug(`Control ${control.id || 'unnamed'} (${control.tagName}): Initial value: ${control.value || 'N/A'}`);
-                });
-            }
         });
     </script>
 </body>

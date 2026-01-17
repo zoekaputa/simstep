@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -86,6 +87,10 @@
             <span id="resourceDisplay">100</span>
         </div>
         <div class="control-group">
+            <label for="teamSizeDisplay">Team Size:</label>
+            <span id="teamSizeDisplay">5</span>
+        </div>
+        <div class="control-group">
             <button id="nextGeneration">Next Generation</button>
         </div>
     </div>
@@ -110,6 +115,7 @@
         const abilitySelector = document.getElementById('abilitySelector');
         const generationCounter = document.getElementById('generationCounter');
         const resourceDisplay = document.getElementById('resourceDisplay');
+        const teamSizeDisplay = document.getElementById('teamSizeDisplay');
         const nextGenerationButton = document.getElementById('nextGeneration');
 
         let generation = 1;
@@ -118,73 +124,103 @@
         let teamSize = 5;
         let adaptationScore = 0;
 
-        const characterSVG = `
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
-                <circle cx="50" cy="50" r="40" fill="#FFD700"/>
-                <circle cx="35" cy="40" r="5" fill="#000"/>
-                <circle cx="65" cy="40" r="5" fill="#000"/>
-                <path d="M 30 60 Q 50 80 70 60" fill="none" stroke="#000" stroke-width="3"/>
-            </svg>
-        `;
+        class Ability {
+            constructor(name, blendFactor, competitionFactor) {
+                this.name = name;
+                this.blendFactor = blendFactor;
+                this.competitionFactor = competitionFactor;
+            }
 
-        const environmentSVG = `
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600">
-                <rect width="800" height="600" fill="#87CEEB"/>
-                <path d="M 0 500 Q 200 450 400 500 T 800 500 L 800 600 L 0 600 Z" fill="#8B4513"/>
-                <circle cx="700" cy="100" r="60" fill="#FDB813"/>
-            </svg>
-        `;
+            getBlendEffectiveness() {
+                return this.blendFactor;
+            }
+
+            getCompetitionEffectiveness() {
+                return this.competitionFactor;
+            }
+        }
+
+        const abilities = {
+            speed: new Ability('speed', 0.3, 0.7),
+            strength: new Ability('strength', 0.1, 0.9),
+            camouflage: new Ability('camouflage', 0.9, 0.5)
+        };
 
         function drawEnvironment() {
-            const img = new Image();
-            img.onload = () => {
-                ctx.drawImage(img, 0, 0, gameCanvas.width, gameCanvas.height);
-                drawCharacters();
-            };
-            img.src = 'data:image/svg+xml;base64,' + btoa(environmentSVG);
+            rc.rectangle(0, 0, gameCanvas.width, gameCanvas.height, {
+                fill: 'skyblue',
+                fillStyle: 'solid'
+            });
+            rc.circle(700, 100, 120, {
+                fill: 'yellow',
+                fillStyle: 'solid'
+            });
+            rc.path('M 0 500 Q 200 450 400 500 T 800 500 L 800 600 L 0 600 Z', {
+                fill: 'brown',
+                fillStyle: 'solid'
+            });
         }
 
         function drawCharacters() {
-            const img = new Image();
-            img.onload = () => {
-                for (let i = 0; i < teamSize; i++) {
-                    ctx.drawImage(img, i * 150 + 50, 400, 100, 100);
-                }
-            };
-            img.src = 'data:image/svg+xml;base64,' + btoa(characterSVG);
+            const blendFactor = abilities[currentAbility].getBlendEffectiveness();
+            for (let i = 0; i < teamSize; i++) {
+                const x = i * (700 / teamSize) + 50;
+                const y = 400;
+                rc.circle(x + 50, y + 50, 80, {
+                    fill: `rgba(255, 215, 0, ${1 - blendFactor})`,
+                    fillStyle: 'solid'
+                });
+                rc.circle(x + 35, y + 40, 10, {
+                    fill: 'black',
+                    fillStyle: 'solid'
+                });
+                rc.circle(x + 65, y + 40, 10, {
+                    fill: 'black',
+                    fillStyle: 'solid'
+                });
+                rc.path(`M ${x + 30} ${y + 60} Q ${x + 50} ${y + 80} ${x + 70} ${y + 60}`, {
+                    stroke: 'black',
+                    strokeWidth: 3
+                });
+            }
         }
 
         function updateGame() {
             ctx.clearRect(0, 0, gameCanvas.width, gameCanvas.height);
             drawEnvironment();
+            drawCharacters();
             updateResources();
+            updateTeamSize();
             updateAdaptationScore();
             drawDataGraph();
-            logDebug(`Game updated: Generation ${generation}, Resources ${resources}, Ability ${currentAbility}, Adaptation Score ${adaptationScore}`);
+            teamSizeDisplay.textContent = teamSize;
+            logDebug(`Game updated: Generation ${generation}, Resources ${resources}, Ability ${currentAbility}, Adaptation Score ${adaptationScore}, Team Size ${teamSize}`);
         }
 
         function updateResources() {
-            resources = Math.max(0, resources - 10 + Math.floor(Math.random() * 20));
+            const competitionFactor = abilities[currentAbility].getCompetitionEffectiveness();
+            resources = Math.max(0, resources - 10 + Math.floor(Math.random() * 20 * competitionFactor));
             resourceDisplay.textContent = resources;
         }
 
+        function updateTeamSize() {
+            const growthRate = (resources / 100) * (adaptationScore + 0.5);
+            teamSize = Math.max(1, Math.min(10, Math.floor(teamSize * (1 + growthRate - 0.5))));
+        }
+
         function updateAdaptationScore() {
-            const abilityScores = {
-                speed: 0.7,
-                strength: 0.5,
-                camouflage: 0.8
-            };
-            adaptationScore = (adaptationScore + abilityScores[currentAbility]) / 2;
+            const blendFactor = abilities[currentAbility].getBlendEffectiveness();
+            const competitionFactor = abilities[currentAbility].getCompetitionEffectiveness();
+            adaptationScore = (adaptationScore + (blendFactor + competitionFactor) / 2) / 2;
         }
 
         function drawDataGraph() {
             dataCtx.clearRect(0, 0, dataCanvas.width, dataCanvas.height);
-            dataCtx.beginPath();
-            dataCtx.moveTo(0, dataCanvas.height - adaptationScore * dataCanvas.height);
-            dataCtx.lineTo(dataCanvas.width, dataCanvas.height - adaptationScore * dataCanvas.height);
-            dataCtx.strokeStyle = '#4CAF50';
-            dataCtx.lineWidth = 2;
-            dataCtx.stroke();
+            const rc = rough.canvas(dataCanvas);
+            rc.line(0, dataCanvas.height - adaptationScore * dataCanvas.height, dataCanvas.width, dataCanvas.height - adaptationScore * dataCanvas.height, {
+                stroke: 'green',
+                strokeWidth: 2
+            });
 
             dataCtx.font = '16px "Cabin Sketch"';
             dataCtx.fillStyle = '#4a4a4a';

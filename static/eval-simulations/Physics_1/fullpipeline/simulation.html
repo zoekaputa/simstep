@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -81,8 +82,9 @@
     <canvas id="canvas" width="800" height="400"></canvas>
     <div id="controls">
         <div class="control-group">
-            <label for="force-meter">Push Force (N):</label>
+            <label for="force-meter">Force (N):</label>
             <input type="range" id="force-meter" min="0" max="100" value="50">
+            <span id="force-value">50</span>
         </div>
         <div class="control-group">
             <label for="mass-input">Rider Mass (kg):</label>
@@ -124,6 +126,7 @@
     const graphCtx = graphCanvas.getContext('2d');
 
     const forceMeter = document.getElementById('force-meter');
+    const forceValue = document.getElementById('force-value');
     const massInput = document.getElementById('mass-input');
     const startButton = document.getElementById('start-button');
     const timeDisplay = document.getElementById('time-display');
@@ -139,43 +142,15 @@
     let distance = 0;
     let isSimulationRunning = false;
 
-    const skateboarderSVG = `
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
-            <circle cx="50" cy="30" r="20" fill="#ffcc00"/>
-            <rect x="30" y="50" width="40" height="10" fill="#4a4a4a"/>
-            <circle cx="35" cy="65" r="5" fill="#ff4444"/>
-            <circle cx="65" cy="65" r="5" fill="#ff4444"/>
-        </svg>
-    `;
-
-    const rampSVG = `
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 100">
-            <path d="M0 100 L150 0 L200 0 L200 100 Z" fill="#8b4513"/>
-        </svg>
-    `;
-
     function drawSkateboarder(x, y) {
-        ctx.save();
-        ctx.translate(x, y);
-        ctx.scale(0.5, 0.5);
-        const img = new Image();
-        img.src = 'data:image/svg+xml,' + encodeURIComponent(skateboarderSVG);
-        img.onload = () => {
-            ctx.drawImage(img, -50, -50, 100, 100);
-        };
-        ctx.restore();
+        rc.circle(x, y - 20, 40, { fill: 'yellow', fillStyle: 'solid' });
+        rc.rectangle(x - 20, y + 20, 40, 10, { fill: '#4a4a4a', fillStyle: 'solid' });
+        rc.circle(x - 15, y + 35, 10, { fill: 'red', fillStyle: 'solid' });
+        rc.circle(x + 15, y + 35, 10, { fill: 'red', fillStyle: 'solid' });
     }
 
     function drawRamp() {
-        ctx.save();
-        ctx.translate(600, 200);
-        ctx.scale(1, 1);
-        const img = new Image();
-        img.src = 'data:image/svg+xml,' + encodeURIComponent(rampSVG);
-        img.onload = () => {
-            ctx.drawImage(img, 0, 0, 200, 100);
-        };
-        ctx.restore();
+        rc.path('M 600 300 L 750 200 L 800 200 L 800 300 Z', { fill: '#8b4513', fillStyle: 'solid' });
     }
 
     function drawScene() {
@@ -221,20 +196,22 @@
 
     function updateGraph() {
         graphCtx.clearRect(0, 0, graphCanvas.width, graphCanvas.height);
-        graphCtx.beginPath();
-        graphCtx.moveTo(0, graphCanvas.height);
+        const rc = rough.canvas(graphCanvas);
+        
+        rc.line(0, graphCanvas.height, graphCanvas.width, graphCanvas.height, { roughness: 1 });
+        rc.line(0, 0, 0, graphCanvas.height, { roughness: 1 });
         
         const rows = dataTable.rows;
+        let points = [];
         for (let i = 0; i < rows.length; i++) {
             const force = parseFloat(rows[i].cells[1].textContent);
             const acceleration = parseFloat(rows[i].cells[2].textContent);
             const x = (force / 100) * graphCanvas.width;
             const y = graphCanvas.height - (acceleration / 10) * graphCanvas.height;
-            graphCtx.lineTo(x, y);
+            points.push([x, y]);
         }
-
-        graphCtx.strokeStyle = 'blue';
-        graphCtx.stroke();
+        
+        rc.linearPath(points, { stroke: 'blue', roughness: 1 });
 
         graphCtx.font = '14px Cabin Sketch';
         graphCtx.fillStyle = 'black';
@@ -262,6 +239,7 @@
 
     forceMeter.addEventListener('input', () => {
         logDebug(`Force meter changed to ${forceMeter.value}`);
+        forceValue.textContent = forceMeter.value;
     });
 
     massInput.addEventListener('input', () => {
@@ -273,10 +251,6 @@
     document.addEventListener('DOMContentLoaded', () => {
         if (window.LOG_DEBUG) {
             logDebug('Simulation initialized');
-            document.querySelectorAll('svg').forEach((svg, index) => {
-                const rect = svg.getBoundingClientRect();
-                logDebug(`SVG #${index}: Position {x: ${rect.x}, y: ${rect.y}}, Size {w: ${rect.width}, h: ${rect.height}}`);
-            });
             document.querySelectorAll('input, button, select').forEach((control) => {
                 logDebug(`Control ${control.id || 'unnamed'} (${control.tagName}): Initial value: ${control.value || 'N/A'}`);
             });

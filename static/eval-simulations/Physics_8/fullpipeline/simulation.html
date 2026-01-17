@@ -94,14 +94,6 @@
     <canvas id="graph" width="400" height="300"></canvas>
 
     <script>
-        window.LOG_DEBUG = true;
-
-        function logDebug(message) {
-            if (window.LOG_DEBUG) {
-                console.log(`DEBUG [${new Date().toISOString()}]: ${message}`);
-            }
-        }
-
         const canvas = document.getElementById('canvas');
         const ctx = canvas.getContext('2d');
         const rc = rough.canvas(canvas);
@@ -115,67 +107,26 @@
         const observeButton = document.getElementById('observeButton');
         const dataTable = document.getElementById('dataTable');
 
-        const poolSvg = `
-            <svg width="800" height="400" viewBox="0 0 800 400">
-                <defs>
-                    <linearGradient id="waterGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-                        <stop offset="0%" style="stop-color:#87CEFA;stop-opacity:0.8" />
-                        <stop offset="100%" style="stop-color:#1E90FF;stop-opacity:0.8" />
-                    </linearGradient>
-                </defs>
-                <rect x="0" y="100" width="800" height="300" fill="url(#waterGradient)" />
-                <path d="M0,100 Q400,80 800,100" stroke="#87CEFA" stroke-width="2" fill="none" />
-            </svg>
-        `;
-
-        const targetSvg = `
-            <svg width="40" height="40" viewBox="0 0 40 40">
-                <circle cx="20" cy="20" r="18" fill="#FF6347" stroke="#8B0000" stroke-width="2" />
-                <circle cx="20" cy="20" r="12" fill="#8B0000" />
-                <circle cx="20" cy="20" r="6" fill="#FF6347" />
-            </svg>
-        `;
-
-        const lifeguardSvg = `
-            <svg width="60" height="100" viewBox="0 0 60 100">
-                <ellipse cx="30" cy="20" rx="15" ry="20" fill="#FFD700" />
-                <rect x="20" y="40" width="20" height="40" fill="#FF0000" />
-                <rect x="15" y="80" width="30" height="20" fill="#0000FF" />
-            </svg>
-        `;
-
         let targetDepth = 50;
         const data = [];
 
         function drawPool() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-            const poolImg = new Image();
-            poolImg.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(poolSvg);
-            poolImg.onload = () => {
-                ctx.drawImage(poolImg, 0, 0);
-                drawTarget();
-                drawLifeguard();
-                drawLightRay();
-            };
+            ctx.fillStyle = '#87CEFA';
+            ctx.fillRect(0, 100, canvas.width, canvas.height - 100);
+            rc.line(0, 100, canvas.width, 100, { stroke: '#0066cc', strokeWidth: 2 });
+            drawTarget();
+            drawLifeguard();
+            drawLightRay();
         }
 
         function drawTarget() {
-            const targetImg = new Image();
-            targetImg.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(targetSvg);
-            targetImg.onload = () => {
-                const y = 100 + (targetDepth / 200) * 300;
-                ctx.drawImage(targetImg, 380, y);
-                logDebug(`Target drawn at y: ${y}`);
-            };
+            const y = 100 + (targetDepth / 200) * 300;
+            rc.circle(400, y, 20, { fill: 'red', fillStyle: 'solid' });
         }
 
         function drawLifeguard() {
-            const lifeguardImg = new Image();
-            lifeguardImg.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(lifeguardSvg);
-            lifeguardImg.onload = () => {
-                ctx.drawImage(lifeguardImg, 700, 20);
-                logDebug('Lifeguard drawn');
-            };
+            rc.rectangle(700, 20, 60, 80, { fill: 'yellow', fillStyle: 'solid' });
         }
 
         function drawLightRay() {
@@ -185,9 +136,6 @@
             
             rc.line(400, targetY, 730, 70, { stroke: '#FFD700', strokeWidth: 2 });
             rc.line(400, apparentY, 730, 70, { stroke: '#FF0000', strokeWidth: 2, strokeDashArray: [5, 5] });
-            
-            logDebug(`Light ray drawn from (400, ${targetY}) to (730, 70)`);
-            logDebug(`Apparent light ray drawn from (400, ${apparentY}) to (730, 70)`);
         }
 
         function calculateApparentDepth(actualDepth) {
@@ -200,7 +148,6 @@
             targetDepth = parseInt(depthSlider.value);
             depthValue.textContent = targetDepth;
             drawPool();
-            logDebug(`Depth updated to ${targetDepth}`);
         }
 
         function observe() {
@@ -214,7 +161,6 @@
             row.insertCell(2).textContent = ratio.toFixed(4);
             
             updateGraph();
-            logDebug(`Observation added: Actual ${targetDepth}, Apparent ${apparentDepth.toFixed(2)}, Ratio ${ratio.toFixed(4)}`);
         }
 
         function updateGraph() {
@@ -236,18 +182,14 @@
             data.forEach(point => {
                 const x = 50 + (point.actual / maxDepth) * 300;
                 const y = 250 - point.ratio * 200;
-                graphRc.circle(x, y, 5, { fill: '#0066cc' });
-                logDebug(`Graph point drawn at (${x.toFixed(2)}, ${y.toFixed(2)})`);
+                graphRc.circle(x, y, 5, { fill: '#0066cc', fillStyle: 'solid' });
             });
         }
 
         depthSlider.addEventListener('input', updateDepthValue);
         observeButton.addEventListener('click', observe);
 
-        document.addEventListener('DOMContentLoaded', () => {
-            drawPool();
-            logDebug('Simulation initialized');
-        });
+        drawPool();
     </script>
 </body>
 </html>

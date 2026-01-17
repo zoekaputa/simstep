@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -78,6 +79,11 @@
             border: 2px solid #3a3a3a;
             border-radius: 10px;
         }
+        .graph-label {
+            text-align: center;
+            margin-top: 5px;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
@@ -87,14 +93,20 @@
         <canvas id="neuronCanvas" width="800" height="400"></canvas>
     </div>
     <div id="controls">
-        <input type="range" id="neurotransmitterSlider" min="0" max="100" value="50">
-        <label for="neurotransmitterSlider">Neurotransmitter Quantity (molecules)</label>
+        <input type="range" id="neurotransmitterSlider" min="1" max="100" value="1" step="1">
+        <label for="neurotransmitterSlider">Neurotransmitter Quantity: <span id="sliderValue">1</span> molecule(s)</label>
         <button id="startButton">Start Simulation</button>
         <button id="resetButton">Reset</button>
     </div>
     <div id="graphs">
-        <canvas id="speedGraph" class="graph"></canvas>
-        <canvas id="successGraph" class="graph"></canvas>
+        <div>
+            <canvas id="speedGraph" class="graph"></canvas>
+            <div class="graph-label">Signal Speed</div>
+        </div>
+        <div>
+            <canvas id="successGraph" class="graph"></canvas>
+            <div class="graph-label">Transmission Success</div>
+        </div>
     </div>
     <script>
         window.LOG_DEBUG = false;
@@ -112,60 +124,87 @@
         const rcSpeed = rough.canvas(speedGraph);
         const rcSuccess = rough.canvas(successGraph);
 
-        const neuronSVG = `
-            <svg viewBox="0 0 800 400">
-                <path d="M100,200 C150,100 250,100 300,200 S450,300 500,200 S650,100 700,200" fill="none" stroke="#3a3a3a" stroke-width="10"/>
-                <circle cx="100" cy="200" r="40" fill="#f0f0f0" stroke="#3a3a3a" stroke-width="5"/>
-                <circle cx="700" cy="200" r="20" fill="#f0f0f0" stroke="#3a3a3a" stroke-width="5"/>
-            </svg>
-        `;
-
-        const neurotransmitterSVG = `
-            <svg viewBox="0 0 20 20">
-                <circle cx="10" cy="10" r="8" fill="#4CAF50"/>
-            </svg>
-        `;
-
         let neurotransmitters = [];
         let signalSpeed = 0;
         let transmissionSuccess = 0;
+        let time = 0;
+        let activeRegions = [];
+        let messageTransmissionPosition = 140;
+        const axonStart = 140;
+        const axonEnd = 700;
+        const axonLength = axonEnd - axonStart;
+        const messageTransmissionSpeed = 5;
 
         function drawNeuron() {
-            rc.path('M100,200 C150,100 250,100 300,200 S450,300 500,200 S650,100 700,200', {
-                stroke: '#3a3a3a',
-                strokeWidth: 10,
-                roughness: 1
-            });
-            rc.circle(100, 200, 80, { fill: 'white', stroke: '#3a3a3a', strokeWidth: 5, roughness: 1 });
-            rc.circle(700, 200, 40, { fill: 'white', stroke: '#3a3a3a', strokeWidth: 5, roughness: 1 });
-        }
-
-        function drawMyelin() {
-            for (let i = 300; i < 700; i += 100) {
-                rc.rectangle(i, 180, 80, 40, { fill: '#FFD700', stroke: '#3a3a3a', strokeWidth: 2, roughness: 0.5 });
+            // Dendrites
+            for (let i = 0; i < 5; i++) {
+                rc.line(20, 160 + i * 20, 80, 200, { stroke: '#1E90FF', strokeWidth: 3, roughness: 2 });
             }
+
+            // Soma
+            rc.circle(100, 200, 80, { fill: '#FF69B4', stroke: '#3a3a3a', strokeWidth: 2, roughness: 1 });
+
+            // Axon
+            rc.line(140, 200, 700, 200, { stroke: '#32CD32', strokeWidth: 10, roughness: 1 });
+
+            // Myelin sheaths
+            for (let i = 200; i < 650; i += 100) {
+                rc.rectangle(i, 180, 80, 40, { fill: '#FFA500', stroke: '#3a3a3a', strokeWidth: 2, roughness: 0.5 });
+            }
+
+            // Nodes of Ranvier
+            for (let i = 280; i < 650; i += 100) {
+                rc.circle(i, 200, 10, { fill: '#FFFF00', stroke: '#3a3a3a', strokeWidth: 1, roughness: 0.5 });
+            }
+
+            // Axon terminal (synapse)
+            rc.circle(700, 200, 40, { fill: '#32CD32', stroke: '#3a3a3a', strokeWidth: 2, roughness: 1 });
         }
 
         function drawNeurotransmitters() {
             neurotransmitters.forEach(nt => {
-                rc.circle(nt.x, nt.y, 10, { fill: '#4CAF50', stroke: '#3a3a3a', strokeWidth: 1, roughness: 0.5 });
+                rc.circle(nt.x, nt.y, 5, { fill: '#4CAF50', stroke: '#3a3a3a', strokeWidth: 1, roughness: 0.5 });
             });
+        }
+
+        function highlightActiveRegions() {
+            activeRegions.forEach(region => {
+                rc.circle(region.x, region.y, region.radius, { fill: 'rgba(255, 255, 0, 0.3)', stroke: 'rgba(255, 255, 0, 0.5)', strokeWidth: 2, roughness: 0.5 });
+            });
+        }
+
+        function drawMessageTransmission() {
+            rc.circle(messageTransmissionPosition, 200, 8, { fill: '#FF0000', stroke: '#3a3a3a', strokeWidth: 1, roughness: 0 });
         }
 
         function updateSimulation() {
             neuronCanvas.getContext('2d').clearRect(0, 0, neuronCanvas.width, neuronCanvas.height);
             drawNeuron();
-            drawMyelin();
             drawNeurotransmitters();
+            highlightActiveRegions();
+            drawMessageTransmission();
 
             neurotransmitters.forEach(nt => {
                 nt.x += 5;
-                nt.y = 200 + Math.sin(nt.x / 20) * 20;
             });
 
             neurotransmitters = neurotransmitters.filter(nt => nt.x < 800);
 
-            signalSpeed = 50 + Math.random() * 50;
+            // Update active regions
+            activeRegions = neurotransmitters.map(nt => ({ x: nt.x, y: nt.y, radius: 20 }));
+            if (neurotransmitters.length > 0) {
+                activeRegions.push({ x: 100, y: 200, radius: 40 }); // Soma
+                activeRegions.push({ x: 700, y: 200, radius: 20 }); // Synapse
+            }
+
+            // Update message transmission position
+            messageTransmissionPosition += messageTransmissionSpeed;
+            if (messageTransmissionPosition > axonEnd) {
+                messageTransmissionPosition = axonStart;
+            }
+
+            time += 0.1;
+            signalSpeed = calculateSignalSpeed(time);
             transmissionSuccess = neurotransmitters.length / 2;
 
             updateGraphs();
@@ -175,18 +214,57 @@
             }
         }
 
+        function calculateSignalSpeed(t) {
+            const maxSpeed = 10;
+            const minSpeed = 0.1;
+            const period = 2 * Math.PI;
+            return minSpeed + (maxSpeed - minSpeed) * Math.exp(-t / 10) * (1 + Math.sin(t / period)) / 2;
+        }
+
         function updateGraphs() {
             speedGraph.getContext('2d').clearRect(0, 0, speedGraph.width, speedGraph.height);
             successGraph.getContext('2d').clearRect(0, 0, successGraph.width, successGraph.height);
 
-            rcSpeed.line(0, 100, 200, 100 - signalSpeed, { stroke: '#3a3a3a', strokeWidth: 2 });
-            rcSuccess.line(0, 100, 200, 100 - transmissionSuccess, { stroke: '#3a3a3a', strokeWidth: 2 });
+            const maxSpeed = 10;
+            const maxSuccess = 50;
+
+            // Draw speed graph
+            const points = [];
+            for (let x = 0; x < speedGraph.width; x++) {
+                const t = x / speedGraph.width * 20;
+                const speed = calculateSignalSpeed(t);
+                const y = speedGraph.height - (speed / maxSpeed) * speedGraph.height;
+                points.push([x, y]);
+            }
+            rcSpeed.curve(points, { stroke: '#3a3a3a', strokeWidth: 2, roughness: 1 });
+
+            // Draw current speed point
+            const currentX = (messageTransmissionPosition - axonStart) / axonLength * speedGraph.width;
+            const currentY = speedGraph.height - (signalSpeed / maxSpeed) * speedGraph.height;
+            rcSpeed.circle(currentX, currentY, 5, { fill: 'red', stroke: 'red', roughness: 0 });
+
+            // Draw success graph
+            const successY = successGraph.height - (transmissionSuccess / maxSuccess) * successGraph.height;
+            rcSuccess.line(0, successGraph.height, successGraph.width, successY, { stroke: '#3a3a3a', strokeWidth: 2, roughness: 1 });
+
+            // Add labels to speed graph
+            const ctx = speedGraph.getContext('2d');
+            ctx.font = '12px Cabin Sketch';
+            ctx.fillStyle = '#3a3a3a';
+            ctx.fillText('Time/Distance', speedGraph.width - 80, speedGraph.height - 5);
+            ctx.save();
+            ctx.translate(10, speedGraph.height / 2);
+            ctx.rotate(-Math.PI / 2);
+            ctx.fillText('Speed', 0, 0);
+            ctx.restore();
         }
 
         document.getElementById('startButton').addEventListener('click', () => {
             logDebug('Start button clicked');
             const quantity = parseInt(document.getElementById('neurotransmitterSlider').value);
-            neurotransmitters = Array(quantity).fill().map(() => ({ x: 100, y: 200 }));
+            neurotransmitters = Array(quantity).fill().map(() => ({ x: 20, y: 200 }));
+            time = 0;
+            messageTransmissionPosition = axonStart;
             updateSimulation();
         });
 
@@ -195,27 +273,28 @@
             neurotransmitters = [];
             signalSpeed = 0;
             transmissionSuccess = 0;
+            time = 0;
+            activeRegions = [];
+            messageTransmissionPosition = axonStart;
             neuronCanvas.getContext('2d').clearRect(0, 0, neuronCanvas.width, neuronCanvas.height);
             drawNeuron();
-            drawMyelin();
             updateGraphs();
+            document.getElementById('neurotransmitterSlider').value = 1;
+            document.getElementById('sliderValue').textContent = '1';
         });
 
         document.getElementById('neurotransmitterSlider').addEventListener('input', (e) => {
             logDebug(`Neurotransmitter slider changed to ${e.target.value}`);
+            document.getElementById('sliderValue').textContent = e.target.value;
+            updateGraphs();
         });
 
         document.addEventListener('DOMContentLoaded', () => {
             drawNeuron();
-            drawMyelin();
             updateGraphs();
 
             if (window.LOG_DEBUG) {
                 logDebug('Simulation initialized');
-                document.querySelectorAll('svg').forEach((svg, index) => {
-                    const rect = svg.getBoundingClientRect();
-                    logDebug(`SVG #${index}: Position {x: ${rect.x}, y: ${rect.y}}, Size {w: ${rect.width}, h: ${rect.height}}`);
-                });
                 document.querySelectorAll('input, button, select').forEach((control) => {
                     logDebug(`Control ${control.id || 'unnamed'} (${control.tagName}): Initial value: ${control.value || 'N/A'}`);
                 });

@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -70,6 +71,15 @@
             width: 80%;
             max-width: 800px;
         }
+        .city-data {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        .city-data > div {
+            flex: 1;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
@@ -97,54 +107,25 @@
     <script>
         const canvas = document.getElementById('canvas');
         const ctx = canvas.getContext('2d');
-
-        const cityASvg = `
-            <svg width="200" height="200" viewBox="0 0 200 200">
-                <rect x="20" y="100" width="160" height="100" fill="#8B4513"/>
-                <polygon points="20,100 100,20 180,100" fill="#A52A2A"/>
-                <rect x="40" y="120" width="40" height="40" fill="#FFFFFF"/>
-                <rect x="120" y="120" width="40" height="40" fill="#FFFFFF"/>
-                <rect x="90" y="160" width="20" height="40" fill="#FFFFFF"/>
-            </svg>
-        `;
-
-        const cityBSvg = `
-            <svg width="200" height="200" viewBox="0 0 200 200">
-                <rect x="20" y="80" width="160" height="120" fill="#4CAF50"/>
-                <polygon points="20,80 100,20 180,80" fill="#2E7D32"/>
-                <rect x="40" y="100" width="40" height="60" fill="#FFFFFF"/>
-                <rect x="120" y="100" width="40" height="60" fill="#FFFFFF"/>
-                <rect x="90" y="160" width="20" height="40" fill="#FFFFFF"/>
-            </svg>
-        `;
-
-        const cityCSvg = `
-            <svg width="200" height="200" viewBox="0 0 200 200">
-                <rect x="20" y="60" width="160" height="140" fill="#2196F3"/>
-                <polygon points="20,60 100,10 180,60" fill="#1565C0"/>
-                <rect x="40" y="80" width="40" height="80" fill="#FFFFFF"/>
-                <rect x="120" y="80" width="40" height="80" fill="#FFFFFF"/>
-                <rect x="90" y="160" width="20" height="40" fill="#FFFFFF"/>
-            </svg>
-        `;
+        const rc = rough.canvas(canvas);
 
         const cities = [
-            { name: 'City A', svg: cityASvg, x: 100, y: 200, focus: 'Short-term' },
-            { name: 'City B', svg: cityBSvg, x: 400, y: 200, focus: 'Balanced' },
-            { name: 'City C', svg: cityCSvg, x: 700, y: 200, focus: 'Long-term' }
+            { name: 'City A', x: 100, y: 200, focus: 'Short-term' },
+            { name: 'City B', x: 400, y: 200, focus: 'Balanced' },
+            { name: 'City C', x: 700, y: 200, focus: 'Long-term' }
         ];
 
         function drawCity(city) {
-            const img = new Image();
-            img.onload = () => {
-                ctx.drawImage(img, city.x - 100, city.y - 200, 200, 200);
-                ctx.font = '16px "Cabin Sketch"';
-                ctx.fillStyle = '#2c3e50';
-                ctx.textAlign = 'center';
-                ctx.fillText(city.name, city.x, city.y + 20);
-                ctx.fillText(city.focus + ' Focus', city.x, city.y + 40);
-            };
-            img.src = 'data:image/svg+xml;base64,' + btoa(city.svg);
+            rc.rectangle(city.x - 80, city.y - 160, 160, 160, { fill: city.name === 'City A' ? '#8B4513' : city.name === 'City B' ? '#4CAF50' : '#2196F3' });
+            rc.polygon([[city.x - 80, city.y - 160], [city.x, city.y - 240], [city.x + 80, city.y - 160]], { fill: city.name === 'City A' ? '#A52A2A' : city.name === 'City B' ? '#2E7D32' : '#1565C0' });
+            rc.rectangle(city.x - 60, city.y - 140, 40, 80, { fill: 'white' });
+            rc.rectangle(city.x + 20, city.y - 140, 40, 80, { fill: 'white' });
+            rc.rectangle(city.x - 10, city.y - 40, 20, 40, { fill: 'white' });
+            ctx.font = '16px "Cabin Sketch"';
+            ctx.fillStyle = '#2c3e50';
+            ctx.textAlign = 'center';
+            ctx.fillText(city.name, city.x, city.y + 20);
+            ctx.fillText(city.focus + ' Focus', city.x, city.y + 40);
         }
 
         function drawCities() {
@@ -176,28 +157,46 @@
                 }
             };
 
+            html += '<div class="city-data">';
             if (comparison === 'all' || comparison.includes('A')) {
-                html += `<p>City A (Short-term Focus): Population ${cityData['City A'].population.toLocaleString()}, Economy $${cityData['City A'].economy.toFixed(1)}B, Green Space ${cityData['City A'].greenSpace.toFixed(1)}%</p>`;
+                html += `<div>
+                    <h4>City A (Short-term Focus)</h4>
+                    <p>Population: ${cityData['City A'].population.toLocaleString()}</p>
+                    <p>Economy: $${cityData['City A'].economy.toFixed(1)}B</p>
+                    <p>Green Space: ${cityData['City A'].greenSpace.toFixed(1)}%</p>
+                </div>`;
             }
             if (comparison === 'all' || comparison.includes('B')) {
-                html += `<p>City B (Balanced Approach): Population ${cityData['City B'].population.toLocaleString()}, Economy $${cityData['City B'].economy.toFixed(1)}B, Green Space ${cityData['City B'].greenSpace.toFixed(1)}%</p>`;
+                html += `<div>
+                    <h4>City B (Balanced Approach)</h4>
+                    <p>Population: ${cityData['City B'].population.toLocaleString()}</p>
+                    <p>Economy: $${cityData['City B'].economy.toFixed(1)}B</p>
+                    <p>Green Space: ${cityData['City B'].greenSpace.toFixed(1)}%</p>
+                </div>`;
             }
             if (comparison === 'all' || comparison.includes('C')) {
-                html += `<p>City C (Long-term Focus): Population ${cityData['City C'].population.toLocaleString()}, Economy $${cityData['City C'].economy.toFixed(1)}B, Green Space ${cityData['City C'].greenSpace.toFixed(1)}%</p>`;
+                html += `<div>
+                    <h4>City C (Long-term Focus)</h4>
+                    <p>Population: ${cityData['City C'].population.toLocaleString()}</p>
+                    <p>Economy: $${cityData['City C'].economy.toFixed(1)}B</p>
+                    <p>Green Space: ${cityData['City C'].greenSpace.toFixed(1)}%</p>
+                </div>`;
             }
+            html += '</div>';
 
             dataDisplay.innerHTML = html;
         }
 
         document.getElementById('timeline').addEventListener('input', () => {
             updateData();
+            drawCities();
         });
 
         document.getElementById('shockEvent').addEventListener('click', () => {
-            alert('A major environmental disaster has occurred! All cities must adapt their strategies.');
             const timeline = document.getElementById('timeline');
             timeline.value = Math.min(100, parseInt(timeline.value) + 10);
             updateData();
+            drawCities();
         });
 
         document.getElementById('cityComparison').addEventListener('change', () => {

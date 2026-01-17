@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -18,7 +19,7 @@
             margin: 0;
             padding: 20px;
         }
-        h1 {
+        h1, h2 {
             font-family: 'Cabin Sketch', cursive;
             font-weight: 700;
             color: #2c3e50;
@@ -59,6 +60,13 @@
             padding: 10px;
             margin-top: 20px;
             background-color: #ecf0f1;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+        .plot-data {
+            border: 1px solid #2c3e50;
+            padding: 10px;
         }
     </style>
 </head>
@@ -73,6 +81,7 @@
         <label for="timeSlider">Time (Days): <span id="timeValue">0</span></label>
         <button id="disturbanceButton">Simulate Disturbance</button>
     </div>
+    <h2>Data Display</h2>
     <div id="dataDisplay"></div>
 
     <script>
@@ -143,15 +152,25 @@
         }
 
         function updateDataDisplay() {
-            const stabilityScore = plots.reduce((sum, plot) => sum + plot.health * plot.species, 0) / plots.length;
-            const resilienceScore = plots.reduce((sum, plot) => sum + plot.species, 0) / plots.length * 10;
-            dataDisplay.innerHTML = `
-                <strong>Garden Stability:</strong> ${stabilityScore.toFixed(2)}<br>
-                <strong>Garden Resilience:</strong> ${resilienceScore.toFixed(2)}<br>
-                <strong>Natural Pest Control:</strong> ${(stabilityScore * 0.8).toFixed(2)}<br>
-                <strong>Crop Variety Resilience:</strong> ${(resilienceScore * 0.9).toFixed(2)}
-            `;
-            logDebug(`Data updated - Stability: ${stabilityScore}, Resilience: ${resilienceScore}`);
+            dataDisplay.innerHTML = '';
+            plots.forEach(plot => {
+                const stabilityScore = plot.health * plot.species / 10;
+                const resilienceScore = plot.species * 10;
+                const pestControlScore = stabilityScore * 0.8;
+                const cropResilienceScore = resilienceScore * 0.9;
+
+                const plotDiv = document.createElement('div');
+                plotDiv.classList.add('plot-data');
+                plotDiv.innerHTML = `
+                    <h3>${plot.name}</h3>
+                    <strong>Ecosystem Stability:</strong> ${stabilityScore.toFixed(2)}<br>
+                    <strong>Ecosystem Resilience:</strong> ${resilienceScore.toFixed(2)}<br>
+                    <strong>Natural Pest Control:</strong> ${pestControlScore.toFixed(2)}<br>
+                    <strong>Crop Variety Resilience:</strong> ${cropResilienceScore.toFixed(2)}
+                `;
+                dataDisplay.appendChild(plotDiv);
+            });
+            logDebug('Data display updated');
         }
 
         timeSlider.addEventListener('input', () => {

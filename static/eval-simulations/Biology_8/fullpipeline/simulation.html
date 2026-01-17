@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -80,7 +81,7 @@
     <div id="results"></div>
 
     <script>
-        window.LOG_DEBUG = false;
+        window.LOG_DEBUG = true;
 
         function logDebug(message) {
             if (window.LOG_DEBUG) {
@@ -92,31 +93,6 @@
         const ctx = canvas.getContext('2d');
         const rc = rough.canvas(canvas);
 
-        const lightSvg = `<svg width="100" height="100" viewBox="0 0 100 100">
-            <defs>
-                <radialGradient id="lightGradient" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
-                    <stop offset="0%" style="stop-color:rgb(255,255,200);stop-opacity:1" />
-                    <stop offset="100%" style="stop-color:rgb(255,255,0);stop-opacity:0" />
-                </radialGradient>
-            </defs>
-            <circle cx="50" cy="50" r="40" fill="url(#lightGradient)" />
-            <path d="M30 50 L70 50 M50 30 L50 70" stroke="yellow" stroke-width="5" />
-        </svg>`;
-
-        const saladBarSvg = `<svg width="200" height="100" viewBox="0 0 200 100">
-            <rect x="10" y="10" width="180" height="80" fill="#8cc63f" stroke="#5a8d2a" stroke-width="5" />
-            <circle cx="50" cy="50" r="20" fill="#ff0000" /> <!-- Tomato -->
-            <rect x="100" y="30" width="40" height="40" fill="#ffa500" /> <!-- Carrot -->
-            <ellipse cx="160" cy="50" rx="25" ry="15" fill="#a05a2c" /> <!-- Potato -->
-        </svg>`;
-
-        const studentSvg = `<svg width="50" height="100" viewBox="0 0 50 100">
-            <circle cx="25" cy="25" r="20" fill="#f5d7b5" /> <!-- Head -->
-            <rect x="15" y="45" width="20" height="40" fill="#3498db" /> <!-- Body -->
-            <rect x="10" y="85" width="10" height="15" fill="#2c3e50" /> <!-- Left leg -->
-            <rect x="30" y="85" width="10" height="15" fill="#2c3e50" /> <!-- Right leg -->
-        </svg>`;
-
         let energy = {
             light: 1000,
             producer: 0,
@@ -126,24 +102,41 @@
         };
 
         function drawScene() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            rc.rectangle(0, 0, canvas.width, canvas.height, {
+                fill: '#ecf0f1',
+                fillStyle: 'solid'
+            });
             
             // Draw light
-            const lightImg = new Image();
-            lightImg.src = 'data:image/svg+xml,' + encodeURIComponent(lightSvg);
-            ctx.drawImage(lightImg, 350, 50, 100, 100);
+            rc.circle(400, 100, 80, {
+                fill: 'yellow',
+                fillStyle: 'solid'
+            });
             
             // Draw salad bar
-            const saladBarImg = new Image();
-            saladBarImg.src = 'data:image/svg+xml,' + encodeURIComponent(saladBarSvg);
-            ctx.drawImage(saladBarImg, 300, 200, 200, 100);
+            rc.rectangle(300, 200, 200, 100, {
+                fill: '#8cc63f',
+                fillStyle: 'solid'
+            });
+            rc.circle(350, 250, 20, { fill: 'red', fillStyle: 'solid' }); // Tomato
+            rc.rectangle(400, 230, 40, 40, { fill: 'orange', fillStyle: 'solid' }); // Carrot
+            rc.ellipse(460, 250, 50, 30, { fill: '#a05a2c', fillStyle: 'solid' }); // Potato
             
             // Draw students
-            const studentImg = new Image();
-            studentImg.src = 'data:image/svg+xml,' + encodeURIComponent(studentSvg);
-            ctx.drawImage(studentImg, 200, 350, 50, 100); // Vegetarian
-            ctx.drawImage(studentImg, 375, 350, 50, 100); // Omnivore
-            ctx.drawImage(studentImg, 550, 350, 50, 100); // Carnivore
+            rc.circle(225, 400, 20, { fill: '#f5d7b5', fillStyle: 'solid' }); // Head
+            rc.rectangle(215, 420, 20, 40, { fill: '#3498db', fillStyle: 'solid' }); // Body
+            rc.rectangle(210, 460, 10, 15, { fill: '#2c3e50', fillStyle: 'solid' }); // Left leg
+            rc.rectangle(230, 460, 10, 15, { fill: '#2c3e50', fillStyle: 'solid' }); // Right leg
+
+            rc.circle(400, 400, 20, { fill: '#f5d7b5', fillStyle: 'solid' }); // Head
+            rc.rectangle(390, 420, 20, 40, { fill: '#3498db', fillStyle: 'solid' }); // Body
+            rc.rectangle(385, 460, 10, 15, { fill: '#2c3e50', fillStyle: 'solid' }); // Left leg
+            rc.rectangle(405, 460, 10, 15, { fill: '#2c3e50', fillStyle: 'solid' }); // Right leg
+
+            rc.circle(575, 400, 20, { fill: '#f5d7b5', fillStyle: 'solid' }); // Head
+            rc.rectangle(565, 420, 20, 40, { fill: '#3498db', fillStyle: 'solid' }); // Body
+            rc.rectangle(560, 460, 10, 15, { fill: '#2c3e50', fillStyle: 'solid' }); // Left leg
+            rc.rectangle(580, 460, 10, 15, { fill: '#2c3e50', fillStyle: 'solid' }); // Right leg
             
             // Draw energy labels
             ctx.font = '16px "Cabin Sketch"';
@@ -218,26 +211,9 @@
         document.getElementById('reset').addEventListener('click', reset);
 
         document.addEventListener('DOMContentLoaded', () => {
-            if (window.LOG_DEBUG) {
-                logDebug('Simulation initialized');
-                document.querySelectorAll('svg').forEach((svg, index) => {
-                    const rect = svg.getBoundingClientRect();
-                    logDebug(`SVG #${index}: Position {x: ${rect.x}, y: ${rect.y}}, Size {w: ${rect.width}, h: ${rect.height}}`);
-                });
-                document.querySelectorAll('input, button, select').forEach((control) => {
-                    logDebug(`Control ${control.id || 'unnamed'} (${control.tagName}): Initial value: ${control.value || 'N/A'}`);
-                });
-                
-                document.querySelectorAll('button').forEach((button) => {
-                    button.addEventListener('click', () => logDebug(`Button ${button.id || 'unnamed'} clicked`));
-                });
-                document.querySelectorAll('input').forEach((input) => {
-                    input.addEventListener('change', (e) => logDebug(`Input ${input.id || 'unnamed'} changed to ${e.target.value}`));
-                });
-            }
+            logDebug('DOM content loaded');
+            drawScene();
         });
-
-        drawScene();
     </script>
 </body>
 </html>

@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -10,65 +11,54 @@
     <script src="https://unpkg.com/roughjs@latest/bundled/rough.js"></script>
     <style>
         body {
-            font-family: 'Cabin Sketch', cursive;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            background-color: #f0f8ff;
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f0f0f0;
         }
         h1 {
             font-family: 'Cabin Sketch', cursive;
-            font-weight: 700;
-            color: #4a4a4a;
+            color: #2c3e50;
         }
         #description {
-            max-width: 800px;
-            text-align: center;
+            background-color: #ecf0f1;
+            padding: 15px;
+            border-radius: 5px;
             margin-bottom: 20px;
         }
         #simulationArea {
             display: flex;
-            flex-direction: column;
-            align-items: center;
+            justify-content: space-between;
         }
         #canvas {
-            border: 2px solid #4a4a4a;
-            margin-bottom: 20px;
+            border: 1px solid #bdc3c7;
+            background-color: #ffffff;
         }
         #controls {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-        .control-group {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            background-color: #e6f2ff;
+            width: 300px;
             padding: 10px;
+            background-color: #ecf0f1;
             border-radius: 5px;
         }
+        .control-group {
+            margin-bottom: 15px;
+        }
         label {
+            display: block;
             margin-bottom: 5px;
         }
-        input[type="range"] {
-            width: 150px;
-        }
-        select, button {
-            font-family: 'Cabin Sketch', cursive;
-            font-size: 16px;
-            padding: 5px;
+        input[type="range"], select {
+            width: 100%;
         }
         #resultsDisplay {
-            width: 100%;
-            max-width: 800px;
-            height: 100px;
-            border: 1px solid #4a4a4a;
+            margin-top: 20px;
             padding: 10px;
-            overflow-y: auto;
-            background-color: white;
+            background-color: #ecf0f1;
+            border-radius: 5px;
+        }
+        button {
+            margin: 5px;
+            padding: 5px 10px;
         }
     </style>
 </head>
@@ -81,45 +71,53 @@
         <canvas id="canvas" width="800" height="400"></canvas>
         <div id="controls">
             <div class="control-group">
-                <label for="rainfall">Rainfall (mm/hr)</label>
-                <input type="range" id="rainfall" min="0" max="100" value="50">
-            </div>
-            <div class="control-group">
-                <label for="windSpeed">Wind Speed (km/h)</label>
-                <input type="range" id="windSpeed" min="0" max="100" value="25">
-            </div>
-            <div class="control-group">
-                <label for="temperature">Temperature (°C)</label>
-                <input type="range" id="temperature" min="-20" max="40" value="20">
-            </div>
-            <div class="control-group">
-                <label for="slope">Slope Steepness (%)</label>
-                <input type="range" id="slope" min="0" max="100" value="30">
-            </div>
-            <div class="control-group">
-                <label for="vegetation">Vegetation Density (%)</label>
-                <input type="range" id="vegetation" min="0" max="100" value="50">
-            </div>
-            <div class="control-group">
-                <label for="humanActivity">Human Activity Level</label>
-                <select id="humanActivity">
-                    <option value="none">None</option>
-                    <option value="low">Low</option>
-                    <option value="medium">Medium</option>
-                    <option value="high">High</option>
-                </select>
-            </div>
-            <div class="control-group">
-                <label for="landscape">Landscape Type</label>
-                <select id="landscape">
+                <label for="landscapeType">Landscape Type:</label>
+                <select id="landscapeType">
+                    <option value="coastal">Coastal</option>
                     <option value="mountain">Mountain</option>
                     <option value="desert">Desert</option>
-                    <option value="coastal">Coastal</option>
-                    <option value="valley">Valley</option>
+                    <option value="forest">Forest</option>
+                </select>
+                <button id="previewLandscape">Preview Landscape</button>
+            </div>
+            <div class="control-group">
+                <button id="startSimulation">Start Simulation</button>
+                <button id="pauseSimulation">Pause Simulation</button>
+                <button id="stopSimulation">Stop Simulation</button>
+                <button id="resetSimulation">Reset Simulation</button>
+            </div>
+            <div class="control-group">
+                <label for="rainfallIntensity">Rainfall Intensity:</label>
+                <input type="range" id="rainfallIntensity" min="0" max="100" value="50">
+            </div>
+            <div class="control-group">
+                <label for="windSpeed">Wind Speed:</label>
+                <input type="range" id="windSpeed" min="0" max="100" value="50">
+                <label for="windDirection">Wind Direction:</label>
+                <input type="range" id="windDirection" min="0" max="360" value="0">
+            </div>
+            <div class="control-group">
+                <label for="freezeThaw">Freeze-Thaw Cycles:</label>
+                <input type="checkbox" id="freezeThaw">
+            </div>
+            <div class="control-group">
+                <label for="slope">Slope Angle:</label>
+                <input type="number" id="slope" min="0" max="90" value="0">
+            </div>
+            <div class="control-group">
+                <label for="soilType">Soil Type:</label>
+                <select id="soilType">
+                    <option value="sand">Sand</option>
+                    <option value="clay">Clay</option>
+                    <option value="loam">Loam</option>
                 </select>
             </div>
             <div class="control-group">
-                <label for="timeScale">Time Scale</label>
+                <button id="addVegetation">Add Vegetation</button>
+                <button id="removeVegetation">Remove Vegetation</button>
+            </div>
+            <div class="control-group">
+                <label for="timeScale">Time Scale:</label>
                 <select id="timeScale">
                     <option value="days">Days</option>
                     <option value="months">Months</option>
@@ -127,163 +125,165 @@
                     <option value="decades">Decades</option>
                 </select>
             </div>
-            <div class="control-group">
-                <button id="startSimulation">Start Simulation</button>
-                <button id="resetSimulation">Reset Simulation</button>
-            </div>
         </div>
         <div id="resultsDisplay"></div>
     </div>
     <script>
-        window.LOG_DEBUG = false;
-
-        function logDebug(message) {
-            if (window.LOG_DEBUG) {
-                console.log(`DEBUG [${new Date().toISOString()}]: ${message}`);
-            }
-        }
-
         const canvas = document.getElementById('canvas');
         const ctx = canvas.getContext('2d');
         const rc = rough.canvas(canvas);
 
         let landscape = {
-            type: 'mountain',
-            points: [],
+            water: [],
             soil: [],
             vegetation: [],
-            water: [],
             erosion: 0
         };
 
-        const landscapeSVGs = {
-            mountain: `<svg viewBox="0 0 100 100">
-                <linearGradient id="mountainGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-                    <stop offset="0%" style="stop-color:rgb(139,69,19);stop-opacity:1" />
-                    <stop offset="60%" style="stop-color:rgb(205,133,63);stop-opacity:1" />
-                    <stop offset="100%" style="stop-color:rgb(244,164,96);stop-opacity:1" />
-                </linearGradient>
-                <path d="M0 100 L40 20 L60 50 L100 0 L100 100 Z" fill="url(#mountainGradient)" />
-                <path d="M0 100 L40 20 L60 50 L100 0" fill="none" stroke="black" stroke-width="2" />
-            </svg>`,
-            desert: `<svg viewBox="0 0 100 100">
-                <linearGradient id="desertGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-                    <stop offset="0%" style="stop-color:rgb(255,228,196);stop-opacity:1" />
-                    <stop offset="100%" style="stop-color:rgb(210,180,140);stop-opacity:1" />
-                </linearGradient>
-                <path d="M0 70 Q25 60 50 70 T100 70 L100 100 L0 100 Z" fill="url(#desertGradient)" />
-                <circle cx="20" cy="80" r="5" fill="rgb(210,180,140)" />
-                <circle cx="70" cy="75" r="7" fill="rgb(210,180,140)" />
-            </svg>`,
-            coastal: `<svg viewBox="0 0 100 100">
-                <linearGradient id="sandGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-                    <stop offset="0%" style="stop-color:rgb(255,228,196);stop-opacity:1" />
-                    <stop offset="100%" style="stop-color:rgb(210,180,140);stop-opacity:1" />
-                </linearGradient>
-                <linearGradient id="waterGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-                    <stop offset="0%" style="stop-color:rgb(135,206,235);stop-opacity:1" />
-                    <stop offset="100%" style="stop-color:rgb(0,191,255);stop-opacity:1" />
-                </linearGradient>
-                <path d="M0 60 Q25 70 50 60 T100 60 L100 100 L0 100 Z" fill="url(#sandGradient)" />
-                <path d="M0 60 Q25 50 50 60 T100 60 L100 0 L0 0 Z" fill="url(#waterGradient)" />
-            </svg>`,
-            valley: `<svg viewBox="0 0 100 100">
-                <linearGradient id="valleyGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-                    <stop offset="0%" style="stop-color:rgb(34,139,34);stop-opacity:1" />
-                    <stop offset="100%" style="stop-color:rgb(0,100,0);stop-opacity:1" />
-                </linearGradient>
-                <path d="M0 0 L30 100 L70 100 L100 0 Z" fill="url(#valleyGradient)" />
-                <path d="M50 100 L50 0" fill="none" stroke="rgb(0,100,0)" stroke-width="2" />
-            </svg>`
+        let simulationSpeed = 1;
+        let rainfallActive = false;
+        let simulationInterval;
+        let simulationRunning = false;
+
+        const landscapeTypes = {
+            coastal: {
+                terrain: (x, y) => Math.sin(x / 50) * 20 + y / 2,
+                rainfallIntensity: 70,
+                windSpeed: 80,
+                soilType: 'sand',
+                vegetation: 30
+            },
+            mountain: {
+                terrain: (x, y) => Math.abs(Math.sin(x / 30)) * 100 + y / 4,
+                rainfallIntensity: 60,
+                windSpeed: 70,
+                soilType: 'clay',
+                vegetation: 50
+            },
+            desert: {
+                terrain: (x, y) => Math.sin(x / 100) * 10 + y / 10,
+                rainfallIntensity: 10,
+                windSpeed: 90,
+                soilType: 'sand',
+                vegetation: 10
+            },
+            forest: {
+                terrain: (x, y) => Math.sin(x / 40) * 30 + y / 3,
+                rainfallIntensity: 80,
+                windSpeed: 40,
+                soilType: 'loam',
+                vegetation: 80
+            }
         };
 
         function drawLandscape() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-            const img = new Image();
-            img.onload = () => {
-                ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-                drawParticles();
-                drawWater();
-                drawVegetation();
-            };
-            img.src = 'data:image/svg+xml;base64,' + btoa(landscapeSVGs[landscape.type]);
-        }
 
-        function drawParticles() {
+            const landscapeType = document.getElementById('landscapeType').value;
+            const terrainFunction = landscapeTypes[landscapeType].terrain;
+
+            rc.path(`M0,${canvas.height} ${Array.from({length: canvas.width}, (_, x) => `L${x},${canvas.height - terrainFunction(x, 0)}`).join(' ')} L${canvas.width},${canvas.height} Z`, {
+                fill: 'brown',
+                fillStyle: 'hachure',
+                roughness: 2
+            });
+
             landscape.soil.forEach(particle => {
-                rc.circle(particle.x, particle.y, 2, { fill: 'brown', roughness: 1 });
+                rc.circle(particle.x, particle.y, 2, {
+                    fill: 'brown',
+                    roughness: 2
+                });
             });
-        }
 
-        function drawWater() {
-            ctx.fillStyle = 'rgba(0, 0, 255, 0.3)';
             landscape.water.forEach(drop => {
-                ctx.beginPath();
-                ctx.arc(drop.x, drop.y, 2, 0, Math.PI * 2);
-                ctx.fill();
+                rc.circle(drop.x, drop.y, 1, {
+                    fill: 'blue',
+                    roughness: 1
+                });
             });
-        }
 
-        function drawVegetation() {
             landscape.vegetation.forEach(plant => {
-                rc.line(plant.x, plant.y, plant.x, plant.y - 10, { stroke: 'green', roughness: 2 });
+                rc.line(plant.x, plant.y, plant.x, plant.y - 20, {
+                    stroke: 'green',
+                    roughness: 2
+                });
+                rc.circle(plant.x, plant.y - 25, 10, {
+                    fill: 'green',
+                    fillStyle: 'solid',
+                    roughness: 2
+                });
             });
         }
 
         function updateSimulation() {
-            const rainfall = parseFloat(document.getElementById('rainfall').value);
+            const landscapeType = document.getElementById('landscapeType').value;
+            const rainfallIntensity = parseFloat(document.getElementById('rainfallIntensity').value);
             const windSpeed = parseFloat(document.getElementById('windSpeed').value);
-            const temperature = parseFloat(document.getElementById('temperature').value);
+            const windDirection = parseFloat(document.getElementById('windDirection').value);
+            const freezeThaw = document.getElementById('freezeThaw').checked;
             const slope = parseFloat(document.getElementById('slope').value);
-            const vegetationDensity = parseFloat(document.getElementById('vegetation').value);
-            const humanActivity = document.getElementById('humanActivity').value;
+            const soilType = document.getElementById('soilType').value;
+            const timeScale = document.getElementById('timeScale').value;
 
-            // Update water
-            if (Math.random() < rainfall / 100) {
+            switch(timeScale) {
+                case 'days':
+                    simulationSpeed = 1;
+                    break;
+                case 'months':
+                    simulationSpeed = 30;
+                    break;
+                case 'years':
+                    simulationSpeed = 365;
+                    break;
+                case 'decades':
+                    simulationSpeed = 3650;
+                    break;
+            }
+
+            if (Math.random() < rainfallIntensity / 100) {
                 landscape.water.push({ x: Math.random() * canvas.width, y: 0 });
             }
 
-            // Move water and cause erosion
             landscape.water.forEach(drop => {
-                drop.y += 2 + slope / 20;
-                drop.x += (windSpeed - 50) / 10;
+                drop.y += (2 + slope / 20) * simulationSpeed;
+                drop.x += (windSpeed / 10) * Math.cos(windDirection * Math.PI / 180) * simulationSpeed;
 
                 if (drop.y > canvas.height) {
                     landscape.water.splice(landscape.water.indexOf(drop), 1);
                 }
 
-                // Erode soil
                 landscape.soil = landscape.soil.filter(particle => {
                     const distance = Math.sqrt((particle.x - drop.x)**2 + (particle.y - drop.y)**2);
                     if (distance < 5) {
-                        landscape.erosion++;
+                        landscape.erosion += simulationSpeed;
                         return false;
                     }
                     return true;
                 });
             });
 
-            // Add new soil particles
             if (landscape.soil.length < 1000) {
                 landscape.soil.push({ x: Math.random() * canvas.width, y: Math.random() * canvas.height });
             }
 
-            // Update vegetation
-            if (landscape.vegetation.length < vegetationDensity * 2) {
-                landscape.vegetation.push({ x: Math.random() * canvas.width, y: canvas.height });
+            if (freezeThaw) {
+                landscape.erosion += 0.1 * simulationSpeed;
             }
 
-            // Human activity effects
-            if (humanActivity !== 'none') {
-                const activityFactor = { low: 0.1, medium: 0.2, high: 0.3 }[humanActivity];
-                landscape.erosion += activityFactor;
-                landscape.soil = landscape.soil.filter(() => Math.random() > activityFactor);
-            }
+            const soilErodibility = { sand: 1.2, clay: 0.8, loam: 1 };
+            landscape.erosion *= soilErodibility[soilType];
 
-            // Temperature effects
-            if (temperature < 0) {
-                landscape.erosion += 0.1; // Freeze-thaw cycle
-            }
+            landscape.vegetation.forEach(plant => {
+                plant.age += simulationSpeed;
+                plant.height = Math.min(50, plant.age / 10);
+                
+                if (Math.random() < 0.001 * simulationSpeed) {
+                    landscape.vegetation.splice(landscape.vegetation.indexOf(plant), 1);
+                }
+            });
+
+            const vegetationDensity = landscape.vegetation.length / (canvas.width * canvas.height);
+            landscape.erosion *= (1 - vegetationDensity * 0.5);
 
             drawLandscape();
             updateResults();
@@ -292,45 +292,86 @@
         function updateResults() {
             const resultsDisplay = document.getElementById('resultsDisplay');
             resultsDisplay.innerHTML = `
+                <h3>Simulation Results</h3>
                 <p>Total Erosion: ${landscape.erosion.toFixed(2)} units</p>
                 <p>Soil Particles: ${landscape.soil.length}</p>
-                <p>Water Droplets: ${landscape.water.length}</p>
-                <p>Vegetation: ${landscape.vegetation.length}</p>
+                <p>Vegetation: ${landscape.vegetation.length} plants</p>
             `;
         }
 
+        function initializeLandscape() {
+            const landscapeType = document.getElementById('landscapeType').value;
+            const landscapeSettings = landscapeTypes[landscapeType];
+
+            document.getElementById('rainfallIntensity').value = landscapeSettings.rainfallIntensity;
+            document.getElementById('windSpeed').value = landscapeSettings.windSpeed;
+            document.getElementById('soilType').value = landscapeSettings.soilType;
+
+            landscape.vegetation = [];
+            for (let i = 0; i < landscapeSettings.vegetation; i++) {
+                landscape.vegetation.push({
+                    x: Math.random() * canvas.width,
+                    y: canvas.height,
+                    age: Math.random() * 1000,
+                    height: Math.random() * 50
+                });
+            }
+
+            drawLandscape();
+        }
+
+        document.getElementById('landscapeType').addEventListener('change', initializeLandscape);
+        document.getElementById('previewLandscape').addEventListener('click', initializeLandscape);
+
         document.getElementById('startSimulation').addEventListener('click', () => {
-            setInterval(updateSimulation, 100);
+            if (!simulationRunning) {
+                simulationInterval = setInterval(updateSimulation, 50);
+                simulationRunning = true;
+            }
+        });
+
+        document.getElementById('pauseSimulation').addEventListener('click', () => {
+            clearInterval(simulationInterval);
+            simulationRunning = false;
+        });
+
+        document.getElementById('stopSimulation').addEventListener('click', () => {
+            clearInterval(simulationInterval);
+            simulationRunning = false;
+            drawLandscape();
         });
 
         document.getElementById('resetSimulation').addEventListener('click', () => {
+            clearInterval(simulationInterval);
+            simulationRunning = false;
             landscape = {
-                type: document.getElementById('landscape').value,
-                points: [],
+                water: [],
                 soil: [],
                 vegetation: [],
-                water: [],
                 erosion: 0
             };
-            drawLandscape();
+            initializeLandscape();
             updateResults();
         });
 
-        document.getElementById('landscape').addEventListener('change', (e) => {
-            landscape.type = e.target.value;
+        document.getElementById('addVegetation').addEventListener('click', () => {
+            landscape.vegetation.push({ 
+                x: Math.random() * canvas.width, 
+                y: canvas.height,
+                age: 0,
+                height: 0
+            });
             drawLandscape();
         });
 
-        document.addEventListener('DOMContentLoaded', () => {
-            drawLandscape();
-            updateResults();
+        document.getElementById('removeVegetation').addEventListener('click', () => {
+            if (landscape.vegetation.length > 0) {
+                landscape.vegetation.pop();
+                drawLandscape();
+            }
+        });
 
-            if (window.LOG_DEBUG) {
-                logDebug('Simulation initialized');
-                document.querySelectorAll('svg').forEach((svg, index) => {
-                    const rect = svg.getBoundingClientRect();
-                    logDebug(`SVG #${index}: Position {x: ${rect.x}, y: ${rect.y}}, Size {w: ${rect.width}, h: ${rect.height}}`);
-                });
-                document.querySelectorAll('input, button, select').forEach((control) => {
-                    logDebug(`Control ${control.id || 'unnamed'} (${control.tagName}): Initial value: ${control.value || 'N/A'}`);
-                });
+        initializeLandscape();
+    </script>
+</body>
+</html>

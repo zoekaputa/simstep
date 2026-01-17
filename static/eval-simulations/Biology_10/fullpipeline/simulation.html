@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -79,6 +80,8 @@
             </select>
             <button id="start-simulation">Start Simulation</button>
             <button id="reset-simulation">Reset Simulation</button>
+            <button id="zoom-in">Zoom In</button>
+            <button id="zoom-out">Zoom Out</button>
         </div>
         <div id="defense-stage-indicator">Current Defense Stage: None</div>
         <div id="response-diagram"></div>
@@ -88,56 +91,69 @@
         const rc = rough.canvas(canvas);
         const ctx = canvas.getContext('2d');
 
-        const bodySvg = `
-            <svg width="400" height="600" viewBox="0 0 400 600">
-                <path d="M200,50 Q100,200 100,350 Q100,550 200,550 Q300,550 300,350 Q300,200 200,50" fill="#f8d5a3" stroke="#000000" stroke-width="5"/>
-            </svg>
-        `;
-
-        const pathogenSvgs = {
-            virus: `
-                <svg width="50" height="50" viewBox="0 0 50 50">
-                    <circle cx="25" cy="25" r="20" fill="#ff7f7f" stroke="#000000" stroke-width="2"/>
-                    <circle cx="25" cy="25" r="15" fill="none" stroke="#000000" stroke-width="2"/>
-                    <line x1="25" y1="5" x2="25" y2="45" stroke="#000000" stroke-width="2"/>
-                    <line x1="5" y1="25" x2="45" y2="25" stroke="#000000" stroke-width="2"/>
-                </svg>
-            `,
-            bacteria: `
-                <svg width="50" height="50" viewBox="0 0 50 50">
-                    <ellipse cx="25" cy="25" rx="20" ry="15" fill="#7fbfff" stroke="#000000" stroke-width="2"/>
-                    <line x1="10" y1="20" x2="40" y2="20" stroke="#000000" stroke-width="2"/>
-                    <line x1="10" y1="30" x2="40" y2="30" stroke="#000000" stroke-width="2"/>
-                </svg>
-            `,
-            fungus: `
-                <svg width="50" height="50" viewBox="0 0 50 50">
-                    <path d="M25,5 Q40,20 25,35 Q10,20 25,5" fill="#9f7fbf" stroke="#000000" stroke-width="2"/>
-                    <line x1="25" y1="35" x2="25" y2="45" stroke="#000000" stroke-width="2"/>
-                </svg>
-            `
-        };
-
         let currentStage = 'none';
         let selectedPathogen = 'virus';
         let pathogens = [];
+        let immuneComponents = [];
+        let zoomLevel = 1;
+        let zoomCenter = { x: canvas.width / 2, y: canvas.height / 2 };
 
         function drawBody() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-            const img = new Image();
-            img.onload = () => {
-                ctx.drawImage(img, 200, 0, 400, 600);
-            };
-            img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(bodySvg);
+            ctx.save();
+            ctx.translate(zoomCenter.x, zoomCenter.y);
+            ctx.scale(zoomLevel, zoomLevel);
+            ctx.translate(-zoomCenter.x, -zoomCenter.y);
+            
+            rc.path('M200,50 Q100,200 100,350 Q100,550 200,550 Q300,550 300,350 Q300,200 200,50', {
+                stroke: 'black',
+                strokeWidth: 2,
+                fill: '#f8d5a3',
+                fillStyle: 'solid'
+            });
+
+            drawPathogens();
+            drawImmuneComponents();
+            ctx.restore();
         }
 
         function drawPathogens() {
             pathogens.forEach(pathogen => {
-                const img = new Image();
-                img.onload = () => {
-                    ctx.drawImage(img, pathogen.x, pathogen.y, 50, 50);
-                };
-                img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(pathogenSvgs[selectedPathogen]);
+                drawPathogen(pathogen.x, pathogen.y, selectedPathogen);
+            });
+        }
+
+        function drawPathogen(x, y, type) {
+            const pathogenOptions = {
+                stroke: 'black',
+                strokeWidth: 1,
+                fill: type === 'virus' ? '#ff7f7f' : type === 'bacteria' ? '#7fbfff' : '#9f7fbf',
+                fillStyle: 'solid'
+            };
+
+            if (type === 'virus') {
+                rc.circle(x, y, 20, pathogenOptions);
+                rc.circle(x, y, 15, { ...pathogenOptions, fill: 'transparent' });
+                rc.line(x, y - 20, x, y + 20, pathogenOptions);
+                rc.line(x - 20, y, x + 20, y, pathogenOptions);
+            } else if (type === 'bacteria') {
+                rc.ellipse(x, y, 40, 30, pathogenOptions);
+                rc.line(x - 15, y - 5, x + 15, y - 5, pathogenOptions);
+                rc.line(x - 15, y + 5, x + 15, y + 5, pathogenOptions);
+            } else {
+                rc.path(`M${x},${y-20} Q${x+15},${y-5} ${x},${y+10} Q${x-15},${y-5} ${x},${y-20}`, pathogenOptions);
+                rc.line(x, y + 10, x, y + 20, pathogenOptions);
+            }
+        }
+
+        function drawImmuneComponents() {
+            immuneComponents.forEach(component => {
+                rc.circle(component.x, component.y, 10, {
+                    stroke: 'black',
+                    strokeWidth: 1,
+                    fill: '#00ff00',
+                    fillStyle: 'solid'
+                });
             });
         }
 
@@ -148,27 +164,42 @@
         function startSimulation() {
             currentStage = 'Physical Barriers';
             pathogens = [{x: 100, y: 100}, {x: 300, y: 200}, {x: 500, y: 300}];
+            immuneComponents = [];
             updateDefenseStageIndicator();
             drawBody();
-            drawPathogens();
+
             setTimeout(() => {
                 currentStage = 'First Response';
+                immuneComponents.push({x: 150, y: 150}, {x: 350, y: 250});
                 updateDefenseStageIndicator();
                 drawBody();
-                drawPathogens();
             }, 2000);
+
             setTimeout(() => {
                 currentStage = 'Specialized Response';
+                immuneComponents.push({x: 200, y: 200}, {x: 400, y: 300}, {x: 550, y: 350});
                 updateDefenseStageIndicator();
                 drawBody();
-                drawPathogens();
             }, 4000);
         }
 
         function resetSimulation() {
             currentStage = 'none';
             pathogens = [];
+            immuneComponents = [];
+            zoomLevel = 1;
+            zoomCenter = { x: canvas.width / 2, y: canvas.height / 2 };
             updateDefenseStageIndicator();
+            drawBody();
+        }
+
+        function zoomIn() {
+            zoomLevel *= 1.2;
+            drawBody();
+        }
+
+        function zoomOut() {
+            zoomLevel /= 1.2;
             drawBody();
         }
 
@@ -176,6 +207,15 @@
         document.getElementById('reset-simulation').addEventListener('click', resetSimulation);
         document.getElementById('pathogen-selector').addEventListener('change', (e) => {
             selectedPathogen = e.target.value;
+            drawBody();
+        });
+        document.getElementById('zoom-in').addEventListener('click', zoomIn);
+        document.getElementById('zoom-out').addEventListener('click', zoomOut);
+
+        canvas.addEventListener('mousemove', (e) => {
+            const rect = canvas.getBoundingClientRect();
+            zoomCenter.x = (e.clientX - rect.left) / zoomLevel;
+            zoomCenter.y = (e.clientY - rect.top) / zoomLevel;
         });
 
         document.addEventListener('DOMContentLoaded', () => {

@@ -1,9 +1,10 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ocean Currents Simulation</title>
+    <title>Ocean Current Simulator</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cabin+Sketch:wght@400;700&family=Londrina+Sketch&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
@@ -11,11 +12,10 @@
     <style>
         body {
             font-family: 'Cabin Sketch', cursive;
+            background-color: #f0f8ff;
             display: flex;
             flex-direction: column;
             align-items: center;
-            background-color: #f0f8ff;
-            margin: 0;
             padding: 20px;
         }
         h1 {
@@ -23,22 +23,11 @@
             font-weight: 700;
             color: #0077be;
         }
-        #description {
-            font-family: 'Cabin Sketch', cursive;
-            font-weight: 400;
-            max-width: 800px;
-            text-align: center;
-            margin-bottom: 20px;
-        }
-        #canvas-container {
-            position: relative;
-            width: 800px;
-            height: 600px;
+        #canvas {
             border: 2px solid #0077be;
-            border-radius: 10px;
-            overflow: hidden;
+            background-color: #e6f3ff;
         }
-        #controls {
+        .controls {
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
@@ -52,6 +41,8 @@
         }
         label {
             margin-bottom: 5px;
+            font-weight: bold;
+            color: #0077be;
         }
         input[type="range"] {
             width: 200px;
@@ -63,31 +54,44 @@
             color: white;
             border: none;
             padding: 10px 20px;
-            border-radius: 5px;
             cursor: pointer;
+            transition: background-color 0.3s;
         }
         button:hover {
             background-color: #005f9e;
         }
-        select {
+        #scenario-selector {
+            font-family: 'Cabin Sketch', cursive;
+            font-size: 16px;
+            padding: 5px;
+        }
+        #description {
+            max-width: 800px;
+            text-align: center;
+            margin-bottom: 20px;
             font-family: 'Cabin Sketch', cursive;
             font-weight: 400;
-            padding: 5px;
+            color: #333;
+        }
+        #data-display {
+            margin-top: 20px;
+            padding: 10px;
+            border: 2px solid #0077be;
+            background-color: #e6f3ff;
+            display: none;
         }
     </style>
 </head>
 <body>
-    <h1>Ocean Currents Simulation</h1>
+    <h1>Ocean Current Simulator</h1>
     <div id="description">
-        Dive into the fascinating world of ocean currents! In this interactive simulation, you'll explore how various factors shape the movement of water in our oceans. Experiment with wind patterns, temperature gradients, and the Earth's rotation to see how they influence surface flows and deep circulation patterns. Observe how these currents impact climate and marine ecosystems. Get ready to unravel the mysteries of global water movement!
+        Welcome to the Ocean Current Simulator! Dive into the fascinating world of ocean circulation and discover how different factors shape the movement of water across our planet. Experiment with wind patterns, temperature gradients, and the Earth's rotation to see how they influence surface currents, deep-water circulation, and marine ecosystems. Your mission is to explore and understand the complex interactions that drive our oceans' circulation patterns.
     </div>
-    <div id="canvas-container">
-        <canvas id="canvas"></canvas>
-    </div>
-    <div id="controls">
+    <canvas id="canvas" width="800" height="600"></canvas>
+    <div class="controls">
         <div class="control-group">
-            <label for="wind">Wind Pattern (m/s)</label>
-            <input type="range" id="wind" min="0" max="20" value="10">
+            <label for="wind-speed">Wind Speed (m/s)</label>
+            <input type="range" id="wind-speed" min="0" max="20" value="5">
         </div>
         <div class="control-group">
             <label for="coriolis">Coriolis Effect</label>
@@ -95,20 +99,21 @@
         </div>
         <div class="control-group">
             <label for="temperature">Temperature Gradient (°C)</label>
-            <input type="range" id="temperature" min="-10" max="40" value="15">
+            <input type="range" id="temperature" min="0" max="30" value="15">
         </div>
         <div class="control-group">
-            <label for="scenario">Scenario</label>
-            <select id="scenario">
+            <label for="scenario-selector">Select Scenario</label>
+            <select id="scenario-selector">
                 <option value="normal">Normal Conditions</option>
-                <option value="elnino">El Niño</option>
-                <option value="lanina">La Niña</option>
+                <option value="elNino">El Niño</option>
+                <option value="laNina">La Niña</option>
+                <option value="iceAge">Ice Age</option>
             </select>
         </div>
-        <button id="reset">Reset</button>
-        <button id="collect-data">Collect Data</button>
+        <button id="reset-button">Reset</button>
+        <button id="display-data">Display Data</button>
     </div>
-
+    <div id="data-display"></div>
     <script>
         window.LOG_DEBUG = false;
 
@@ -122,190 +127,210 @@
         const ctx = canvas.getContext('2d');
         const rc = rough.canvas(canvas);
 
-        let width, height;
-        let particles = [];
-        let windSpeed = 10;
-        let coriolisEffect = 0.5;
+        let windSpeed = 5;
+        let coriolisEffect = 50;
         let temperatureGradient = 15;
+        let scenario = 'normal';
+        let animationFrame;
+        let time = 0;
+        let fish = [];
+        let collectedData = [];
 
-        const oceanSvg = `
-            <svg viewBox="0 0 100 100">
-                <defs>
-                    <linearGradient id="oceanGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-                        <stop offset="0%" style="stop-color:#0077be;stop-opacity:1" />
-                        <stop offset="100%" style="stop-color:#00008b;stop-opacity:1" />
-                    </linearGradient>
-                </defs>
-                <rect width="100" height="100" fill="url(#oceanGradient)" />
-                <path d="M0 20 Q 25 40 50 20 T 100 20" fill="none" stroke="white" stroke-width="2" />
-                <path d="M0 40 Q 25 60 50 40 T 100 40" fill="none" stroke="white" stroke-width="2" />
-                <path d="M0 60 Q 25 80 50 60 T 100 60" fill="none" stroke="white" stroke-width="2" />
-            </svg>
-        `;
-
-        const fishSvg = `
-            <svg viewBox="0 0 100 100">
-                <path d="M10 50 Q 40 30 70 50 T 90 50 L 70 60 L 90 50 L 70 40 Z" fill="#ff9900" stroke="black" stroke-width="2" />
-                <circle cx="25" cy="45" r="3" fill="black" />
-            </svg>
-        `;
-
-        function resizeCanvas() {
-            width = canvas.width = canvas.clientWidth;
-            height = canvas.height = canvas.clientHeight;
-            logDebug(`Canvas resized to ${width}x${height}`);
-        }
-
-        function createParticle() {
+        function createFish(x, y) {
             return {
-                x: Math.random() * width,
-                y: Math.random() * height,
-                vx: (Math.random() - 0.5) * 2,
-                vy: (Math.random() - 0.5) * 2
+                x: x,
+                y: y,
+                angle: 0,
+                speed: Math.random() * 2 + 1
             };
         }
 
-        function updateParticles() {
-            particles.forEach(p => {
-                p.x += p.vx * windSpeed / 10;
-                p.y += p.vy * windSpeed / 10;
-
-                // Apply Coriolis effect
-                p.vx += (p.y - height/2) * coriolisEffect / 1000;
-                p.vy -= (p.x - width/2) * coriolisEffect / 1000;
-
-                // Apply temperature gradient effect
-                p.vy += (temperatureGradient - 15) / 100;
-
-                if (p.x < 0) p.x = width;
-                if (p.x > width) p.x = 0;
-                if (p.y < 0) p.y = height;
-                if (p.y > height) p.y = 0;
-            });
-            logDebug(`Updated ${particles.length} particles`);
-        }
-
-        function draw() {
-            ctx.clearRect(0, 0, width, height);
-
-            // Draw ocean background
-            ctx.drawImage(createSvgImage(oceanSvg), 0, 0, width, height);
-
-            // Draw particles
-            particles.forEach(p => {
-                rc.circle(p.x, p.y, 2, { fill: 'white', roughness: 0.5 });
-            });
-
-            // Draw fish
-            ctx.drawImage(createSvgImage(fishSvg), width/2 - 25, height/2 - 25, 50, 50);
-
-            requestAnimationFrame(draw);
-        }
-
-        function createSvgImage(svgString) {
-            const img = new Image();
-            img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svgString);
-            return img;
-        }
-
-        function initSimulation() {
-            resizeCanvas();
-            for (let i = 0; i < 100; i++) {
-                particles.push(createParticle());
+        function initializeFish() {
+            fish = [];
+            for (let i = 0; i < 5; i++) {
+                fish.push(createFish(Math.random() * canvas.width, Math.random() * canvas.height));
             }
-            logDebug(`Initialized simulation with ${particles.length} particles`);
-            draw();
-            setInterval(updateParticles, 50);
         }
 
-        document.getElementById('wind').addEventListener('input', (e) => {
+        function drawOcean() {
+            ctx.fillStyle = '#0077be';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+        }
+
+        function drawCurrents() {
+            const velocity = calculateCurrentVelocity().velocity;
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.5)';
+            ctx.lineWidth = 2;
+            for (let i = 0; i < 10; i++) {
+                ctx.beginPath();
+                ctx.moveTo(0, i * 60 + Math.sin(time + i) * 20);
+                for (let x = 0; x < canvas.width; x += 10) {
+                    const y = i * 60 + Math.sin((x + i) / 50 + time * velocity) * 20 + (coriolisEffect - 50) / 5;
+                    ctx.lineTo(x, y);
+                }
+                ctx.stroke();
+            }
+        }
+
+        function drawFish(fish) {
+            ctx.save();
+            ctx.translate(fish.x, fish.y);
+            ctx.rotate(fish.angle);
+            rc.path('M-20,-5 C-15,-10 -5,-10 0,-5 C5,-10 15,-10 20,-5 C15,0 5,0 0,5 C-5,0 -15,0 -20,-5 Z', {
+                fill: '#f4a460',
+                stroke: '#8b4513',
+                roughness: 1
+            });
+            rc.circle(10, -3, 3, { fill: '#000', roughness: 1 });
+            ctx.restore();
+        }
+
+        function moveFish() {
+            const { velocity, direction } = calculateCurrentVelocity();
+            fish.forEach(f => {
+                f.angle = Math.atan2(velocity * (direction.includes('East') ? 1 : -1), f.speed);
+                f.x += Math.cos(f.angle) * f.speed + velocity * (direction.includes('East') ? 1 : -1);
+                f.y += Math.sin(f.angle) * f.speed;
+
+                if (f.x > canvas.width) f.x = 0;
+                if (f.x < 0) f.x = canvas.width;
+                if (f.y > canvas.height) f.y = 0;
+                if (f.y < 0) f.y = canvas.height;
+
+                drawFish(f);
+            });
+        }
+
+        function calculateCurrentVelocity() {
+            const velocity = windSpeed * 0.1 + (coriolisEffect - 50) * 0.02;
+            const direction = (windSpeed > 10 ? 'East' : 'West') + (coriolisEffect > 50 ? 'ward' : '');
+            return { velocity, direction };
+        }
+
+        function collectData() {
+            const { velocity, direction } = calculateCurrentVelocity();
+            const data = {
+                time: new Date().toISOString(),
+                windSpeed,
+                coriolisEffect,
+                temperatureGradient,
+                scenario,
+                currentVelocity: velocity,
+                currentDirection: direction
+            };
+            collectedData.push(data);
+            if (collectedData.length > 100) {
+                collectedData.shift();
+            }
+        }
+
+        function updateSimulation() {
+            drawOcean();
+            drawCurrents();
+            moveFish();
+            
+            const { velocity, direction } = calculateCurrentVelocity();
+            ctx.font = '16px Cabin Sketch';
+            ctx.fillStyle = 'white';
+            ctx.fillText(`Current Velocity: ${velocity.toFixed(2)} m/s ${direction}`, 10, 30);
+
+            time += 0.05;
+            collectData();
+            animationFrame = requestAnimationFrame(updateSimulation);
+        }
+
+        function startSimulation() {
+            if (animationFrame) {
+                cancelAnimationFrame(animationFrame);
+            }
+            initializeFish();
+            updateSimulation();
+        }
+
+        document.getElementById('wind-speed').addEventListener('input', (e) => {
             windSpeed = parseFloat(e.target.value);
-            logDebug(`Wind speed changed to ${windSpeed}`);
+            startSimulation();
         });
 
         document.getElementById('coriolis').addEventListener('input', (e) => {
-            coriolisEffect = parseFloat(e.target.value) / 100;
-            logDebug(`Coriolis effect changed to ${coriolisEffect}`);
+            coriolisEffect = parseFloat(e.target.value);
+            startSimulation();
         });
 
         document.getElementById('temperature').addEventListener('input', (e) => {
             temperatureGradient = parseFloat(e.target.value);
-            logDebug(`Temperature gradient changed to ${temperatureGradient}`);
+            startSimulation();
         });
 
-        document.getElementById('scenario').addEventListener('change', (e) => {
-            const scenario = e.target.value;
-            logDebug(`Scenario changed to ${scenario}`);
+        document.getElementById('scenario-selector').addEventListener('change', (e) => {
+            scenario = e.target.value;
             switch (scenario) {
-                case 'elnino':
-                    windSpeed = 5;
-                    coriolisEffect = 0.3;
+                case 'elNino':
+                    windSpeed = 10;
                     temperatureGradient = 25;
                     break;
-                case 'lanina':
+                case 'laNina':
                     windSpeed = 15;
-                    coriolisEffect = 0.7;
                     temperatureGradient = 5;
                     break;
+                case 'iceAge':
+                    windSpeed = 2;
+                    temperatureGradient = 0;
+                    break;
                 default:
-                    windSpeed = 10;
-                    coriolisEffect = 0.5;
+                    windSpeed = 5;
                     temperatureGradient = 15;
             }
-            updateControls();
-        });
-
-        document.getElementById('reset').addEventListener('click', () => {
-            logDebug('Reset button clicked');
-            windSpeed = 10;
-            coriolisEffect = 0.5;
-            temperatureGradient = 15;
-            particles = [];
-            for (let i = 0; i < 100; i++) {
-                particles.push(createParticle());
-            }
-            updateControls();
-        });
-
-        document.getElementById('collect-data').addEventListener('click', () => {
-            logDebug('Data collection initiated');
-            const data = {
-                windSpeed,
-                coriolisEffect,
-                temperatureGradient,
-                particleCount: particles.length,
-                averageVelocity: particles.reduce((sum, p) => sum + Math.sqrt(p.vx*p.vx + p.vy*p.vy), 0) / particles.length
-            };
-            console.log('Collected Data:', data);
-        });
-
-        function updateControls() {
-            document.getElementById('wind').value = windSpeed;
-            document.getElementById('coriolis').value = coriolisEffect * 100;
+            document.getElementById('wind-speed').value = windSpeed;
             document.getElementById('temperature').value = temperatureGradient;
-            logDebug('Controls updated');
-        }
+            startSimulation();
+        });
 
-        window.addEventListener('resize', resizeCanvas);
-        document.addEventListener('DOMContentLoaded', initSimulation);
+        document.getElementById('reset-button').addEventListener('click', () => {
+            windSpeed = 5;
+            coriolisEffect = 50;
+            temperatureGradient = 15;
+            scenario = 'normal';
+            document.getElementById('wind-speed').value = windSpeed;
+            document.getElementById('coriolis').value = coriolisEffect;
+            document.getElementById('temperature').value = temperatureGradient;
+            document.getElementById('scenario-selector').value = scenario;
+            startSimulation();
+            logDebug('Simulation reset to default values');
+        });
 
-        if (window.LOG_DEBUG) {
-            logDebug('Simulation initialized');
-            document.querySelectorAll('svg').forEach((svg, index) => {
-                const rect = svg.getBoundingClientRect();
-                logDebug(`SVG #${index}: Position {x: ${rect.x}, y: ${rect.y}}, Size {w: ${rect.width}, h: ${rect.height}}`);
-            });
-            document.querySelectorAll('input, button, select').forEach((control) => {
-                logDebug(`Control ${control.id || 'unnamed'} (${control.tagName}): Initial value: ${control.value || 'N/A'}`);
-            });
-            
-            document.querySelectorAll('button').forEach((button) => {
-                button.addEventListener('click', () => logDebug(`Button ${button.id || 'unnamed'} clicked`));
-            });
-            document.querySelectorAll('input').forEach((input) => {
-                input.addEventListener('change', (e) => logDebug(`Input ${input.id || 'unnamed'} changed to ${e.target.value}`));
-            });
-        }
+        document.getElementById('display-data').addEventListener('click', () => {
+            const dataDisplay = document.getElementById('data-display');
+            dataDisplay.style.display = 'block';
+            const lastData = collectedData[collectedData.length - 1];
+            dataDisplay.innerHTML = `
+                <h2>Current Simulation Data</h2>
+                <p>Time: ${lastData.time}</p>
+                <p>Wind Speed: ${lastData.windSpeed} m/s</p>
+                <p>Coriolis Effect: ${lastData.coriolisEffect}</p>
+                <p>Temperature Gradient: ${lastData.temperatureGradient}°C</p>
+                <p>Scenario: ${lastData.scenario}</p>
+                <p>Current Velocity: ${lastData.currentVelocity.toFixed(2)} m/s ${lastData.currentDirection}</p>
+            `;
+            logDebug('Data displayed');
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            if (window.LOG_DEBUG) {
+                logDebug('Simulation initialized');
+                document.querySelectorAll('input, button, select').forEach((control) => {
+                    logDebug(`Control ${control.id || 'unnamed'} (${control.tagName}): Initial value: ${control.value || 'N/A'}`);
+                });
+                
+                document.querySelectorAll('button').forEach((button) => {
+                    button.addEventListener('click', () => logDebug(`Button ${button.id || 'unnamed'} clicked`));
+                });
+                document.querySelectorAll('input').forEach((input) => {
+                    input.addEventListener('change', (e) => logDebug(`Input ${input.id || 'unnamed'} changed to ${e.target.value}`));
+                });
+            }
+            startSimulation();
+        });
     </script>
 </body>
 </html>

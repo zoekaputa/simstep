@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -51,8 +52,14 @@
         input[type="range"] {
             width: 200px;
         }
-        #dataTable {
+        #dataTableContainer {
+            max-height: 300px;
+            overflow-y: auto;
             margin-top: 20px;
+            border: 1px solid #ddd;
+        }
+        #dataTable {
+            width: 100%;
             border-collapse: collapse;
         }
         #dataTable th, #dataTable td {
@@ -63,6 +70,8 @@
         #dataTable th {
             background-color: #4CAF50;
             color: white;
+            position: sticky;
+            top: 0;
         }
     </style>
 </head>
@@ -80,14 +89,19 @@
         <button id="startButton">Start</button>
         <button id="resetButton">Reset</button>
     </div>
-    <table id="dataTable">
-        <tr>
-            <th>Time (s)</th>
-            <th>Speed (m/s)</th>
-            <th>Centripetal Force (N)</th>
-            <th>Radial Acceleration (m/s²)</th>
-        </tr>
-    </table>
+    <div id="dataTableContainer">
+        <table id="dataTable">
+            <thead>
+                <tr>
+                    <th>Time (s)</th>
+                    <th>Speed (m/s)</th>
+                    <th>Centripetal Force (N)</th>
+                    <th>Radial Acceleration (m/s²)</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
 
     <script>
         window.LOG_DEBUG = false;
@@ -107,6 +121,7 @@
         const startButton = document.getElementById('startButton');
         const resetButton = document.getElementById('resetButton');
         const dataTable = document.getElementById('dataTable');
+        const dataTableContainer = document.getElementById('dataTableContainer');
 
         let speed = 5;
         let angle = 0;
@@ -116,62 +131,60 @@
 
         const trackRadius = 250;
         const trackWidth = 50;
-        const bikeSize = 30;
-        const avatarSize = 20;
+        const bikeSize = 40;
+        const avatarSize = 30;
         const centerX = canvas.width / 2;
         const centerY = canvas.height / 2;
 
-        const trackSVG = `
-            <svg width="500" height="500" viewBox="0 0 500 500">
-                <defs>
-                    <radialGradient id="trackGradient">
-                        <stop offset="70%" stop-color="#888" />
-                        <stop offset="100%" stop-color="#666" />
-                    </radialGradient>
-                </defs>
-                <circle cx="250" cy="250" r="250" fill="url(#trackGradient)" />
-                <circle cx="250" cy="250" r="200" fill="#f0f0f0" />
-            </svg>
-        `;
-
-        const bikeSVG = `
-            <svg width="30" height="30" viewBox="0 0 30 30">
-                <circle cx="15" cy="15" r="14" fill="#4CAF50" />
-                <circle cx="15" cy="15" r="10" fill="#2E7D32" />
-                <rect x="13" y="5" width="4" height="10" fill="#1B5E20" />
-            </svg>
-        `;
-
-        const avatarSVG = `
-            <svg width="20" height="20" viewBox="0 0 20 20">
-                <circle cx="10" cy="10" r="9" fill="#FFA000" />
-                <circle cx="7" cy="8" r="2" fill="#000" />
-                <circle cx="13" cy="8" r="2" fill="#000" />
-                <path d="M6 12 Q10 16 14 12" stroke="#000" stroke-width="2" fill="none" />
-            </svg>
-        `;
-
         function drawTrack() {
-            ctx.drawImage(createSVGImage(trackSVG), centerX - trackRadius, centerY - trackRadius, trackRadius * 2, trackRadius * 2);
+            rc.circle(centerX, centerY, trackRadius * 2, { 
+                stroke: '#888', 
+                fill: '#666',
+                fillStyle: 'solid',
+                roughness: 1
+            });
+            rc.circle(centerX, centerY, (trackRadius - trackWidth) * 2, { 
+                stroke: '#f0f0f0', 
+                fill: '#f0f0f0',
+                fillStyle: 'solid',
+                roughness: 0.5
+            });
         }
 
-        function drawBikeAndAvatar(x, y, lean) {
+        function drawBikeAndAvatar(x, y, lean, velocityX, velocityY) {
             ctx.save();
             ctx.translate(x, y);
             ctx.rotate(lean);
-            ctx.drawImage(createSVGImage(bikeSVG), -bikeSize / 2, -bikeSize / 2, bikeSize, bikeSize);
-            ctx.drawImage(createSVGImage(avatarSVG), -avatarSize / 2, -avatarSize / 2 - bikeSize / 2, avatarSize, avatarSize);
-            ctx.restore();
-        }
 
-        function createSVGImage(svgString) {
-            const img = new Image();
-            img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svgString);
-            return img;
+            rc.rectangle(-bikeSize/2, -bikeSize/4, bikeSize, bikeSize/2, {
+                fill: "#4CAF50",
+                fillStyle: "solid",
+                roughness: 1
+            });
+            rc.circle(0, 0, bikeSize/3, {
+                fill: "#2E7D32",
+                fillStyle: "solid",
+                roughness: 0.5
+            });
+
+            rc.circle(0, -bikeSize/2, avatarSize/2, {
+                fill: "#FFA000",
+                fillStyle: "solid",
+                roughness: 0.5
+            });
+
+            ctx.restore();
+
+            ctx.beginPath();
+            ctx.moveTo(x, y);
+            ctx.lineTo(x + velocityX * 10, y + velocityY * 10);
+            ctx.strokeStyle = "red";
+            ctx.lineWidth = 2;
+            ctx.stroke();
         }
 
         function calculateCentripetalForce(speed, radius) {
-            const mass = 70; // kg
+            const mass = 70;
             return mass * (speed * speed) / radius;
         }
 
@@ -184,16 +197,19 @@
 
             const radius = trackRadius - trackWidth / 2;
             const angularSpeed = speed / radius;
-            angle += angularSpeed * 0.016; // Assuming 60 FPS
+            angle += angularSpeed * 0.016;
 
             const x = centerX + radius * Math.cos(angle);
             const y = centerY + radius * Math.sin(angle);
 
             const lean = Math.atan2(speed * speed, 9.8 * radius);
 
+            const velocityX = -speed * Math.sin(angle);
+            const velocityY = speed * Math.cos(angle);
+
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             drawTrack();
-            drawBikeAndAvatar(x, y, angle + Math.PI / 2 + lean);
+            drawBikeAndAvatar(x, y, angle + Math.PI / 2 + lean, velocityX, velocityY);
 
             const elapsedTime = (Date.now() - startTime) / 1000;
             const centripetalForce = calculateCentripetalForce(speed, radius);
@@ -208,11 +224,13 @@
         }
 
         function updateDataTable(time, speed, force, acceleration) {
-            const row = dataTable.insertRow(-1);
+            const tbody = dataTable.querySelector('tbody');
+            const row = tbody.insertRow(0);
             row.insertCell(0).textContent = time.toFixed(2);
             row.insertCell(1).textContent = speed.toFixed(2);
             row.insertCell(2).textContent = force.toFixed(2);
             row.insertCell(3).textContent = acceleration.toFixed(2);
+            dataTableContainer.scrollTop = 0;
         }
 
         speedSlider.addEventListener('input', () => {
@@ -239,16 +257,15 @@
             speedValue.textContent = speed;
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             drawTrack();
-            drawBikeAndAvatar(centerX, centerY - trackRadius + trackWidth / 2, Math.PI / 2);
-            while (dataTable.rows.length > 1) {
-                dataTable.deleteRow(1);
-            }
+            drawBikeAndAvatar(centerX, centerY - trackRadius + trackWidth / 2, Math.PI / 2, 0, speed);
+            const tbody = dataTable.querySelector('tbody');
+            tbody.innerHTML = '';
             logDebug('Simulation reset');
         });
 
         document.addEventListener('DOMContentLoaded', () => {
             drawTrack();
-            drawBikeAndAvatar(centerX, centerY - trackRadius + trackWidth / 2, Math.PI / 2);
+            drawBikeAndAvatar(centerX, centerY - trackRadius + trackWidth / 2, Math.PI / 2, 0, speed);
             logDebug('Simulation initialized');
         });
     </script>

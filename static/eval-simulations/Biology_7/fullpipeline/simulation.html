@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -60,7 +61,7 @@
             align-items: center;
             font-weight: bold;
         }
-        #dataAnalysis {
+        #dataAnalysis, #offspringDisplay {
             margin-top: 20px;
             font-weight: bold;
         }
@@ -86,45 +87,90 @@
         <select id="trait">
             <option value="">Select Trait</option>
             <option value="furColor">Fur Color</option>
+            <option value="eyeColor">Eye Color</option>
             <option value="earShape">Ear Shape</option>
-            <option value="tailLength">Tail Length</option>
         </select>
         <button id="generateOffspring">Generate Offspring</button>
         <button id="repeatExperiment">Repeat Experiment</button>
     </div>
     <div id="punnettSquare"></div>
+    <div id="offspringDisplay"></div>
     <div id="dataAnalysis"></div>
     <script>
-        window.LOG_DEBUG = false;
-
-        function logDebug(message) {
-            if (window.LOG_DEBUG) {
-                console.log(`DEBUG [${new Date().toISOString()}]: ${message}`);
-            }
-        }
-
         const canvas = document.getElementById('canvas');
         const rc = rough.canvas(canvas);
         const ctx = canvas.getContext('2d');
 
-        const petSVGs = {
-            cat: `<svg viewBox="0 0 100 100"><path d="M50 10 L30 40 L70 40 Z" fill="#808080"/><circle cx="50" cy="50" r="30" fill="#808080"/><circle cx="35" cy="45" r="5" fill="white"/><circle cx="65" cy="45" r="5" fill="white"/><path d="M45 60 Q50 65 55 60" fill="none" stroke="black" stroke-width="2"/></svg>`,
-            dog: `<svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" fill="#A0522D"/><circle cx="35" cy="45" r="5" fill="black"/><circle cx="65" cy="45" r="5" fill="black"/><path d="M45 65 Q50 70 55 65" fill="none" stroke="black" stroke-width="2"/><path d="M20 30 Q10 20 20 10" fill="none" stroke="#A0522D" stroke-width="8"/><path d="M80 30 Q90 20 80 10" fill="none" stroke="#A0522D" stroke-width="8"/></svg>`,
-            rabbit: `<svg viewBox="0 0 100 100"><ellipse cx="50" cy="60" rx="30" ry="35" fill="#F5DEB3"/><circle cx="40" cy="50" r="5" fill="black"/><circle cx="60" cy="50" r="5" fill="black"/><ellipse cx="50" cy="60" rx="10" ry="5" fill="pink"/><path d="M30 10 Q50 40 70 10" fill="#F5DEB3"/></svg>`
+        let parentA, parentB, selectedTrait, offspring, offspringTrait;
+
+        const traitOptions = {
+            furColor: ['brown', 'white', 'black'],
+            eyeColor: ['blue', 'green', 'brown'],
+            earShape: ['pointy', 'floppy', 'round']
         };
 
-        let parentA, parentB, selectedTrait, offspring;
-
-        function drawPet(pet, x, y, scale = 1) {
-            const tempSvg = document.createElement('svg');
-            tempSvg.innerHTML = petSVGs[pet];
-            const path = tempSvg.querySelector('path');
-            const pathD = path.getAttribute('d');
-            
+        function drawPet(pet, x, y, scale = 1, trait = null) {
             ctx.save();
             ctx.translate(x, y);
             ctx.scale(scale, scale);
-            rc.path(pathD, { fill: 'gray', stroke: 'black' });
+
+            if (pet === 'cat') {
+                rc.circle(0, 0, 40, { fill: trait && selectedTrait === 'furColor' ? trait : 'gray' });
+                rc.circle(-15, -10, 5, { fill: trait && selectedTrait === 'eyeColor' ? trait : 'white' });
+                rc.circle(15, -10, 5, { fill: trait && selectedTrait === 'eyeColor' ? trait : 'white' });
+                if (trait && selectedTrait === 'earShape') {
+                    if (trait === 'pointy') {
+                        rc.line(-20, -30, 0, -50);
+                        rc.line(20, -30, 0, -50);
+                    } else if (trait === 'floppy') {
+                        rc.line(-20, -30, -30, -10);
+                        rc.line(20, -30, 30, -10);
+                    } else {
+                        rc.arc(0, -30, 20, 20, Math.PI, 2 * Math.PI, false);
+                    }
+                } else {
+                    rc.line(-20, -30, 0, -50);
+                    rc.line(20, -30, 0, -50);
+                }
+            } else if (pet === 'dog') {
+                rc.circle(0, 0, 40, { fill: trait && selectedTrait === 'furColor' ? trait : 'brown' });
+                rc.circle(-15, -10, 5, { fill: trait && selectedTrait === 'eyeColor' ? trait : 'black' });
+                rc.circle(15, -10, 5, { fill: trait && selectedTrait === 'eyeColor' ? trait : 'black' });
+                if (trait && selectedTrait === 'earShape') {
+                    if (trait === 'pointy') {
+                        rc.line(-20, -30, -40, -50);
+                        rc.line(20, -30, 40, -50);
+                    } else if (trait === 'floppy') {
+                        rc.line(-20, -30, -40, 0);
+                        rc.line(20, -30, 40, 0);
+                    } else {
+                        rc.arc(-20, -30, 20, 20, Math.PI, 2 * Math.PI, false);
+                        rc.arc(20, -30, 20, 20, Math.PI, 2 * Math.PI, false);
+                    }
+                } else {
+                    rc.line(-20, -30, -40, -50);
+                    rc.line(20, -30, 40, -50);
+                }
+            } else if (pet === 'rabbit') {
+                rc.circle(0, 10, 30, { fill: trait && selectedTrait === 'furColor' ? trait : 'white' });
+                rc.circle(-10, 0, 5, { fill: trait && selectedTrait === 'eyeColor' ? trait : 'red' });
+                rc.circle(10, 0, 5, { fill: trait && selectedTrait === 'eyeColor' ? trait : 'red' });
+                if (trait && selectedTrait === 'earShape') {
+                    if (trait === 'pointy') {
+                        rc.line(-10, -20, -10, -60);
+                        rc.line(10, -20, 10, -60);
+                    } else if (trait === 'floppy') {
+                        rc.line(-10, -20, -30, 0);
+                        rc.line(10, -20, 30, 0);
+                    } else {
+                        rc.arc(0, -40, 20, 40, Math.PI, 2 * Math.PI, false);
+                    }
+                } else {
+                    rc.line(-10, -20, -10, -60);
+                    rc.line(10, -20, 10, -60);
+                }
+            }
+
             ctx.restore();
         }
 
@@ -135,19 +181,23 @@
             if (parentB) drawPet(parentB, 600, 200, 2);
             
             if (offspring) {
-                drawPet(offspring, 400, 300, 1.5);
+                drawPet(offspring, 400, 300, 1.5, offspringTrait);
+                ctx.font = '20px Cabin Sketch';
+                ctx.fillText('Offspring', 370, 380);
             }
         }
 
         function generateOffspring() {
             if (!parentA || !parentB || !selectedTrait) {
-                alert("Please select both parents and a trait first!");
+                document.getElementById('offspringDisplay').textContent = "Please select both parents and a trait first!";
                 return;
             }
             
             offspring = Math.random() < 0.5 ? parentA : parentB;
+            offspringTrait = traitOptions[selectedTrait][Math.floor(Math.random() * traitOptions[selectedTrait].length)];
             updateCanvas();
             updatePunnettSquare();
+            updateOffspringDisplay();
             updateDataAnalysis();
         }
 
@@ -168,9 +218,16 @@
             }
         }
 
+        function updateOffspringDisplay() {
+            const offspringDisplay = document.getElementById('offspringDisplay');
+            offspringDisplay.textContent = `Offspring: ${offspring} (${selectedTrait}: ${offspringTrait})`;
+        }
+
         function updateDataAnalysis() {
             const dataAnalysis = document.getElementById('dataAnalysis');
-            dataAnalysis.textContent = `Offspring ${selectedTrait}: ${offspring}`;
+            const punnettPrediction = "AA: 25%, Aa: 50%, aa: 25%";
+            dataAnalysis.textContent = `Punnett Square Prediction: ${punnettPrediction}
+                                        Actual Result: ${offspring} (${selectedTrait}: ${offspringTrait})`;
         }
 
         document.getElementById('parentA').addEventListener('change', (e) => {
@@ -190,33 +247,19 @@
         document.getElementById('generateOffspring').addEventListener('click', generateOffspring);
 
         document.getElementById('repeatExperiment').addEventListener('click', () => {
-            parentA = parentB = selectedTrait = offspring = null;
+            parentA = parentB = selectedTrait = offspring = offspringTrait = null;
             document.getElementById('parentA').value = '';
             document.getElementById('parentB').value = '';
             document.getElementById('trait').value = '';
             document.getElementById('punnettSquare').innerHTML = '';
+            document.getElementById('offspringDisplay').textContent = '';
             document.getElementById('dataAnalysis').textContent = '';
             updateCanvas();
         });
 
-        document.addEventListener('DOMContentLoaded', () => {
-            if (window.LOG_DEBUG) {
-                logDebug('Simulation initialized');
-                document.querySelectorAll('svg').forEach((svg, index) => {
-                    const rect = svg.getBoundingClientRect();
-                    logDebug(`SVG #${index}: Position {x: ${rect.x}, y: ${rect.y}}, Size {w: ${rect.width}, h: ${rect.height}}`);
-                });
-                document.querySelectorAll('input, button, select').forEach((control) => {
-                    logDebug(`Control ${control.id || 'unnamed'} (${control.tagName}): Initial value: ${control.value || 'N/A'}`);
-                });
-                
-                document.querySelectorAll('button').forEach((button) => {
-                    button.addEventListener('click', () => logDebug(`Button ${button.id || 'unnamed'} clicked`));
-                });
-                document.querySelectorAll('input, select').forEach((input) => {
-                    input.addEventListener('change', (e) => logDebug(`Input ${input.id || 'unnamed'} changed to ${e.target.value}`));
-                });
-            }
+        // Initialize canvas on page load
+        window.addEventListener('load', () => {
+            updateCanvas();
         });
     </script>
 </body>

@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -69,6 +70,19 @@
             text-align: center;
             margin-top: 20px;
         }
+        #iwmBtn.active {
+            background-color: #e74c3c;
+        }
+        #iwmBtn.active::after {
+            content: " ✓";
+        }
+        #waterInfo {
+            font-family: 'Cabin Sketch', cursive;
+            font-weight: 400;
+            color: #2c3e50;
+            text-align: center;
+            margin-top: 20px;
+        }
     </style>
 </head>
 <body>
@@ -89,6 +103,7 @@
         <button id="iwmBtn">Activate Integrated Management</button>
         <button id="compareBtn">Compare Results</button>
     </div>
+    <div id="waterInfo"></div>
     <div id="results"></div>
 
     <script>
@@ -104,109 +119,145 @@
         const ctx = canvas.getContext('2d');
         const rc = rough.canvas(canvas);
 
-        const desertSVG = `
-            <svg width="800" height="600" viewBox="0 0 800 600">
-                <defs>
-                    <linearGradient id="skyGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-                        <stop offset="0%" style="stop-color:#87CEEB;stop-opacity:1" />
-                        <stop offset="100%" style="stop-color:#E6E6FA;stop-opacity:1" />
-                    </linearGradient>
-                    <linearGradient id="sandGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-                        <stop offset="0%" style="stop-color:#F4A460;stop-opacity:1" />
-                        <stop offset="100%" style="stop-color:#D2691E;stop-opacity:1" />
-                    </linearGradient>
-                </defs>
-                <rect width="800" height="400" fill="url(#skyGradient)" />
-                <rect y="400" width="800" height="200" fill="url(#sandGradient)" />
-                <circle cx="700" cy="100" r="60" fill="#FFD700" />
-                <path d="M 0 400 Q 200 300 400 400 Q 600 500 800 400" fill="url(#sandGradient)" />
-            </svg>
-        `;
+        const desertEnvironment = {
+            waterSupply: 1000000, // Initial water supply in gallons
+            waterUsageData: [],
+            population: 100000,
+            agricultureUsage: 500000,
+            updateFrequency: 1, // Daily updates
+            events: ['drought', 'rainstorm'],
+            iwmActive: false,
 
-        const waterSupplySVG = `
-            <svg width="100" height="100" viewBox="0 0 100 100">
-                <circle cx="50" cy="50" r="45" fill="#4169E1" />
-                <path d="M 30 50 Q 50 20 70 50 Q 50 80 30 50" fill="#87CEFA" />
-            </svg>
-        `;
+            updateWaterSupply: function() {
+                const usage = this.population * 0.1 + this.agricultureUsage;
+                this.waterSupply -= usage;
+                this.waterUsageData.push({date: new Date(), usage: usage});
 
-        let waterSupply = 100;
-        let conservationMeasures = [];
-        let waterQualityProtection = false;
-        let integratedManagement = false;
+                // Random events
+                if (Math.random() < 0.1) {
+                    const event = this.events[Math.floor(Math.random() * this.events.length)];
+                    if (event === 'drought') {
+                        this.waterSupply *= 0.9;
+                    } else if (event === 'rainstorm') {
+                        this.waterSupply *= 1.1;
+                    }
+                }
+
+                if (this.iwmActive) {
+                    this.waterSupply *= 1.01; // Slight increase due to IWM
+                }
+
+                logDebug(`Water supply updated: ${this.waterSupply.toFixed(2)} gallons`);
+            }
+        };
 
         function drawScene() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             
-            const img = new Image();
-            img.onload = () => {
-                ctx.drawImage(img, 0, 0);
-                drawWaterSupply();
-            };
-            img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(desertSVG);
-            
-            logDebug(`Scene redrawn. Water supply: ${waterSupply}`);
+            rc.rectangle(0, 0, canvas.width, canvas.height, {
+                fill: 'khaki',
+                fillStyle: 'solid',
+                roughness: 2
+            });
+
+            // Draw sun
+            rc.circle(700, 100, 60, {
+                fill: 'yellow',
+                fillStyle: 'solid',
+                roughness: 1
+            });
+
+            // Draw water supply
+            const waterHeight = (desertEnvironment.waterSupply / 1000000) * 300;
+            rc.rectangle(350, 600 - waterHeight, 100, waterHeight, {
+                fill: 'blue',
+                fillStyle: 'solid',
+                roughness: 1
+            });
+
+            logDebug(`Scene redrawn. Water supply: ${desertEnvironment.waterSupply.toFixed(2)} gallons`);
         }
 
-        function drawWaterSupply() {
-            const img = new Image();
-            img.onload = () => {
-                const scale = waterSupply / 100;
-                ctx.drawImage(img, 350, 250, 100 * scale, 100 * scale);
-            };
-            img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(waterSupplySVG);
+        function drawWaterUsageGraph() {
+            const graphWidth = 300;
+            const graphHeight = 150;
+            const graphX = 450;
+            const graphY = 50;
+
+            rc.rectangle(graphX, graphY, graphWidth, graphHeight, { roughness: 1 });
+
+            const dataPoints = desertEnvironment.waterUsageData.slice(-30); // Last 30 days
+            if (dataPoints.length > 1) {
+                const xStep = graphWidth / (dataPoints.length - 1);
+                const maxUsage = Math.max(...dataPoints.map(d => d.usage));
+                const yScale = graphHeight / maxUsage;
+
+                let path = `M${graphX},${graphY + graphHeight - dataPoints[0].usage * yScale}`;
+                for (let i = 1; i < dataPoints.length; i++) {
+                    path += ` L${graphX + i * xStep},${graphY + graphHeight - dataPoints[i].usage * yScale}`;
+                }
+
+                rc.path(path, { roughness: 1, stroke: 'blue' });
+            }
         }
 
         document.getElementById('measureBtn').addEventListener('click', () => {
-            waterSupply = Math.max(0, Math.min(100, waterSupply + Math.random() * 20 - 10));
             drawScene();
-            logDebug(`Measured water supply: ${waterSupply}`);
+            drawWaterUsageGraph();
+
+            const waterSupplyCubicMeters = desertEnvironment.waterSupply * 0.00378541; // Convert gallons to cubic meters
+            const dailyUsage = desertEnvironment.waterUsageData.length > 0 ? desertEnvironment.waterUsageData[desertEnvironment.waterUsageData.length - 1].usage : 0;
+            const dailyUsageCubicMeters = dailyUsage * 0.00378541; // Convert gallons to cubic meters
+
+            const waterInfo = `
+                Current water supply: ${waterSupplyCubicMeters.toFixed(2)} cubic meters
+                Daily water usage rate: ${dailyUsageCubicMeters.toFixed(2)} cubic meters/day
+            `;
+            document.getElementById('waterInfo').innerHTML = waterInfo.replace(/\n/g, '<br>');
+
+            logDebug(`Measured water supply: ${waterSupplyCubicMeters.toFixed(2)} cubic meters`);
         });
 
         document.getElementById('conserveMeasures').addEventListener('change', (e) => {
             const measure = e.target.value;
-            if (measure && !conservationMeasures.includes(measure)) {
-                conservationMeasures.push(measure);
-                waterSupply = Math.min(100, waterSupply + 10);
+            if (measure) {
+                desertEnvironment.waterSupply *= 1.05;
                 drawScene();
             }
-            logDebug(`Conservation measure applied: ${measure}. New water supply: ${waterSupply}`);
+            logDebug(`Conservation measure applied: ${measure}. New water supply: ${desertEnvironment.waterSupply.toFixed(2)} gallons`);
         });
 
         document.getElementById('recordBtn').addEventListener('click', () => {
             const metrics = {
-                supply: waterSupply,
-                measures: conservationMeasures,
-                qualityProtection: waterQualityProtection,
-                integratedManagement: integratedManagement
+                supply: desertEnvironment.waterSupply,
+                population: desertEnvironment.population,
+                agricultureUsage: desertEnvironment.agricultureUsage
             };
             logDebug(`Recorded metrics: ${JSON.stringify(metrics)}`);
         });
 
         document.getElementById('wqpBtn').addEventListener('click', () => {
-            waterQualityProtection = !waterQualityProtection;
-            if (waterQualityProtection) {
-                waterSupply = Math.min(100, waterSupply + 5);
-            } else {
-                waterSupply = Math.max(0, waterSupply - 5);
-            }
+            desertEnvironment.waterSupply *= 1.02;
             drawScene();
-            logDebug(`Water quality protection ${waterQualityProtection ? 'activated' : 'deactivated'}. New water supply: ${waterSupply}`);
+            logDebug(`Water quality protection activated. New water supply: ${desertEnvironment.waterSupply.toFixed(2)} gallons`);
         });
 
         document.getElementById('iwmBtn').addEventListener('click', () => {
-            integratedManagement = !integratedManagement;
-            if (integratedManagement) {
-                waterSupply = Math.min(100, waterSupply + 15);
+            desertEnvironment.iwmActive = !desertEnvironment.iwmActive;
+            const iwmBtn = document.getElementById('iwmBtn');
+            if (desertEnvironment.iwmActive) {
+                iwmBtn.classList.add('active');
+                desertEnvironment.waterSupply *= 1.1;
             } else {
-                waterSupply = Math.max(0, waterSupply - 15);
+                iwmBtn.classList.remove('active');
+                desertEnvironment.waterSupply /= 1.1;
             }
             drawScene();
-            logDebug(`Integrated management ${integratedManagement ? 'activated' : 'deactivated'}. New water supply: ${waterSupply}`);
+            logDebug(`Integrated management ${desertEnvironment.iwmActive ? 'activated' : 'deactivated'}. New water supply: ${desertEnvironment.waterSupply.toFixed(2)} gallons`);
         });
 
         document.getElementById('compareBtn').addEventListener('click', () => {
-            const efficiency = (conservationMeasures.length * 10 + (waterQualityProtection ? 5 : 0) + (integratedManagement ? 15 : 0)) / 50 * 100;
+            const efficiency = (desertEnvironment.waterSupply / 1000000) * 100;
             const results = `Water Management Plan Efficiency: ${efficiency.toFixed(2)}%`;
             document.getElementById('results').textContent = results;
             logDebug(`Comparison results: ${results}`);
@@ -214,12 +265,13 @@
 
         document.addEventListener('DOMContentLoaded', () => {
             drawScene();
+            setInterval(() => {
+                desertEnvironment.updateWaterSupply();
+                drawScene();
+            }, desertEnvironment.updateFrequency * 24 * 60 * 60 * 1000);
+
             if (window.LOG_DEBUG) {
                 logDebug('Simulation initialized');
-                document.querySelectorAll('svg').forEach((svg, index) => {
-                    const rect = svg.getBoundingClientRect();
-                    logDebug(`SVG #${index}: Position {x: ${rect.x}, y: ${rect.y}}, Size {w: ${rect.width}, h: ${rect.height}}`);
-                });
                 document.querySelectorAll('input, button, select').forEach((control) => {
                     logDebug(`Control ${control.id || 'unnamed'} (${control.tagName}): Initial value: ${control.value || 'N/A'}`);
                 });

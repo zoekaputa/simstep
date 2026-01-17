@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -59,6 +60,17 @@
             text-align: center;
             margin-bottom: 20px;
         }
+        #performanceTracker, #dataLogger {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        #feedback {
+            font-weight: bold;
+            margin-top: 10px;
+        }
     </style>
 </head>
 <body>
@@ -71,9 +83,15 @@
         <div class="control-group">
             <select id="scenarioSelector">
                 <option value="sprain">Ankle Sprain</option>
+                <option value="strain">Muscle Strain</option>
+                <option value="concussion">Concussion</option>
                 <option value="fracture">Arm Fracture</option>
-                <option value="burn">Minor Burn</option>
-                <option value="cardiac">Cardiac Arrest</option>
+            </select>
+            <select id="sportSelector">
+                <option value="soccer">Soccer</option>
+                <option value="basketball">Basketball</option>
+                <option value="tennis">Tennis</option>
+                <option value="swimming">Swimming</option>
             </select>
             <button id="startButton">Start Simulation</button>
         </div>
@@ -93,104 +111,130 @@
             <button id="recoveryPositionButton">Place in Recovery Position</button>
         </div>
     </div>
+    <div id="performanceTracker">
+        <h3>Performance Tracker</h3>
+        <p>Actions taken: <span id="actionsTaken">0</span></p>
+        <p>Correct actions: <span id="correctActions">0</span></p>
+        <p>Score: <span id="score">0%</span></p>
+    </div>
+    <div id="dataLogger">
+        <h3>Data Logger</h3>
+        <div id="logEntries"></div>
+        <div id="feedback"></div>
+    </div>
     <script>
-        window.LOG_DEBUG = false;
-
-        function logDebug(message) {
-            if (window.LOG_DEBUG) {
-                console.log(`DEBUG [${new Date().toISOString()}]: ${message}`);
-            }
-        }
-
         const canvas = document.getElementById('canvas');
         const ctx = canvas.getContext('2d');
         const rc = rough.canvas(canvas);
 
-        const victimSVG = `
-            <svg width="100" height="200" viewBox="0 0 100 200">
-                <ellipse cx="50" cy="30" rx="20" ry="25" fill="#ffb3ba"/>
-                <rect x="40" y="55" width="20" height="70" fill="#ffb3ba"/>
-                <rect x="30" y="125" width="15" height="60" fill="#ffb3ba"/>
-                <rect x="55" y="125" width="15" height="60" fill="#ffb3ba"/>
-                <rect x="15" y="65" width="70" height="20" fill="#ffb3ba"/>
-            </svg>
-        `;
-
-        const sceneSVG = `
-            <svg width="800" height="600" viewBox="0 0 800 600">
-                <rect x="0" y="500" width="800" height="100" fill="#7ec850"/>
-                <circle cx="700" cy="100" r="50" fill="#ffd700"/>
-            </svg>
-        `;
-
         let currentScenario = '';
+        let currentSport = '';
         let victimState = 'normal';
+        let actionsTaken = 0;
+        let correctActions = 0;
 
         function drawScene() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-            const sceneImg = new Image();
-            sceneImg.onload = () => {
-                ctx.drawImage(sceneImg, 0, 0);
-                drawVictim();
-            };
-            sceneImg.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(sceneSVG);
-            logDebug('Scene drawn');
+            rc.rectangle(0, 500, 800, 100, { fill: '#7ec850', fillStyle: 'solid' });
+            rc.circle(700, 100, 100, { fill: '#ffd700', fillStyle: 'solid' });
+            drawVictim();
+            drawSportSpecificElements();
         }
 
         function drawVictim() {
-            const victimImg = new Image();
-            victimImg.onload = () => {
-                ctx.drawImage(victimImg, 350, 300);
-            };
-            victimImg.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(victimSVG);
-            logDebug('Victim drawn');
+            rc.path('M350,300 C370,250 430,250 450,300', { stroke: '#ffb3ba', strokeWidth: 2, fill: '#ffb3ba' }); // head
+            rc.line(400, 300, 400, 400, { stroke: '#ffb3ba', strokeWidth: 20 }); // body
+            rc.line(400, 330, 350, 380, { stroke: '#ffb3ba', strokeWidth: 10 }); // left arm
+            rc.line(400, 330, 450, 380, { stroke: '#ffb3ba', strokeWidth: 10 }); // right arm
+            rc.line(400, 400, 370, 480, { stroke: '#ffb3ba', strokeWidth: 10 }); // left leg
+            rc.line(400, 400, 430, 480, { stroke: '#ffb3ba', strokeWidth: 10 }); // right leg
+
+            drawInjury();
+        }
+
+        function drawInjury() {
+            switch (currentScenario) {
+                case 'sprain':
+                    rc.circle(370, 470, 20, { fill: 'purple', fillStyle: 'hachure' });
+                    break;
+                case 'strain':
+                    rc.line(400, 350, 450, 400, { stroke: 'red', strokeWidth: 3 });
+                    break;
+                case 'concussion':
+                    rc.circle(400, 270, 30, { stroke: 'yellow', strokeWidth: 2 });
+                    break;
+                case 'fracture':
+                    rc.zigzagLine(440, 340, 460, 380, { stroke: 'red', strokeWidth: 2 });
+                    break;
+            }
+        }
+
+        function drawSportSpecificElements() {
+            switch (currentSport) {
+                case 'soccer':
+                    rc.circle(100, 500, 40, { fill: 'black', fillStyle: 'solid' });
+                    break;
+                case 'basketball':
+                    rc.circle(100, 500, 40, { fill: 'orange', fillStyle: 'solid' });
+                    break;
+                case 'tennis':
+                    rc.ellipse(100, 500, 60, 40, { fill: 'yellow', fillStyle: 'solid' });
+                    break;
+                case 'swimming':
+                    rc.rectangle(50, 450, 100, 100, { fill: 'blue', fillStyle: 'solid' });
+                    break;
+            }
         }
 
         function startSimulation() {
             currentScenario = document.getElementById('scenarioSelector').value;
+            currentSport = document.getElementById('sportSelector').value;
             victimState = 'injured';
             drawScene();
-            logDebug(`Simulation started with scenario: ${currentScenario}`);
+            actionsTaken = 0;
+            correctActions = 0;
+            updatePerformanceTracker();
+            logAction('Simulation started', true);
         }
 
         function performAssessment() {
             rc.rectangle(10, 10, 780, 580, { stroke: '#ff6b6b', strokeWidth: 2 });
-            logDebug('Assessment performed');
+            updatePerformance(true);
+            logAction('Assessment performed', true);
         }
 
         function performCPR() {
-            if (currentScenario === 'cardiac') {
-                rc.circle(400, 350, 50, { fill: 'rgba(255, 0, 0, 0.5)' });
-                logDebug('CPR performed');
-            }
+            rc.circle(400, 350, 50, { fill: 'rgba(255, 0, 0, 0.5)' });
+            const correct = currentScenario === 'concussion';
+            updatePerformance(correct);
+            logAction('CPR performed', correct);
         }
 
         function useAED() {
-            if (currentScenario === 'cardiac') {
-                rc.rectangle(300, 400, 200, 100, { fill: 'yellow' });
-                logDebug('AED used');
-            }
+            rc.rectangle(300, 400, 200, 100, { fill: 'yellow' });
+            const correct = currentScenario === 'concussion';
+            updatePerformance(correct);
+            logAction('AED used', correct);
         }
 
         function controlBleeding() {
-            if (currentScenario === 'fracture') {
-                rc.line(370, 330, 430, 390, { stroke: 'red', strokeWidth: 2 });
-                logDebug('Bleeding controlled');
-            }
+            rc.line(370, 330, 430, 390, { stroke: 'red', strokeWidth: 2 });
+            const correct = currentScenario === 'fracture';
+            updatePerformance(correct);
+            logAction('Bleeding controlled', correct);
         }
 
         function applySplint() {
-            if (currentScenario === 'fracture' || currentScenario === 'sprain') {
-                rc.rectangle(360, 320, 80, 150, { fill: 'brown' });
-                logDebug('Splint applied');
-            }
+            rc.rectangle(360, 320, 80, 150, { fill: 'brown' });
+            const correct = currentScenario === 'fracture' || currentScenario === 'sprain';
+            updatePerformance(correct);
+            logAction('Splint applied', correct);
         }
 
         function treatBurn() {
-            if (currentScenario === 'burn') {
-                rc.circle(400, 350, 30, { fill: 'blue' });
-                logDebug('Burn treated');
-            }
+            rc.circle(400, 350, 30, { fill: 'blue' });
+            updatePerformance(false);
+            logAction('Burn treated', false);
         }
 
         function placeInRecoveryPosition() {
@@ -201,8 +245,36 @@
                 ctx.translate(-400, -400);
                 drawVictim();
                 ctx.restore();
-                logDebug('Victim placed in recovery position');
+                const correct = currentScenario === 'concussion';
+                updatePerformance(correct);
+                logAction('Victim placed in recovery position', correct);
+            } else {
+                updatePerformance(false);
+                logAction('Attempted to place victim in recovery position', false);
             }
+        }
+
+        function updatePerformance(correct) {
+            actionsTaken++;
+            if (correct) correctActions++;
+            updatePerformanceTracker();
+        }
+
+        function updatePerformanceTracker() {
+            document.getElementById('actionsTaken').textContent = actionsTaken;
+            document.getElementById('correctActions').textContent = correctActions;
+            const score = actionsTaken > 0 ? Math.round((correctActions / actionsTaken) * 100) : 0;
+            document.getElementById('score').textContent = score + '%';
+        }
+
+        function logAction(action, correct) {
+            const logEntry = document.createElement('p');
+            logEntry.textContent = `${new Date().toLocaleTimeString()}: ${action}`;
+            document.getElementById('logEntries').appendChild(logEntry);
+
+            const feedback = document.getElementById('feedback');
+            feedback.textContent = correct ? 'Good job!' : 'This is not the right action.';
+            feedback.style.color = correct ? 'green' : 'red';
         }
 
         document.getElementById('startButton').addEventListener('click', startSimulation);
@@ -215,26 +287,8 @@
         document.getElementById('recoveryPositionButton').addEventListener('click', placeInRecoveryPosition);
 
         document.addEventListener('DOMContentLoaded', () => {
-            if (window.LOG_DEBUG) {
-                logDebug('Simulation initialized');
-                document.querySelectorAll('svg').forEach((svg, index) => {
-                    const rect = svg.getBoundingClientRect();
-                    logDebug(`SVG #${index}: Position {x: ${rect.x}, y: ${rect.y}}, Size {w: ${rect.width}, h: ${rect.height}}`);
-                });
-                document.querySelectorAll('input, button, select').forEach((control) => {
-                    logDebug(`Control ${control.id || 'unnamed'} (${control.tagName}): Initial value: ${control.value || 'N/A'}`);
-                });
-                
-                document.querySelectorAll('button').forEach((button) => {
-                    button.addEventListener('click', () => logDebug(`Button ${button.id || 'unnamed'} clicked`));
-                });
-                document.querySelectorAll('input').forEach((input) => {
-                    input.addEventListener('change', (e) => logDebug(`Input ${input.id || 'unnamed'} changed to ${e.target.value}`));
-                });
-            }
+            drawScene();
         });
-
-        drawScene();
     </script>
 </body>
 </html>
