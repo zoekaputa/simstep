@@ -1,68 +1,266 @@
 [
-  { "slug": "Astronomy_Space_Science_1", "title": "Astronomy Space Science 1" },
-  { "slug": "Astronomy_Space_Science_3", "title": "Astronomy Space Science 3" },
-  { "slug": "Astronomy_Space_Science_4", "title": "Astronomy Space Science 4" },
-  { "slug": "Astronomy_Space_Science_5", "title": "Astronomy Space Science 5" },
-  { "slug": "Biology_1", "title": "Biology 1" },
-  { "slug": "Biology_2", "title": "Biology 2" },
-  { "slug": "Biology_3", "title": "Biology 3" },
-  { "slug": "Biology_5", "title": "Biology 5" },
-  { "slug": "Biology_6", "title": "Biology 6" },
-  { "slug": "Biology_7", "title": "Biology 7" },
-  { "slug": "Biology_8", "title": "Biology 8" },
-  { "slug": "Biology_10", "title": "Biology 10" },
-  { "slug": "Chemistry_1", "title": "Chemistry 1" },
-  { "slug": "Chemistry_2", "title": "Chemistry 2" },
-  { "slug": "Chemistry_3", "title": "Chemistry 3" },
-  { "slug": "Chemistry_4", "title": "Chemistry 4" },
-  { "slug": "Chemistry_5", "title": "Chemistry 5" },
-  { "slug": "Chemistry_6", "title": "Chemistry 6" },
-  { "slug": "Chemistry_7", "title": "Chemistry 7" },
-  { "slug": "Chemistry_8", "title": "Chemistry 8" },
-  { "slug": "Chemistry_9", "title": "Chemistry 9" },
-  { "slug": "Chemistry_10", "title": "Chemistry 10" },
-  { "slug": "Computer_Science_AI_2", "title": "Computer Science AI 2" },
-  { "slug": "Computer_Science_AI_3", "title": "Computer Science AI 3" },
-  { "slug": "Computer_Science_AI_4", "title": "Computer Science AI 4" },
-  { "slug": "Computer_Science_AI_5", "title": "Computer Science AI 5" },
-  { "slug": "Computer_Science_AI_6", "title": "Computer Science AI 6" },
-  { "slug": "Computer_Science_AI_8", "title": "Computer Science AI 8" },
-  { "slug": "Computer_Science_AI_9", "title": "Computer Science AI 9" },
-  { "slug": "CrossDisciplinary_1", "title": "Cross Disciplinary 1" },
-  { "slug": "CrossDisciplinary_2", "title": "Cross Disciplinary 2" },
-  { "slug": "CrossDisciplinary_3", "title": "Cross Disciplinary 3" },
-  { "slug": "CrossDisciplinary_4", "title": "Cross Disciplinary 4" },
-  { "slug": "CrossDisciplinary_5", "title": "Cross Disciplinary 5" },
-  { "slug": "CrossDisciplinary_6", "title": "Cross Disciplinary 6" },
-  { "slug": "CrossDisciplinary_7", "title": "Cross Disciplinary 7" },
-  { "slug": "CrossDisciplinary_8", "title": "Cross Disciplinary 8" },
-  { "slug": "CrossDisciplinary_9", "title": "Cross Disciplinary 9" },
-  { "slug": "CrossDisciplinary_10", "title": "Cross Disciplinary 10" },
-  { "slug": "Earth_Environmental_Science_1", "title": "Earth & Environmental Science 1" },
-  { "slug": "Earth_Environmental_Science_2", "title": "Earth & Environmental Science 2" },
-  { "slug": "Earth_Environmental_Science_3", "title": "Earth & Environmental Science 3" },
-  { "slug": "Earth_Environmental_Science_4", "title": "Earth & Environmental Science 4" },
-  { "slug": "Earth_Environmental_Science_5", "title": "Earth & Environmental Science 5" },
-  { "slug": "Earth_Environmental_Science_6", "title": "Earth & Environmental Science 6" },
-  { "slug": "Earth_Environmental_Science_7", "title": "Earth & Environmental Science 7" },
-  { "slug": "Earth_Environmental_Science_9", "title": "Earth & Environmental Science 9" },
-  { "slug": "Earth_Environmental_Science_10", "title": "Earth & Environmental Science 10" },
-  { "slug": "Medical_Health_Science_2", "title": "Medical & Health Science 2" },
-  { "slug": "Medical_Health_Science_3", "title": "Medical & Health Science 3" },
-  { "slug": "Medical_Health_Science_4", "title": "Medical & Health Science 4" },
-  { "slug": "Medical_Health_Science_5", "title": "Medical & Health Science 5" },
-  { "slug": "Physics_1", "title": "Physics 1" },
-  { "slug": "Physics_2", "title": "Physics 2" },
-  { "slug": "Physics_3", "title": "Physics 3" },
-  { "slug": "Physics_4", "title": "Physics 4" },
-  { "slug": "Physics_5", "title": "Physics 5" },
-  { "slug": "Physics_6", "title": "Physics 6" },
-  { "slug": "Physics_7", "title": "Physics 7" },
-  { "slug": "Physics_8", "title": "Physics 8" },
-  { "slug": "Physics_10", "title": "Physics 10" },
-  { "slug": "Physics_11", "title": "Physics 11" },
-  { "slug": "Physics_12", "title": "Physics 12" },
-  { "slug": "Physics_13", "title": "Physics 13" },
-  { "slug": "Physics_14", "title": "Physics 14" },
-  { "slug": "Physics_15", "title": "Physics 15" }
+  {
+    "slug": "Astronomy_Space_Science_1",
+    "title": "Stellar Campfire Simulator"
+  },
+  {
+    "slug": "Astronomy_Space_Science_3",
+    "title": "Bottle Atmosphere Lab"
+  },
+  {
+    "slug": "Astronomy_Space_Science_4",
+    "title": "Cosmic Scale Campus"
+  },
+  {
+    "slug": "Astronomy_Space_Science_5",
+    "title": "Gravitational Vortex Explorer"
+  },
+  {
+    "slug": "Biology_1",
+    "title": "Evolution Arena"
+  },
+  {
+    "slug": "Biology_2",
+    "title": "Cellular Power Race"
+  },
+  {
+    "slug": "Biology_3",
+    "title": "Terrarium Ecosystem Lab"
+  },
+  {
+    "slug": "Biology_5",
+    "title": "Hallway Highways: Blood Circulation Simulator"
+  },
+  {
+    "slug": "Biology_6",
+    "title": "NeuroBridge: Message Relay Network"
+  },
+  {
+    "slug": "Biology_7",
+    "title": "GeneticPets: Inheritance Simulator"
+  },
+  {
+    "slug": "Biology_8",
+    "title": "EcoTray: Cafeteria Energy Flow"
+  },
+  {
+    "slug": "Biology_10",
+    "title": "SecurityNet: Immune Defense Simulator"
+  },
+  {
+    "slug": "Chemistry_1",
+    "title": "Element Identity Creator"
+  },
+  {
+    "slug": "Chemistry_2",
+    "title": "Cookie Chemistry Lab"
+  },
+  {
+    "slug": "Chemistry_3",
+    "title": "Garden Soil Simulator"
+  },
+  {
+    "slug": "Chemistry_4",
+    "title": "Bicycle Pump Laboratory"
+  },
+  {
+    "slug": "Chemistry_5",
+    "title": "Molecular Connections"
+  },
+  {
+    "slug": "Chemistry_6",
+    "title": "Ice Cream Science Lab"
+  },
+  {
+    "slug": "Chemistry_7",
+    "title": "Cafeteria Equilibrium"
+  },
+  {
+    "slug": "Chemistry_8",
+    "title": "Smart Device Energy Lab"
+  },
+  {
+    "slug": "Chemistry_9",
+    "title": "Fruit Power Laboratory"
+  },
+  {
+    "slug": "Chemistry_10",
+    "title": "Domino Cascade: The Catalyst Effect"
+  },
+  {
+    "slug": "Computer_Science_AI_2",
+    "title": "Virtual Pet Trainer"
+  },
+  {
+    "slug": "Computer_Science_AI_3",
+    "title": "Locker System Designer"
+  },
+  {
+    "slug": "Computer_Science_AI_4",
+    "title": "Team Project Accelerator"
+  },
+  {
+    "slug": "Computer_Science_AI_5",
+    "title": "Club Decision Simulator"
+  },
+  {
+    "slug": "Computer_Science_AI_6",
+    "title": "Secret Communication Center"
+  },
+  {
+    "slug": "Computer_Science_AI_8",
+    "title": "Adventure Decision Navigator"
+  },
+  {
+    "slug": "Computer_Science_AI_9",
+    "title": "Predictive Text Laboratory"
+  },
+  {
+    "slug": "CrossDisciplinary_1",
+    "title": "Skatepark Engineering Lab"
+  },
+  {
+    "slug": "CrossDisciplinary_2",
+    "title": "Sustainable City Simulator"
+  },
+  {
+    "slug": "CrossDisciplinary_3",
+    "title": "Community Values Simulator"
+  },
+  {
+    "slug": "CrossDisciplinary_4",
+    "title": "Treehouse Power Designer"
+  },
+  {
+    "slug": "CrossDisciplinary_5",
+    "title": "Desert Resource Manager"
+  },
+  {
+    "slug": "CrossDisciplinary_6",
+    "title": "Bridge Design Laboratory"
+  },
+  {
+    "slug": "CrossDisciplinary_7",
+    "title": "Pandemic Ethics Simulator"
+  },
+  {
+    "slug": "CrossDisciplinary_8",
+    "title": "Supply Chain Explorer"
+  },
+  {
+    "slug": "CrossDisciplinary_9",
+    "title": "Event Planning Network"
+  },
+  {
+    "slug": "CrossDisciplinary_10",
+    "title": "Knowledge Integration Challenge"
+  },
+  {
+    "slug": "Earth_Environmental_Science_1",
+    "title": "Tectonic Puzzle Explorer"
+  },
+  {
+    "slug": "Earth_Environmental_Science_2",
+    "title": "Carbon Journey Simulator"
+  },
+  {
+    "slug": "Earth_Environmental_Science_3",
+    "title": "Fluid Dynamics Playground"
+  },
+  {
+    "slug": "Earth_Environmental_Science_4",
+    "title": "Community Garden Designer"
+  },
+  {
+    "slug": "Earth_Environmental_Science_5",
+    "title": "Soil Profile Builder"
+  },
+  {
+    "slug": "Earth_Environmental_Science_6",
+    "title": "Terrain Transformation Lab"
+  },
+  {
+    "slug": "Earth_Environmental_Science_7",
+    "title": "Atmospheric Skyscraper"
+  },
+  {
+    "slug": "Earth_Environmental_Science_9",
+    "title": "ForecastPlanner: Weather Systems Simulator"
+  },
+  {
+    "slug": "Earth_Environmental_Science_10",
+    "title": "GeoBite: Rock Formation Sandwich Lab"
+  },
+  {
+    "slug": "Medical_Health_Science_2",
+    "title": "Therapeutic Transport Network"
+  },
+  {
+    "slug": "Medical_Health_Science_3",
+    "title": "Emergency Response Trainer"
+  },
+  {
+    "slug": "Medical_Health_Science_4",
+    "title": "Epidemic Management System"
+  },
+  {
+    "slug": "Medical_Health_Science_5",
+    "title": "Building Body Systems"
+  },
+  {
+    "slug": "Physics_1",
+    "title": "Skateboard Physics Lab"
+  },
+  {
+    "slug": "Physics_2",
+    "title": "Nautical Engineering Challenge"
+  },
+  {
+    "slug": "Physics_3",
+    "title": "Guitar Wave Laboratory"
+  },
+  {
+    "slug": "Physics_4",
+    "title": "Playground Design Studio"
+  },
+  {
+    "slug": "Physics_5",
+    "title": "Extreme Cycling Physics"
+  },
+  {
+    "slug": "Physics_6",
+    "title": "Basketball Trajectory Lab"
+  },
+  {
+    "slug": "Physics_7",
+    "title": "Bumper Car Physics"
+  },
+  {
+    "slug": "Physics_8",
+    "title": "Poolside Rescue"
+  },
+  {
+    "slug": "Physics_10",
+    "title": "Dance Party Circuits"
+  },
+  {
+    "slug": "Physics_11",
+    "title": "Waterpark Engineering"
+  },
+  {
+    "slug": "Physics_12",
+    "title": "S'mores Science Challenge"
+  },
+  {
+    "slug": "Physics_13",
+    "title": "Studio Acoustics Designer"
+  },
+  {
+    "slug": "Physics_14",
+    "title": "Remote Control Challenge"
+  },
+  {
+    "slug": "Physics_15",
+    "title": "Basketball Physics"
+  }
 ]

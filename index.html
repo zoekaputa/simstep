@@ -34,6 +34,10 @@
       box-sizing: border-box;
     }
 
+    html {
+      scroll-behavior: smooth;
+    }
+
     body {
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
       color: var(--text-primary);
@@ -449,7 +453,6 @@
       <div id="mainNav" class="navbar-menu">
         <div class="navbar-start">
           <a class="navbar-item is-active" href="index.html">Home</a>
-          <a class="navbar-item" href="gallery.html">Gallery</a>
         </div>
       </div>
     </div>
@@ -472,7 +475,7 @@
     <p class="subtitle">Interactive AI-generated educational simulations for STEM learning. Create, explore, and
       understand complex concepts through hands-on experimentation.</p>
     <div class="hero-buttons">
-      <a href="gallery.html" class="hero-btn hero-btn-primary">
+      <a href="#simulations" class="hero-btn hero-btn-primary">
         <i class="fas fa-play"></i> Explore Simulations
       </a>
       <a href="./static/paper.pdf" class="hero-btn hero-btn-secondary">
@@ -482,7 +485,7 @@
   </section>
 
   <!-- ===== FEATURED SIMULATIONS ===== -->
-  <section class="featured-section">
+  <section class="featured-section" id="simulations">
     <div class="section-header">
       <h2>Featured Simulations</h2>
       <p>Explore our best AI-generated educational simulations</p>

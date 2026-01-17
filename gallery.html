@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -11,41 +12,75 @@
   <link rel="icon" href="./static/images/favicon.svg">
 
   <style>
-    body { font-family: 'Noto Sans', Arial, sans-serif; color:#2b2b2b; }
-    .navbar { border-bottom: 1px solid #eee; }
-    .navbar-item.is-active { font-weight: 700; color: #222 !important; }
+    body {
+      font-family: 'Noto Sans', Arial, sans-serif;
+      color: #2b2b2b;
+    }
 
-    .gallery-title { margin-bottom: 2rem; }
-    .search-bar { margin-bottom: 1.5rem; }
+    .navbar {
+      border-bottom: 1px solid #eee;
+    }
+
+    .navbar-item.is-active {
+      font-weight: 700;
+      color: #222 !important;
+    }
+
+    .gallery-title {
+      margin-bottom: 2rem;
+    }
+
+    .search-bar {
+      margin-bottom: 1.5rem;
+    }
 
     .sim-card {
       border-radius: 16px;
-      box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
       transition: transform .15s ease;
       height: 100%;
       display: flex;
       flex-direction: column;
       overflow: hidden;
     }
-    .sim-card:hover { transform: translateY(-4px); }
+
+    .sim-card:hover {
+      transform: translateY(-4px);
+    }
 
     .thumb-html {
-      background: linear-gradient(135deg,#f7fbff,#eaf2ff);
+      background: linear-gradient(135deg, #f7fbff, #eaf2ff);
       padding: 1.5rem;
-      display:flex;
-      align-items:center;
-      justify-content:center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       min-height: 140px;
     }
+
     .thumb-title {
-      font:700 1.25rem/1.3 'Google Sans', Arial, sans-serif;
-      text-align:center;
-      color:#0f172a;
+      font: 700 1.25rem/1.3 'Google Sans', Arial, sans-serif;
+      text-align: center;
+      color: #0f172a;
     }
 
-    .sim-body { padding: 1rem 1.25rem 1.5rem; flex:1; display:flex; flex-direction:column; }
-    .sim-subtitle { font-size: 0.9rem; color: #6b7280; margin-bottom: 1rem; text-align:center; }
-    .sim-footer { margin-top: auto; text-align:center; }
+    .sim-body {
+      padding: 1rem 1.25rem 1.5rem;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .sim-subtitle {
+      font-size: 0.9rem;
+      color: #6b7280;
+      margin-bottom: 1rem;
+      text-align: center;
+    }
+
+    .sim-footer {
+      margin-top: auto;
+      text-align: center;
+    }
   </style>
 </head>
 
@@ -95,70 +130,52 @@
 
   <!-- ===== SCRIPT ===== -->
   <script>
-  (async () => {
-    const ROOT_PATH   = "./static/eval-simulations";
-    const INPUTS_PATH = "./static/sim-inputs";
-    const galleryEl   = document.getElementById("gallery");
-    const searchEl    = document.getElementById("search");
+    (async () => {
+      const ROOT_PATH = "./static/eval-simulations";
+      const galleryEl = document.getElementById("gallery");
+      const searchEl = document.getElementById("search");
 
-    const res = await fetch(`${ROOT_PATH}/manifest.json`);
-    if (!res.ok) { galleryEl.innerHTML = "<p>Failed to load simulations.</p>"; return; }
-    let items = await res.json();
-    if (!Array.isArray(items)) return;
+      const res = await fetch(`${ROOT_PATH}/manifest.json`);
+      if (!res.ok) { galleryEl.innerHTML = "<p>Failed to load simulations.</p>"; return; }
+      let items = await res.json();
+      if (!Array.isArray(items)) return;
 
-    const valid = [];
-    for (const it of items) {
-      const slug  = it.slug;
-      let title   = it.title || slug.replace(/[_-]+/g, " ");
-      try {
-        const head = await fetch(`${ROOT_PATH}/${slug}/fullpipeline/simulation.html`, { method: "HEAD" });
-        if (!head.ok) continue;
+      // Sort by title
+      items.sort((a, b) => a.title.localeCompare(b.title, undefined, { numeric: true, sensitivity: 'base' }));
 
-        try {
-          const jr = await fetch(`${INPUTS_PATH}/${encodeURIComponent(slug)}.json`);
-          if (jr.ok) {
-            const data = await jr.json();
-            if (data?.scenario?.title) title = data.scenario.title;
-          }
-        } catch {}
-        valid.push({ slug, title });
-      } catch {}
-    }
-
-    valid.sort((a,b) => a.title.localeCompare(b.title, undefined, { numeric:true, sensitivity:'base' }));
-
-    function render(list) {
-      galleryEl.innerHTML = "";
-      list.forEach(it => {
-        const simURL = `${ROOT_PATH}/${it.slug}/fullpipeline/simulation.html`;
-        const card = document.createElement("div");
-        card.className = "column is-one-third";
-        card.innerHTML = `
+      function render(list) {
+        galleryEl.innerHTML = "";
+        list.forEach(it => {
+          const simURL = `${ROOT_PATH}/${it.slug}/fullpipeline/simulation.html`;
+          const card = document.createElement("div");
+          card.className = "column is-one-third";
+          card.innerHTML = `
           <div class="sim-card">
             <div class="thumb-html">
               <div class="thumb-title">${it.title}</div>
             </div>
             <div class="sim-body">
-              <div class="sim-subtitle">${it.slug}</div>
+              <div class="sim-subtitle">${it.slug.replace(/_/g, ' ')}</div>
               <div class="sim-footer">
                 <a class="button is-dark is-rounded is-small" href="${simURL}" target="_blank">Open Simulation</a>
               </div>
             </div>
           </div>`;
-        galleryEl.appendChild(card);
+          galleryEl.appendChild(card);
+        });
+      }
+
+      render(items);
+
+      searchEl.addEventListener("input", e => {
+        const q = e.target.value.toLowerCase();
+        const filtered = items.filter(it =>
+          it.title.toLowerCase().includes(q) || it.slug.toLowerCase().includes(q)
+        );
+        render(filtered);
       });
-    }
-
-    render(valid);
-
-    searchEl.addEventListener("input", e => {
-      const q = e.target.value.toLowerCase();
-      const filtered = valid.filter(it => 
-        it.title.toLowerCase().includes(q) || it.slug.toLowerCase().includes(q)
-      );
-      render(filtered);
-    });
-  })();
+    })();
   </script>
 </body>
+
 </html>
