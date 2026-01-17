@@ -1,51 +1,434 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8">
-  <meta name="description" content="SimStep: Multi-Level Abstractions for Incremental Specification and Debugging of AI-Generated Educational Simulations">
-  <meta name="keywords" content="AI education simulation">
+  <meta name="description" content="SimStep: AI-Generated Educational Simulations for STEM Learning">
+  <meta name="keywords" content="AI education simulation STEM physics chemistry biology interactive learning">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>SimStep: Multi-Level Abstractions for Incremental Specification and Debugging of AI-Generated Educational Simulations</title>
+  <title>SimStep: AI-Generated Educational Simulations</title>
 
   <!-- Fonts & CSS -->
-  <link href="https://fonts.googleapis.com/css?family=Google+Sans:400,700|Noto+Sans:400,600|Castoro:400,700" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="./static/css/bulma.min.css">
-  <link rel="stylesheet" href="./static/css/fontawesome.all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <link rel="icon" href="./static/images/favicon.svg">
 
   <style>
-    :root{
-      --title-gap: 2rem;     /* consistent space below section titles */
-      --title-gap-large: 2.5rem; /* a bit more under the Video title */
+    :root {
+      --primary: #2563eb;
+      --primary-dark: #1d4ed8;
+      --accent: #06b6d4;
+      --bg-light: #f8fafc;
+      --bg-card: #ffffff;
+      --text-primary: #0f172a;
+      --text-secondary: #475569;
+      --border-light: #e2e8f0;
+      --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+      --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+      --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
     }
-    body { font-family: 'Noto Sans', Arial, sans-serif; color:#2b2b2b; }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      color: var(--text-primary);
+      background: var(--bg-light);
+      line-height: 1.6;
+    }
 
     /* ===== Navbar ===== */
-    .navbar { border-bottom: 1px solid #eee; }
-    .navbar-item.is-active { font-weight: 700; color: #222 !important; }
+    .navbar {
+      background: var(--bg-card);
+      border-bottom: 1px solid var(--border-light);
+      box-shadow: var(--shadow-sm);
+    }
 
-    /* ===== Section title spacing (consistent everywhere) ===== */
-    .hero .title,
-    .section .title { margin-bottom: var(--title-gap); }
+    .navbar-item {
+      font-weight: 500;
+      color: var(--text-secondary);
+    }
 
-    /* Give the video title a tad more space */
-    #video-section .title { margin-bottom: var(--title-gap-large); }
+    .navbar-item:hover {
+      color: var(--primary);
+    }
 
-    /* Nicely center the Drive iframe and keep aspect ratio */
-    .publication-video {
+    .navbar-item.is-active {
+      font-weight: 600;
+      color: var(--primary) !important;
+    }
+
+    .navbar-brand .navbar-item {
+      font-weight: 700;
+      font-size: 1.25rem;
+      color: var(--primary);
+    }
+
+    /* ===== Hero Section ===== */
+    .hero-section {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      padding: 5rem 2rem;
+      text-align: center;
+      color: white;
+    }
+
+    .hero-section h1 {
+      font-size: 3rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      letter-spacing: -0.02em;
+    }
+
+    .hero-section .subtitle {
+      font-size: 1.25rem;
+      opacity: 0.9;
+      max-width: 600px;
+      margin: 0 auto 2rem;
+      font-weight: 400;
+    }
+
+    .hero-buttons {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .hero-btn {
+      padding: 0.875rem 2rem;
+      border-radius: 9999px;
+      font-weight: 600;
+      font-size: 1rem;
+      text-decoration: none;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .hero-btn-primary {
+      background: white;
+      color: #764ba2;
+    }
+
+    .hero-btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-lg);
+      color: #667eea;
+    }
+
+    .hero-btn-secondary {
+      background: rgba(255, 255, 255, 0.15);
+      color: white;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .hero-btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.25);
+      color: white;
+    }
+
+    /* ===== Featured Simulations ===== */
+    .featured-section {
+      padding: 4rem 2rem;
+      background: var(--bg-light);
+    }
+
+    .section-header {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+
+    .section-header h2 {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 0.5rem;
+    }
+
+    .section-header p {
+      color: var(--text-secondary);
+      font-size: 1.1rem;
+    }
+
+    .sim-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .sim-card {
+      background: var(--bg-card);
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: var(--shadow-md);
+      transition: all 0.3s ease;
+      cursor: pointer;
+      text-decoration: none;
+      display: block;
+    }
+
+    .sim-card:hover {
+      transform: translateY(-8px);
+      box-shadow: var(--shadow-xl);
+    }
+
+    .sim-card img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      object-position: top;
+      border-bottom: 1px solid var(--border-light);
+    }
+
+    .sim-card-body {
+      padding: 1.25rem;
+    }
+
+    .sim-card-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 0.5rem;
+    }
+
+    .sim-card-desc {
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+
+    .sim-card-tag {
+      display: inline-block;
+      padding: 0.25rem 0.75rem;
+      background: linear-gradient(135deg, #667eea20, #764ba220);
+      color: #764ba2;
+      font-size: 0.75rem;
+      font-weight: 600;
+      border-radius: 9999px;
+      margin-top: 0.75rem;
+    }
+
+    .view-all-btn {
+      display: block;
+      width: fit-content;
+      margin: 3rem auto 0;
+      padding: 1rem 2rem;
+      background: var(--primary);
+      color: white;
+      text-decoration: none;
+      border-radius: 9999px;
+      font-weight: 600;
+      transition: all 0.2s ease;
+    }
+
+    .view-all-btn:hover {
+      background: var(--primary-dark);
+      color: white;
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    /* ===== Team Section ===== */
+    .team-section {
+      padding: 4rem 2rem;
+      background: var(--bg-card);
+    }
+
+    .team-grid {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 1.5rem;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    @media (max-width: 768px) {
+      .team-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    @media (max-width: 480px) {
+      .team-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    .team-member {
+      text-align: center;
+    }
+
+    .team-photo {
+      display: block;
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin: 0 auto 0.75rem;
+      border: 3px solid var(--border-light);
+      transition: all 0.2s ease;
+    }
+
+    .team-member:hover .team-photo {
+      border-color: var(--primary);
+      transform: scale(1.05);
+    }
+
+    .team-placeholder {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 2rem;
+      font-weight: 600;
+      margin: 0 auto 0.75rem;
+      border: 3px solid var(--border-light);
+    }
+
+    .team-name {
+      font-weight: 600;
+      font-size: 0.85rem;
+      color: var(--text-primary);
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    .team-name:hover {
+      color: var(--primary);
+    }
+
+    .team-affiliation {
+      font-size: 0.7rem;
+      color: var(--text-secondary);
+      margin-top: 0.25rem;
+      white-space: nowrap;
+    }
+
+    /* ===== Paper Section ===== */
+    .paper-section {
+      padding: 4rem 2rem;
+      background: var(--bg-light);
+    }
+
+    .paper-content {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .paper-title {
+      font-size: 1.5rem;
+      font-weight: 600;
+      text-align: center;
+      margin-bottom: 1.5rem;
+      color: var(--text-primary);
+    }
+
+    .paper-abstract {
+      background: var(--bg-card);
+      padding: 2rem;
+      border-radius: 16px;
+      box-shadow: var(--shadow-md);
+      margin-bottom: 2rem;
+    }
+
+    .paper-abstract p {
+      color: var(--text-secondary);
+      line-height: 1.8;
+    }
+
+    .paper-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .paper-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1.5rem;
+      background: var(--text-primary);
+      color: white;
+      text-decoration: none;
+      border-radius: 9999px;
+      font-weight: 500;
+      transition: all 0.2s ease;
+    }
+
+    .paper-btn:hover {
+      background: var(--primary);
+      color: white;
+      transform: translateY(-2px);
+    }
+
+    /* ===== Video Section ===== */
+    .video-section {
+      padding: 4rem 2rem;
+      background: var(--bg-card);
+    }
+
+    .video-container {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .video-wrapper {
       position: relative;
       width: 100%;
-      padding-bottom: 56.25%; /* 16:9 */
+      padding-bottom: 56.25%;
       height: 0;
       overflow: hidden;
-      border-radius: 10px;
-      box-shadow: 0 6px 20px rgba(0,0,0,0.08);
-      background: #f7f8fb;
+      border-radius: 16px;
+      box-shadow: var(--shadow-lg);
+      background: #000;
     }
-    .publication-video iframe {
-      position: absolute; inset: 0;
-      width: 100%; height: 100%;
+
+    .video-wrapper iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
       border: 0;
+    }
+
+    /* ===== Footer ===== */
+    .footer {
+      background: var(--text-primary);
+      color: rgba(255, 255, 255, 0.7);
+      padding: 2rem;
+      text-align: center;
+    }
+
+    .footer a {
+      color: rgba(255, 255, 255, 0.9);
+    }
+
+    /* ===== Responsive ===== */
+    @media (max-width: 768px) {
+      .hero-section h1 {
+        font-size: 2rem;
+      }
+
+      .hero-section {
+        padding: 3rem 1.5rem;
+      }
+
+      .sim-grid {
+        grid-template-columns: 1fr;
+      }
     }
   </style>
 </head>
@@ -56,17 +439,16 @@
   <nav class="navbar is-light" role="navigation" aria-label="main navigation">
     <div class="container is-max-desktop">
       <div class="navbar-brand">
-        <a class="navbar-item" href="index.html" style="font-weight:700;">SimStep</a>
+        <a class="navbar-item" href="index.html">SimStep</a>
         <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="mainNav">
           <span aria-hidden="true"></span>
           <span aria-hidden="true"></span>
           <span aria-hidden="true"></span>
         </a>
       </div>
-
       <div id="mainNav" class="navbar-menu">
         <div class="navbar-start">
-          <a class="navbar-item" href="index.html">Home</a>
+          <a class="navbar-item is-active" href="index.html">Home</a>
           <a class="navbar-item" href="gallery.html">Gallery</a>
         </div>
       </div>
@@ -74,187 +456,225 @@
   </nav>
 
   <script>
-    // Burger menu + active tab highlight
     document.addEventListener('DOMContentLoaded', () => {
       const burger = document.querySelector('.navbar-burger');
-      const targetId = burger?.getAttribute('data-target');
-      const menu = document.getElementById(targetId || 'mainNav');
+      const menu = document.getElementById('mainNav');
       burger?.addEventListener('click', () => {
         burger.classList.toggle('is-active');
         menu?.classList.toggle('is-active');
       });
-      const here = location.pathname.split('/').pop() || 'index.html';
-      document.querySelectorAll('.navbar-item[href]').forEach(a => {
-        if (a.getAttribute('href') === here) a.classList.add('is-active');
-      });
     });
   </script>
 
-  <!-- ===== HERO / AUTHORS ===== -->
-  <section class="hero">
-    <div class="hero-body">
-      <div class="container is-max-desktop">
-        <div class="columns is-centered">
-          <div class="column has-text-centered">
-            <h1 class="title is-1">
-              SimStep: Multi-Level Abstractions for Incremental Specification and
-              Debugging of AI-Generated Educational Simulations
-            </h1>
+  <!-- ===== HERO ===== -->
+  <section class="hero-section">
+    <h1>SimStep</h1>
+    <p class="subtitle">Interactive AI-generated educational simulations for STEM learning. Create, explore, and
+      understand complex concepts through hands-on experimentation.</p>
+    <div class="hero-buttons">
+      <a href="gallery.html" class="hero-btn hero-btn-primary">
+        <i class="fas fa-play"></i> Explore Simulations
+      </a>
+      <a href="./static/paper.pdf" class="hero-btn hero-btn-secondary">
+        <i class="fas fa-file-pdf"></i> Read Paper
+      </a>
+    </div>
+  </section>
 
-            <!-- Authors -->
-            <section class="section" style="padding-top:1.25rem;">
-              <div class="container is-max-desktop">
-                <div class="columns is-multiline is-centered is-variable is-6">
-                  <div class="column is-one-third has-text-centered">
-                    <a href="https://zoekaputa.com/" class="title is-5 has-text-black">Zoe Kaputa</a>
-                    <p class="mt-2 is-size-6 has-text-grey-dark">Stanford University</p>
-                  </div>
-                  <div class="column is-one-third has-text-centered">
-                    <a href="https://26anikar.github.io/" class="title is-5 has-text-black">Anika Rajaram</a>
-                    <p class="mt-2 is-size-6 has-text-grey-dark">The Harker School</p>
-                  </div>
-                  <div class="column is-one-third has-text-centered">
-                    <a href="https://www.linkedin.com/in/vryan-feliciano/" class="title is-5 has-text-black">Vryan Feliciano</a>
-                    <p class="mt-2 is-size-6 has-text-grey-dark">Stanford University</p>
-                  </div>
-                  <div class="column is-one-third has-text-centered">
-                    <a href="https://www.zhuoyuelyu.com/" class="title is-5 has-text-black">Zhuoyue Lyu</a>
-                    <p class="mt-2 is-size-6 has-text-grey-dark">Cambridge University</p>
-                  </div>
-                  <div class="column is-one-third has-text-centered">
-                    <a href="https://graphics.stanford.edu/~maneesh/" class="title is-5 has-text-black">Maneesh Agrawala</a>
-                    <p class="mt-2 is-size-6 has-text-grey-dark">Stanford University</p>
-                  </div>
-                  <div class="column is-one-third has-text-centered">
-                    <a href="https://haridecoded.com/" class="title is-5 has-text-black">Hariharan Subramonyam</a>
-                    <p class="mt-2 is-size-6 has-text-grey-dark">Stanford University</p>
-                  </div>
-                </div>
-              </div>
-            </section>
+  <!-- ===== FEATURED SIMULATIONS ===== -->
+  <section class="featured-section">
+    <div class="section-header">
+      <h2>Featured Simulations</h2>
+      <p>Explore our best AI-generated educational simulations</p>
+    </div>
 
-            <!-- Buttons -->
-            <div class="columns is-centered">
-              <div class="column is-narrow has-text-centered">
-                <a href="./static/paper.pdf" class="button is-normal is-rounded is-dark">
-                  <span class="icon"><i class="fas fa-file-pdf"></i></span>
-                  <span>Paper</span>
-                </a>
-                <a href="https://drive.google.com/file/d/1rvRXmUn6RzwwuetmGyQaFkunC6R1nr7t/preview" class="button is-normal is-rounded is-dark">
-                  <span class="icon"><i class="fab fa-youtube"></i></span>
-                  <span>Video</span>
-                </a>
-                <a href="https://github.com/zoekaputa/SALT" class="external-link button is-normal is-rounded is-dark">
-                  <span class="icon"><i class="fab fa-github"></i></span>
-                  <span>Code</span>
-                </a>
-              </div>
-            </div>
-
-          </div>
+    <div class="sim-grid">
+      <a href="./static/eval-simulations/Physics_6/fullpipeline/simulation.html" target="_blank" class="sim-card">
+        <img src="./static/images/thumbnails/physics6.png" alt="Basketball Free Throw Simulator">
+        <div class="sim-card-body">
+          <div class="sim-card-title">Basketball Trajectory Lab</div>
+          <div class="sim-card-desc">Explore projectile motion by adjusting launch angle, force, and gravity to make the
+            perfect shot.</div>
+          <span class="sim-card-tag">Physics</span>
         </div>
+      </a>
+
+      <a href="./static/eval-simulations/Physics_10/fullpipeline/simulation.html" target="_blank" class="sim-card">
+        <img src="./static/images/thumbnails/physics10.png" alt="Dance Party Lighting System">
+        <div class="sim-card-body">
+          <div class="sim-card-title">Dance Party Circuits</div>
+          <div class="sim-card-desc">Design lighting for a school dance by creating series and parallel circuits.</div>
+          <span class="sim-card-tag">Physics</span>
+        </div>
+      </a>
+
+      <a href="./static/eval-simulations/Chemistry_1/fullpipeline/simulation.html" target="_blank" class="sim-card">
+        <img src="./static/images/thumbnails/chemistry1.png" alt="Atomic Structure Explorer">
+        <div class="sim-card-body">
+          <div class="sim-card-title">Atomic Structure Explorer</div>
+          <div class="sim-card-desc">Build atoms by adjusting protons, neutrons, and electrons to discover element
+            properties.</div>
+          <span class="sim-card-tag">Chemistry</span>
+        </div>
+      </a>
+
+      <a href="./static/eval-simulations/Chemistry_5/fullpipeline/simulation.html" target="_blank" class="sim-card">
+        <img src="./static/images/thumbnails/chemistry5.png" alt="Element Bond Simulator">
+        <div class="sim-card-body">
+          <div class="sim-card-title">Molecular Connections</div>
+          <div class="sim-card-desc">Explore how electronegativity determines bond types between different elements.
+          </div>
+          <span class="sim-card-tag">Chemistry</span>
+        </div>
+      </a>
+
+      <a href="./static/eval-simulations/Physics_14/fullpipeline/simulation.html" target="_blank" class="sim-card">
+        <img src="./static/images/thumbnails/physics14.png" alt="Electromagnetic Wave Explorer">
+        <div class="sim-card-body">
+          <div class="sim-card-title">EM Wave Explorer</div>
+          <div class="sim-card-desc">Discover how electromagnetic waves interact with different materials and obstacles.
+          </div>
+          <span class="sim-card-tag">Physics</span>
+        </div>
+      </a>
+
+      <a href="./static/eval-simulations/Chemistry_9/fullpipeline/simulation.html" target="_blank" class="sim-card">
+        <img src="./static/images/thumbnails/chemistry9.png" alt="Fruit Battery Experiment">
+        <div class="sim-card-body">
+          <div class="sim-card-title">Fruit Power Lab</div>
+          <div class="sim-card-desc">Create fruit batteries and learn about electrochemistry through redox reactions.
+          </div>
+          <span class="sim-card-tag">Chemistry</span>
+        </div>
+      </a>
+
+      <a href="./static/eval-simulations/Physics_8/fullpipeline/simulation_fixed.html" target="_blank" class="sim-card">
+        <img src="./static/images/thumbnails/physics8.png" alt="Pool Rescue Refraction Simulator">
+        <div class="sim-card-body">
+          <div class="sim-card-title">Poolside Rescue</div>
+          <div class="sim-card-desc">Learn about light refraction by observing how objects appear displaced underwater.
+          </div>
+          <span class="sim-card-tag">Physics</span>
+        </div>
+      </a>
+
+      <a href="./static/eval-simulations/Biology_6/fullpipeline/simulation_fixed.html" target="_blank" class="sim-card">
+        <img src="./static/images/thumbnails/biology6.png" alt="Neural Signal Transmission Simulator">
+        <div class="sim-card-body">
+          <div class="sim-card-title">NeuroBridge</div>
+          <div class="sim-card-desc">Explore neural signal transmission from dendrites to axon terminals.</div>
+          <span class="sim-card-tag">Biology</span>
+        </div>
+      </a>
+
+      <a href="./static/eval-simulations/Physics_15/fullpipeline/simulation_fixed.html" target="_blank"
+        class="sim-card">
+        <img src="./static/images/thumbnails/physics15.png" alt="Basketball Shot Simulator">
+        <div class="sim-card-body">
+          <div class="sim-card-title">Basketball Physics</div>
+          <div class="sim-card-desc">Analyze projectile motion and optimize your shooting technique with real-time
+            physics.</div>
+          <span class="sim-card-tag">Physics</span>
+        </div>
+      </a>
+    </div>
+
+    <a href="gallery.html" class="view-all-btn">
+      Browse All Simulations <i class="fas fa-arrow-right"></i>
+    </a>
+  </section>
+
+  <!-- ===== TEAM ===== -->
+  <section class="team-section">
+    <div class="section-header">
+      <h2>Team</h2>
+    </div>
+    <div class="team-grid">
+      <div class="team-member">
+        <div class="team-placeholder">Z</div>
+        <a href="https://zoekaputa.com/" class="team-name">Zoe Kaputa</a>
+        <div class="team-affiliation">Stanford University</div>
+      </div>
+      <div class="team-member">
+        <img src="./static/team/Anika.png" alt="Anika Rajaram" class="team-photo">
+        <a href="https://26anikar.github.io/" class="team-name">Anika Rajaram</a>
+        <div class="team-affiliation">The Harker School</div>
+      </div>
+      <div class="team-member">
+        <div class="team-placeholder">V</div>
+        <a href="https://www.linkedin.com/in/vryan-feliciano/" class="team-name">Vryan Feliciano</a>
+        <div class="team-affiliation">Stanford University</div>
+      </div>
+      <div class="team-member">
+        <div class="team-placeholder">Z</div>
+        <a href="https://www.zhuoyuelyu.com/" class="team-name">Zhuoyue Lyu</a>
+        <div class="team-affiliation">Cambridge University</div>
+      </div>
+      <div class="team-member">
+        <img src="./static/team/Maneesh.jpg" alt="Maneesh Agrawala" class="team-photo">
+        <a href="https://graphics.stanford.edu/~maneesh/" class="team-name">Maneesh Agrawala</a>
+        <div class="team-affiliation">Stanford University</div>
+      </div>
+      <div class="team-member">
+        <img src="./static/team/Hari.png" alt="Hariharan Subramonyam" class="team-photo">
+        <a href="https://haridecoded.com/" class="team-name">Hari Subramonyam</a>
+        <div class="team-affiliation">Stanford University</div>
       </div>
     </div>
   </section>
 
-  <!-- ===== OVERVIEW ===== -->
-  <section class="hero is-small">
-    <div class="hero-body">
-      <div class="container">
-        <h2 class="title is-4 has-text-centered">SimStep Overview</h2>
-        <div class="columns is-centered">
-          <div class="column is-three-quarters has-text-centered">
-            <img src="static/paper_files/figures/teaser.jpg" alt="Overview image" style="max-width: 100%; height: auto;">
-          </div>
-        </div>
+  <!-- ===== PAPER ===== -->
+  <section class="paper-section">
+    <div class="paper-content">
+      <h2 class="paper-title">About the Research</h2>
+      <div class="paper-abstract">
+        <p>
+          Interactive simulations have the potential to enhance STEM learning, yet their effectiveness
+          is often limited by reliance on generic, off-the-shelf content that fails to meet diverse
+          learners' needs. While generative AI can enable educators to rapidly author custom simulations,
+          existing approaches require significant technical expertise or complex iterative prompting to
+          align the learning objectives and simulation behavior. We present <strong>SimStep</strong>, an authoring tool
+          leveraging multi-level abstractions to incrementally specify, validate, and debug AI-generated
+          educational simulations.
+        </p>
       </div>
-    </div>
-  </section>
-
-  <!-- ===== ABSTRACT ===== -->
-  <section class="section hero is-light">
-    <div class="container is-max-desktop">
-      <div class="columns is-centered has-text-centered">
-        <div class="column is-four-fifths">
-          <h2 class="title is-3">Abstract</h2>
-          <div class="content has-text-justified">
-            <p>
-              Interactive simulations have the potential to enhance STEM learning, yet their effectiveness
-              is often limited by reliance on generic, off-the-shelf content that fails to meet diverse
-              learners' needs. While generative AI can enable educators to rapidly author custom simulations,
-              existing approaches require significant technical expertise or complex iterative prompting to
-              align the learning objectives and simulation behavior. We present SimStep, an authoring tool
-              leveraging multi-level abstractions to incrementally specify, validate, and debug AI-generated
-              educational simulations.
-            </p>
-          </div>
-        </div>
+      <div class="paper-buttons">
+        <a href="./static/paper.pdf" class="paper-btn">
+          <i class="fas fa-file-pdf"></i> Paper
+        </a>
+        <a href="https://drive.google.com/file/d/1rvRXmUn6RzwwuetmGyQaFkunC6R1nr7t/preview" class="paper-btn">
+          <i class="fab fa-youtube"></i> Video
+        </a>
+        <a href="https://github.com/zoekaputa/SALT" class="paper-btn">
+          <i class="fab fa-github"></i> Code
+        </a>
       </div>
     </div>
   </section>
 
   <!-- ===== VIDEO ===== -->
-  <section class="hero is-small" id="video-section">
-    <div class="hero-body">
-      <div class="container">
-        <div class="columns is-centered has-text-centered">
-          <div class="column is-four-fifths">
-            <h2 class="title is-3">Video</h2>
-            <div class="publication-video">
-              <iframe
-                src="https://drive.google.com/file/d/1rvRXmUn6RzwwuetmGyQaFkunC6R1nr7t/preview"
-                allow="autoplay; encrypted-media"
-                allowfullscreen>
-              </iframe>
-            </div>
-          </div>
-        </div>
-      </div>
+  <section class="video-section">
+    <div class="section-header">
+      <h2>Video Overview</h2>
     </div>
-  </section>
-
-  <!-- ===== UI SCREENS ===== -->
-  <section class="hero is-small">
-    <div class="hero-body">
-      <div class="container">
-        <h2 class="title is-4 has-text-centered">UI Screens</h2>
-        <div class="columns is-centered">
-          <div class="column is-three-quarters has-text-centered">
-            <img src="static/paper_files/figures/screens.jpg" alt="UI Screens" style="max-width: 100%; height: auto;">
-          </div>
-        </div>
+    <div class="video-container">
+      <div class="video-wrapper">
+        <iframe src="https://drive.google.com/file/d/1rvRXmUn6RzwwuetmGyQaFkunC6R1nr7t/preview"
+          allow="autoplay; encrypted-media" allowfullscreen>
+        </iframe>
       </div>
-    </div>
-  </section>
-
-  <!-- ===== BIBTEX ===== -->
-  <section class="section" id="BibTeX">
-    <div class="container is-max-desktop content">
-      <h2 class="title">BibTeX</h2>
-      Coming soon...
     </div>
   </section>
 
   <!-- ===== FOOTER ===== -->
   <footer class="footer">
-    <div class="container">
-      <div class="columns is-centered">
-        <div class="column is-8">
-          <div class="content">
-            <p>
-              This website is licensed under a
-              <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International License</a>.
-            </p>
-            <p>
-              This means you are free to borrow the
-              <a href="https://github.com/nerfies/nerfies.github.io">source code</a>;
-              we just ask that you link back to this page in the footer.
-            </p>
-          </div>
-        </div>
-      </div>
-    </div>
+    <p>
+      This website is licensed under a
+      <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0
+        International License</a>.
+    </p>
   </footer>
 
 </body>
+
 </html>
